@@ -37,8 +37,11 @@ public class TaskActivity extends AppCompatActivity implements HttpResponse {
         TextView currentLesson = findViewById(R.id.currentLesson);
         TextView nextLesson = findViewById(R.id.nextLesson);
 
-        previousLesson.setText(lessons.get(0).toString());
-        currentLesson.setText(lessons.get(1).toString());
-        nextLesson.setText(lessons.get(2).toString());
+        if (lessons.get(0) != null)
+            previousLesson.setText(lessons.get(0).toString());
+        if (lessons.get(1) != null)
+            currentLesson.setText(lessons.get(1).toString());
+        if (lessons.get(2) != null)
+            nextLesson.setText(lessons.get(2).toString());
     }
 }
