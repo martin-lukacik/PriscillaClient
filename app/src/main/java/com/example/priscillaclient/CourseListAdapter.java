@@ -59,5 +59,5 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
         titleText.setTextColor(ContrastColor(c));
 
         return rowView;
-    };
+    }
 }

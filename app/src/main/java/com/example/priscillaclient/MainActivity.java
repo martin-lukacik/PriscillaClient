@@ -33,7 +33,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements HttpResponse {
+public class MainActivity extends BaseActivity implements HttpResponse {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,6 +145,8 @@ public class MainActivity extends AppCompatActivity implements HttpResponse {
 
     @Override
     public void onUpdate(Object response) {
+
+        super.onUpdate(response);
 
         if (response instanceof User) {
             User user = (User) response;
