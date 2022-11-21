@@ -3,6 +3,7 @@ package com.example.priscillaclient;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +33,7 @@ public class LeaderboardAdapter extends ArrayAdapter<LeaderboardItem> {
         TextView name = rowView.findViewById(R.id.leaderboard_name);
         TextView xp = rowView.findViewById(R.id.leaderboard_xp);
 
-        position.setText("" + (i + 1));
+        position.setText((i + 1) + ".");
         name.setText(leaders.get(i).nickname);
         xp.setText("" + leaders.get(i).xp);
 

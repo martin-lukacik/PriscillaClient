@@ -23,15 +23,6 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
         this.courses = courses;
     }
 
-    public int ContrastColor(Color iColor)
-    {
-        // Calculate the perceptive luminance (aka luma) - human eye favors green color...
-        double luma = ((0.299 * iColor.red()) + (0.587 * iColor.green()) + (0.114 * iColor.blue()));
-
-        // Return black for bright colors, white for dark colors
-        return luma > 0.5 ? 0xff000000 : 0xffffffff;
-    }
-
     public View getView(int i, View view, ViewGroup parent) {
         LayoutInflater inflater = context.getLayoutInflater();
         View rowView = inflater.inflate(R.layout.listview_course, null,true);
@@ -47,16 +38,8 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
         int color = Color.parseColor(courses.get(i).area_color);
         Color c = Color.valueOf(color);
 
-
-
-        float invertedRed = c.red(), invertedGreen = c.green() - 130/255f, invertedBlue = c.blue() - 20/255f;
-
-
-
         rowView.setBackgroundColor(color);
-        titleText.setTextColor(Color.rgb(invertedRed, invertedGreen, invertedBlue));
-
-        titleText.setTextColor(ContrastColor(c));
+        titleText.setTextColor(Color.WHITE);
 
         return rowView;
     }

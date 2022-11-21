@@ -5,25 +5,28 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:paddingLeft="5dp"
+        android:paddingLeft="10dp"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="36dp"
         android:layout_weight="1"
-        android:textSize="16sp"
+        android:textSize="18sp"
+        android:gravity="center_vertical"
         android:id="@+id/leaderboard_position" />
 
     <TextView
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="36dp"
         android:layout_weight="3"
-        android:textSize="16sp"
+        android:textSize="18sp"
+        android:gravity="center_vertical"
         android:id="@+id/leaderboard_name" />
 
     <TextView
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="36dp"
         android:layout_weight="1"
-        android:textSize="16sp"
+        android:textSize="18sp"
+        android:gravity="center_vertical"
         android:id="@+id/leaderboard_xp" />
 
 </LinearLayout>
