@@ -5,6 +5,7 @@ import com.example.priscillaclient.models.Course;
 import com.example.priscillaclient.models.Language;
 import com.example.priscillaclient.models.Lesson;
 import com.example.priscillaclient.models.Task;
+import com.example.priscillaclient.models.User;
 
 import java.util.ArrayList;
 

@@ -7,7 +7,7 @@ import android.util.Log;
 import com.example.priscillaclient.Client;
 import com.example.priscillaclient.HttpURLConnectionFactory;
 import com.example.priscillaclient.MainActivity;
-import com.example.priscillaclient.User;
+import com.example.priscillaclient.models.User;
 
 import org.json.JSONObject;
 

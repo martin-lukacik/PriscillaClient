@@ -8,13 +8,11 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.view.WindowManager;
 
-import com.example.priscillaclient.APILayer;
 import com.example.priscillaclient.Client;
 import com.example.priscillaclient.ClientData;
 import com.example.priscillaclient.HttpURLConnectionFactory;
-import com.example.priscillaclient.LoginActivity;
 import com.example.priscillaclient.MainActivity;
-import com.example.priscillaclient.User;
+import com.example.priscillaclient.models.User;
 
 import org.json.JSONObject;
 

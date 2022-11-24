@@ -1,6 +1,5 @@
 package com.example.priscillaclient;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -11,16 +10,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.GridView;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.priscillaclient.api.GetUserCoursesTask;
 import com.example.priscillaclient.api.GetUserParamsTask;
 import com.example.priscillaclient.api.HttpResponse;
 import com.example.priscillaclient.models.Course;
+import com.example.priscillaclient.models.User;
 
 import org.json.JSONObject;
 

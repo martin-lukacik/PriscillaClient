@@ -1,4 +1,4 @@
-package com.example.priscillaclient;
+package com.example.priscillaclient.models;
 
 import com.example.priscillaclient.models.Course;
 
@@ -16,8 +16,8 @@ public class User {
 
     int theme_id;
     String theme_value;
-    String name;
-    String surname;
+    public String name;
+    public String surname;
     String email;
 
     public Performance performance;
