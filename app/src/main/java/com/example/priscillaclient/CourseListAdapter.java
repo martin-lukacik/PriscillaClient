@@ -2,11 +2,15 @@ package com.example.priscillaclient;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.priscillaclient.models.Course;
@@ -29,16 +33,33 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
 
         TextView titleText = rowView.findViewById(R.id.title);
         TextView subtitleText = rowView.findViewById(R.id.subtitle);
-        TextView passedText = rowView.findViewById(R.id.passed);
+        TextView contentText = rowView.findViewById(R.id.content_passed);
+        TextView taskText = rowView.findViewById(R.id.task_passed);
+        TextView programText = rowView.findViewById(R.id.program_passed);
+        ProgressBar courseProgress = rowView.findViewById(R.id.course_progress);
 
         titleText.setText(courses.get(i).name);
         subtitleText.setText(courses.get(i).description);
-        passedText.setText(courses.get(i).getUserData("passed") + " / " + courses.get(i).getUserData("all"));
+        contentText.setText(courses.get(i).getUserData("content_passed") + " / " + courses.get(i).getUserData("content_count"));
+        taskText.setText(courses.get(i).getUserData("task_passed") + " / " + courses.get(i).getUserData("task_count"));
+        programText.setText(courses.get(i).getUserData("program_passed") + " / " + courses.get(i).getUserData("program_count"));
+
+        int progress = (int) ((courses.get(i).getUserData("passed") / ((double) courses.get(i).getUserData("all"))) * 100);
+        Log.i("PASSED", "" + courses.get(i).getUserData("passed"));
+        Log.i("ALL", "" + courses.get(i).getUserData("all"));
+        Log.i("PROGRESS", "" + progress);
+        courseProgress.setProgress(progress);
 
         int color = Color.parseColor(courses.get(i).area_color);
-        Color c = Color.valueOf(color);
 
-        rowView.setBackgroundColor(color);
+        Drawable drawable = context.getResources().getDrawable(R.drawable.course_title_border);
+        drawable.mutate().setColorFilter(color, PorterDuff.Mode.SRC_IN);
+        titleText.setBackground(drawable);
+
+        Drawable progressDrawable = courseProgress.getProgressDrawable();
+        progressDrawable.mutate().setColorFilter(color, PorterDuff.Mode.MULTIPLY);
+        courseProgress.setProgressDrawable(progressDrawable);
+        //titleText.setBackgroundColor(color);
         titleText.setTextColor(Color.WHITE);
 
         return rowView;

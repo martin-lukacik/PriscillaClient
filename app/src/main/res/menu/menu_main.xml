@@ -5,12 +5,14 @@
 
     <item
         android:id="@+id/my_profile"
-        app:showAsAction="never"
+        app:showAsAction="always"
         android:title="My profile"
+        android:icon="@drawable/ic_person"
         android:orderInCategory="2" />
 
     <item android:id="@+id/leaderboard"
-        app:showAsAction="never"
+        app:showAsAction="always"
         android:title="Leaderboard"
+        android:icon="@drawable/ic_list"
         android:orderInCategory="3" />
 </menu>

@@ -41,6 +41,9 @@ public class MainActivity extends BaseActivity implements HttpResponse {
                 PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET}, 1);
         }
+
+        new GetUserParamsTask(this).execute();
+        new GetUserCoursesTask(this).execute();
     }
 
     public void sendPost() {

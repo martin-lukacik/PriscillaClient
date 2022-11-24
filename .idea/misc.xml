@@ -3,11 +3,16 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Martin/AndroidStudioProjects/PriscillaClient/app/src/main/res/drawable/course_border.xml" value="0.2405" />
+        <entry key="..\:/Users/Martin/AndroidStudioProjects/PriscillaClient/app/src/main/res/drawable/course_title_border.xml" value="0.2405" />
+        <entry key="..\:/Users/Martin/AndroidStudioProjects/PriscillaClient/app/src/main/res/drawable/ic_list.xml" value="0.2405" />
+        <entry key="..\:/Users/Martin/AndroidStudioProjects/PriscillaClient/app/src/main/res/drawable/ic_person.xml" value="0.2405" />
         <entry key="..\:/Users/Martin/AndroidStudioProjects/PriscillaClient/app/src/main/res/layout/activity_leaderboard.xml" value="0.17346014492753623" />
-        <entry key="..\:/Users/Martin/AndroidStudioProjects/PriscillaClient/app/src/main/res/layout/activity_main.xml" value="0.17346014492753623" />
-        <entry key="..\:/Users/Martin/AndroidStudioProjects/PriscillaClient/app/src/main/res/layout/listview_course.xml" value="0.17346014492753623" />
+        <entry key="..\:/Users/Martin/AndroidStudioProjects/PriscillaClient/app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="..\:/Users/Martin/AndroidStudioProjects/PriscillaClient/app/src/main/res/layout/listview_course.xml" value="0.25" />
         <entry key="..\:/Users/Martin/AndroidStudioProjects/PriscillaClient/app/src/main/res/layout/listview_leaderboard.xml" value="0.17346014492753623" />
         <entry key="..\:/Users/Martin/AndroidStudioProjects/PriscillaClient/app/src/main/res/menu/menu_language.xml" value="0.35462962962962963" />
+        <entry key="..\:/Users/Martin/AndroidStudioProjects/PriscillaClient/app/src/main/res/menu/menu_main.xml" value="0.2947916666666667" />
         <entry key="app/src/main/res/drawable/edittextc.xml" value="0.1215" />
         <entry key="app/src/main/res/drawable/edittextc_normal.xml" value="0.1215" />
         <entry key="app/src/main/res/drawable/flag_CZ.xml" value="0.1245" />
