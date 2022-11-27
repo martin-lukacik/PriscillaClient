@@ -1,24 +1,21 @@
 package com.example.priscillaclient;
 
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.TextView;
+
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.example.priscillaclient.api.GetUserCoursesTask;
 import com.example.priscillaclient.api.GetUserParamsTask;
 import com.example.priscillaclient.api.HttpResponse;
 import com.example.priscillaclient.models.Course;
-import com.example.priscillaclient.models.User;
 
 import org.json.JSONObject;
 
@@ -104,16 +101,6 @@ public class MainActivity extends BaseActivity implements HttpResponse {
 
         thread.start();
     }
-
-    public void getData(View view) {
-        new GetUserParamsTask(this)
-                .execute();
-        /*APILayer api = new APILayer();
-        api.getUserParameters();
-        while (api.thread.isAlive());
-        TextView tv = findViewById(R.id.output);
-        tv.setText(Client.getInstance().user.name + " " + Client.getInstance().user.surname);
-    */}
 
     CourseListAdapter adapter;
 
