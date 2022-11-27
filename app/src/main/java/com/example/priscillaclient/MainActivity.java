@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -114,33 +115,6 @@ public class MainActivity extends BaseActivity implements HttpResponse {
         tv.setText(Client.getInstance().user.name + " " + Client.getInstance().user.surname);
     */}
 
-    public void go(View view) {
-
-        if (Client.getInstance().hasValidToken()) {
-            TextView tv = findViewById(R.id.output);
-            tv.setText(Client.getInstance().token_type + "\n" + Client.getInstance().access_token);
-        } else {
-            TextView tv = findViewById(R.id.output);
-            tv.setText("Unauthorized");
-        }
-    }
-
-    public void getLanguageList(View view) {
-        TextView tv = findViewById(R.id.output);
-
-        String languages = "";
-
-        for (int i = 0; i < Client.getInstance().languageList.size(); ++i) {
-            languages += Client.getInstance().languageList.get(i).name + "\n";
-        }
-
-        tv.setText(languages);
-    }
-
-    public void getUserCourseList(View view) {
-        new GetUserCoursesTask(this).execute();
-    }
-
     CourseListAdapter adapter;
 
     @Override
@@ -148,11 +122,7 @@ public class MainActivity extends BaseActivity implements HttpResponse {
 
         super.onUpdate(response);
 
-        if (response instanceof User) {
-            User user = (User) response;
-            TextView tv = findViewById(R.id.output);
-            tv.setText("Response: " + Client.getInstance().user.name + " " + Client.getInstance().user.surname);
-        } else if (response instanceof ArrayList<?>) {
+        if (response instanceof ArrayList<?>) {
             ArrayList<Course> courses = (ArrayList<Course>) response;
             GridView courseListView = findViewById(R.id.courseListView);
 

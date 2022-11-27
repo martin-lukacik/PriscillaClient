@@ -15,4 +15,10 @@
         android:title="Leaderboard"
         android:icon="@drawable/ic_list"
         android:orderInCategory="3" />
+
+    <item android:id="@+id/logout"
+        app:showAsAction="always"
+        android:title="Log out"
+        android:icon="@drawable/ic_list"
+        android:orderInCategory="3" />
 </menu>

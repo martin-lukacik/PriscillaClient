@@ -1,11 +1,7 @@
 package com.example.priscillaclient.models;
 
-import com.example.priscillaclient.models.Course;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
 
 public class User {
     int user_id;
@@ -18,14 +14,14 @@ public class User {
     String theme_value;
     public String name;
     public String surname;
-    String email;
+    public String email;
 
     public Performance performance;
 
-    class Performance {
-        int xp;
-        int coins;
-        int level;
+    public class Performance {
+        public int xp;
+        public int coins;
+        public int level;
         // TODO badges
 
         public Performance(JSONObject json) throws JSONException {

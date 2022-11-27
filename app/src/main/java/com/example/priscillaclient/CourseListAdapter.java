@@ -38,6 +38,10 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
         TextView programText = rowView.findViewById(R.id.program_passed);
         ProgressBar courseProgress = rowView.findViewById(R.id.course_progress);
 
+        ImageView descriptionIcon = rowView.findViewById(R.id.ic_description);
+        ImageView codeIcon = rowView.findViewById(R.id.ic_code);
+        ImageView contactIcon = rowView.findViewById(R.id.ic_contact_support);
+
         titleText.setText(courses.get(i).name);
         subtitleText.setText(courses.get(i).description);
         contentText.setText(courses.get(i).getUserData("content_passed") + " / " + courses.get(i).getUserData("content_count"));
@@ -45,12 +49,13 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
         programText.setText(courses.get(i).getUserData("program_passed") + " / " + courses.get(i).getUserData("program_count"));
 
         int progress = (int) ((courses.get(i).getUserData("passed") / ((double) courses.get(i).getUserData("all"))) * 100);
-        Log.i("PASSED", "" + courses.get(i).getUserData("passed"));
-        Log.i("ALL", "" + courses.get(i).getUserData("all"));
-        Log.i("PROGRESS", "" + progress);
         courseProgress.setProgress(progress);
 
         int color = Color.parseColor(courses.get(i).area_color);
+
+        descriptionIcon.setColorFilter(color);
+        codeIcon.setColorFilter(color);
+        contactIcon.setColorFilter(color);
 
         Drawable drawable = context.getResources().getDrawable(R.drawable.course_title_border);
         drawable.mutate().setColorFilter(color, PorterDuff.Mode.SRC_IN);

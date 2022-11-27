@@ -29,12 +29,17 @@ public class BaseActivity extends AppCompatActivity implements HttpResponse {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
         switch (item.getItemId()) {
             case R.id.my_profile:
+
+                intent = new Intent(BaseActivity.this, ProfileActivity.class);
+                startActivity(intent);
+
                 return true;
             case R.id.leaderboard:
 
-                Intent intent = new Intent(BaseActivity.this, LeaderboardActivity.class);
+                intent = new Intent(BaseActivity.this, LeaderboardActivity.class);
                 startActivity(intent);
 
                 return true;
