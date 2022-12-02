@@ -1,35 +1,27 @@
 package com.example.priscillaclient;
 
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LevelListDrawable;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.Contacts;
-import android.text.Editable;
 import android.text.Html;
 import android.text.InputFilter;
-import android.text.Spanned;
-import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -37,17 +29,17 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.example.priscillaclient.api.GetActiveLessons;
 import com.example.priscillaclient.api.GetActiveTasks;
 import com.example.priscillaclient.api.HttpResponse;
+import com.example.priscillaclient.api.TaskEvaluate;
 import com.example.priscillaclient.models.Lesson;
 import com.example.priscillaclient.models.Task;
+import com.example.priscillaclient.models.TaskEval;
 import com.example.priscillaclient.models.TaskType;
 import com.google.android.material.navigation.NavigationView;
 
-import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 
 public class TaskActivity extends AppCompatActivity implements
-        HttpResponse,
+        HttpResponse<Object>,
         NavigationView.OnNavigationItemSelectedListener,
         Html.ImageGetter {
 
@@ -61,6 +53,8 @@ public class TaskActivity extends AppCompatActivity implements
 
     boolean updateLayout = true;
 
+    LinearLayout taskLayout;
+
     EditText taskContent;
     EditorFilter filter;
 
@@ -69,6 +63,7 @@ public class TaskActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task);
 
+        taskLayout = findViewById(R.id.taskLayout);
         taskContent = findViewById(R.id.taskContent);
 
         Intent intent = getIntent();
@@ -89,84 +84,93 @@ public class TaskActivity extends AppCompatActivity implements
         }
     }
 
-    @Override
-    public void onUpdate(Object response) {
+    public void updateLessons(ArrayList<Lesson> lessons) {
 
-        if (((ArrayList<?>) response).get(0) instanceof Lesson) {
-            ArrayList<Lesson> lessons = (ArrayList<Lesson>) response;
+        if (currentLesson == -1 || currentLessonId == -1) {
+            new GetActiveTasks(this, courseId, chapterId, lessons.get(0).id).execute();
+        } else {
+            new GetActiveTasks(this, courseId, chapterId, currentLessonId).execute();
+        }
 
-            if (currentLesson == -1 || currentLessonId == -1) {
-                new GetActiveTasks(this, courseId, chapterId, lessons.get(0).id).execute();
-            } else {
-                new GetActiveTasks(this, courseId, chapterId, currentLessonId).execute();
+        if (updateLayout) {
+            updateLayout = false;
+            NavigationView navigationView = findViewById(R.id.navigationView);
+            Menu menu = navigationView.getMenu();
+            menu.clear();
+
+            menu.add("Lessons");
+            menu.getItem(0).setEnabled(false);
+
+            navigationView.bringToFront();
+
+            for (Lesson lesson : lessons) {
+                MenuItem item = menu.add(lesson.name);
+
+                item.setOnMenuItemClickListener((e) -> {
+                    currentLesson = item.getItemId();
+                    currentLessonId = lesson.id;
+                    onUpdate(lessons);
+                    DrawerLayout drawer = findViewById(R.id.drawerLayout);
+                    drawer.closeDrawers();
+                    return false;
+                });
             }
 
-            if (updateLayout) {
-                updateLayout = false;
-                NavigationView navigationView = findViewById(R.id.navigationView);
-                Menu menu = navigationView.getMenu();
-                menu.clear();
+            navigationView.invalidate();
+        }
+    }
 
-                menu.add("Lessons");
-                menu.getItem(0).setEnabled(false);
+    public void updateTasks(ArrayList<Task> tasks) {
+        clearTaskLayout();
 
-                navigationView.bringToFront();
+        Task task = tasks.get(currentTask);
 
-                for (Lesson lesson : lessons) {
-                    MenuItem item = menu.add(lesson.name);
+        taskContent.setText(Html.fromHtml(task.content, TaskActivity.this, null));
+        taskContent.setMovementMethod(new ScrollingMovementMethod());
 
-                    item.setOnMenuItemClickListener((e) -> {
-                        currentLesson = item.getItemId();
-                        currentLessonId = lesson.id;
-                        onUpdate(lessons);
-                        DrawerLayout drawer = findViewById(R.id.drawerLayout);
-                        drawer.closeDrawers();
-                        return false;
-                    });
-                }
-
-                navigationView.invalidate();
-            }
-        } else if (((ArrayList<?>) response).get(0) instanceof Task) {
-
-            clearTaskLayout();
-
-            tasks = (ArrayList<Task>) response;
-
-            Task task = tasks.get(currentTask);
-
-            taskContent.setText(Html.fromHtml(task.content, TaskActivity.this, null));
-            taskContent.setMovementMethod(new ScrollingMovementMethod());
-
+        if (task.type == TaskType.TASK_CHOICE) {
             if (task.answers != null) {
+                LinearLayout taskLayout = findViewById(R.id.taskLayout);
+                RadioGroup radioGroup = new RadioGroup(this);
+                radioGroup.setTag("CLEAR");
+
                 for (String answer : task.answers) {
-                    LinearLayout taskLayout = findViewById(R.id.taskLayout);
-                    CheckBox checkBox = new CheckBox(this);
+                    RadioButton checkBox = new RadioButton(this);
                     checkBox.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                     checkBox.setText(answer);
-                    checkBox.setTag("CLEAR");
-                    taskLayout.addView(checkBox);
+                    radioGroup.addView(checkBox);
                 }
-            }
-
-            if (task.type == TaskType.TASK_FILL) {
-                // TODO compare taskContent to task.content
-                // TODO extract differences around positions of EVERY start and end question mark
-                task.content = task.content.replaceAll("§§_§§", "|███|");
-                taskContent.setFocusableInTouchMode(true);
-                taskContent.setText(Html.fromHtml(task.content, TaskActivity.this, null));
-                taskContent.setMovementMethod(new ScrollingMovementMethod());
-
-                filter = new EditorFilter(task);
-                taskContent.setFilters(new InputFilter[] { filter });
+                taskLayout.addView(radioGroup);
             }
         }
 
-        // TODO Collections.sort(agentDtoList, (o1, o2) -> o1.getCustomerCount() - o2.getCustomerCount());
+        if (task.type == TaskType.TASK_FILL) {
+            // TODO compare taskContent to task.content
+            // TODO extract differences around positions of EVERY start and end question mark
+            task.content = task.content.replaceAll("§§_§§", "|███|");
+            taskContent.setFocusableInTouchMode(true);
+            taskContent.setText(Html.fromHtml(task.content, TaskActivity.this, null));
+            taskContent.setMovementMethod(new ScrollingMovementMethod());
+
+            filter = new EditorFilter(task);
+            taskContent.setFilters(new InputFilter[] { filter });
+        }
+    }
+
+    @Override
+    public void onUpdate(Object response) {
+        try {
+            if (((ArrayList<?>) response).get(0) instanceof Lesson)
+                updateLessons((ArrayList<Lesson>) response);
+            else if (((ArrayList<?>) response).get(0) instanceof Task)
+                updateTasks((ArrayList<Task>) response);
+        } catch (Exception ignore) {
+            TaskEval taskEval = (TaskEval) response;
+            Toast.makeText(this, "Rating: " + taskEval.rating, Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void clearTaskLayout() {
-        LinearLayout taskLayout = findViewById(R.id.taskLayout);
 
         taskContent.setFocusable(false);
         taskContent.setFilters(new InputFilter[] { });
@@ -180,6 +184,7 @@ public class TaskActivity extends AppCompatActivity implements
     }
 
     public void submit(View view) {
+        ArrayList<Task> tasks = Client.getInstance().tasks;
         if (tasks != null) {
             Task task = tasks.get(currentTask);
             if (task.type == TaskType.TASK_FILL) {
@@ -191,10 +196,28 @@ public class TaskActivity extends AppCompatActivity implements
                     userAnswers.add(taskContent.getText().toString().substring(start + 1, end + 1));
                 }
             }
+
+            if (task.type == TaskType.TASK_CHOICE) {
+                int index = -1;
+                for (int i = taskLayout.getChildCount() - 1; i >= 0; --i) {
+                    View v = taskLayout.getChildAt(i);
+                    if (v instanceof RadioGroup) {
+                        RadioGroup radioGroup = (RadioGroup) v;
+
+                        for (int j = 0; j < radioGroup.getChildCount(); ++j) {
+                            if (((RadioButton) radioGroup.getChildAt(j)).isChecked()) {
+                                index = j;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                new TaskEvaluate(this).execute("[\"" + task.answers.get(index) + "\"]", task.task_id + "", task.task_type_id + "", "10");
+            }
         }
     }
 
-    ArrayList<Task> tasks = null;
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -203,6 +226,7 @@ public class TaskActivity extends AppCompatActivity implements
     }
 
     public void nextTask(View view) {
+        ArrayList<Task> tasks = Client.getInstance().tasks;
         if (tasks.size() > currentTask + 1) {
             ++currentTask;
             onUpdate(tasks);
@@ -210,6 +234,7 @@ public class TaskActivity extends AppCompatActivity implements
     }
 
     public void previousTask(View view) {
+        ArrayList<Task> tasks = Client.getInstance().tasks;
         if (currentTask - 1 >= 0) {
             --currentTask;
             onUpdate(tasks);

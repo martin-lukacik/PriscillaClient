@@ -7,8 +7,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class Task {
-    int task_id;
-    int task_type_id;
+    public int task_id;
+    public int task_type_id;
     int score;
     int max_score;
     int first_time;
