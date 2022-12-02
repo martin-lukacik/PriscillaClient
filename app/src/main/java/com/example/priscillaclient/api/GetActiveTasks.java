@@ -20,9 +20,17 @@ import java.util.Scanner;
 public class GetActiveTasks extends AsyncTask<String, String, ArrayList<Task>> {
 
     final Context context;
-    public GetActiveTasks(Context context) {
+
+    int courseId;
+    int chapterId;
+    int lessonId;
+
+    public GetActiveTasks(Context context, int courseId, int chapterId, int lessonId) {
         super();
         this.context = context;
+        this.courseId = courseId;
+        this.chapterId = chapterId;
+        this.lessonId = lessonId;
     }
 
     @Override
@@ -30,7 +38,7 @@ public class GetActiveTasks extends AsyncTask<String, String, ArrayList<Task>> {
 
         try {
 
-            HttpURLConnection connection = HttpURLConnectionFactory.getConnection("/get-active-chapters2/", "GET", false);
+            HttpURLConnection connection = HttpURLConnectionFactory.getConnection("/get-active-tasks2/" + courseId + "/" + chapterId + "/" + lessonId, "GET", false);
 
             int status = connection.getResponseCode();
             String message = connection.getResponseMessage();
@@ -43,15 +51,15 @@ public class GetActiveTasks extends AsyncTask<String, String, ArrayList<Task>> {
             }
 
 
-            JSONArray json = new JSONObject(responseStr).getJSONArray("chapter_list");
+            JSONArray json = new JSONObject(responseStr).getJSONArray("task_list");
 
             Client client = Client.getInstance();
 
-            client.chapters = new ArrayList<>();
+            client.tasks = new ArrayList<>();
 
             for (int i = 0; i < json.length(); ++i) {
-                Chapter c = new Chapter(json.getJSONObject(i));
-                client.chapters.add(c);
+                Task t = new Task(json.getJSONObject(i));
+                client.tasks.add(t);
             }
 
             return client.tasks;

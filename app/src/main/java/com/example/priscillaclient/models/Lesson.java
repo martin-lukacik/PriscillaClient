@@ -5,9 +5,9 @@ import org.json.JSONObject;
 
 public class Lesson {
     int order;
-    int id;
+    public int id;
 
-    String name;
+    public String name;
 
     public int tasks_finished;
     public int tasks_nonfinished;

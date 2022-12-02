@@ -21,16 +21,18 @@ import java.util.ArrayList;
 
 public class ChapterActivity extends AppCompatActivity implements HttpResponse {
 
+    int courseId = -1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chapter);
 
         Intent intent = getIntent();
-        int id = intent.getExtras().getInt("course_id", -1);
-        Log.i("Course ID", "=" + id);
+        courseId = intent.getExtras().getInt("course_id", -1);
+        Log.i("Course ID", "=" + courseId);
 
-        new GetActiveChaptersTask(this, id).execute();
+        new GetActiveChaptersTask(this, courseId).execute();
 
         // https://app.priscilla.fitped.eu/get-active-chapters2/{COURSE_ID}
     }
@@ -38,6 +40,10 @@ public class ChapterActivity extends AppCompatActivity implements HttpResponse {
     ArrayAdapter<String> adapter;
     @Override
     public void onUpdate(Object response) {
+
+        if (response == null)
+            return;
+
         ArrayList<Chapter> chapters = (ArrayList<Chapter>) response;
 
         ListView chaptersListView = findViewById(R.id.chapterListView);
@@ -62,6 +68,7 @@ public class ChapterActivity extends AppCompatActivity implements HttpResponse {
 
         Intent intent = new Intent(ChapterActivity.this, TaskActivity.class);
         intent.putExtra("chapter_id", client.chapters.get(i).id);
+        intent.putExtra("course_id", courseId);
         startActivity(intent);
     }
 }

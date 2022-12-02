@@ -21,17 +21,17 @@ import java.util.Scanner;
 public class GetActiveLessons extends AsyncTask<String, String, ArrayList<Lesson>> {
 
     final Context context;
-    final int activeCourseId;
-    public GetActiveLessons(Context context, int activeCourseId) {
+    final int chapterId;
+    public GetActiveLessons(Context context, int chapterId) {
         super();
         this.context = context;
-        this.activeCourseId = activeCourseId;
+        this.chapterId = chapterId;
     }
 
     @Override
     protected ArrayList<Lesson> doInBackground(String... strings) {
         try {
-            HttpURLConnection connection = HttpURLConnectionFactory.getConnection("/get-active-lessons2/" + activeCourseId, "GET", false);
+            HttpURLConnection connection = HttpURLConnectionFactory.getConnection("/get-active-lessons2/" + chapterId, "GET", false);
 
             int status = connection.getResponseCode();
             String message = connection.getResponseMessage();
