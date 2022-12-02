@@ -10,7 +10,11 @@ import android.graphics.drawable.LevelListDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.Html;
+import android.text.InputFilter;
+import android.text.Spanned;
+import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Base64;
 import android.util.Log;
@@ -19,6 +23,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toolbar;
 
@@ -30,6 +37,7 @@ import com.example.priscillaclient.api.GetActiveTasks;
 import com.example.priscillaclient.api.HttpResponse;
 import com.example.priscillaclient.models.Lesson;
 import com.example.priscillaclient.models.Task;
+import com.example.priscillaclient.models.TaskType;
 import com.google.android.material.navigation.NavigationView;
 
 import java.io.InputStream;
@@ -49,10 +57,16 @@ public class TaskActivity extends AppCompatActivity implements
 
     int currentTask = 0;
 
+    boolean updateLayout = true;
+
+    EditText taskContent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task);
+
+        taskContent = findViewById(R.id.taskContent);
 
         Intent intent = getIntent();
 
@@ -71,9 +85,6 @@ public class TaskActivity extends AppCompatActivity implements
             new GetActiveTasks(this, courseId, chapterId, currentLessonId).execute();
         }
     }
-
-
-    boolean updateLayout = true;
 
     @Override
     public void onUpdate(Object response) {
@@ -114,18 +125,60 @@ public class TaskActivity extends AppCompatActivity implements
                 navigationView.invalidate();
             }
         } else if (((ArrayList<?>) response).get(0) instanceof Task) {
-            TextView taskContent = findViewById(R.id.taskContent);
+
+            clearTaskLayout();
+
+            taskContent.setEnabled(false);
 
             tasks = (ArrayList<Task>) response;
 
-            String content = tasks.get(currentTask).content;
+            Task task = tasks.get(currentTask);
 
-            taskContent.setText(Html.fromHtml(content, TaskActivity.this, null));
+            taskContent.setText(Html.fromHtml(task.content, TaskActivity.this, null));
             taskContent.setMovementMethod(new ScrollingMovementMethod());
 
+            if (task.answers != null) {
+                for (String answer : task.answers) {
+                    LinearLayout taskLayout = findViewById(R.id.taskLayout);
+                    CheckBox checkBox = new CheckBox(this);
+                    checkBox.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                    checkBox.setText(answer);
+                    checkBox.setTag("CLEAR");
+                    taskLayout.addView(checkBox);
+                }
+            }
+
+            if (task.type == TaskType.TASK_FILL) {
+                // TODO compare taskContent to task.content
+                // TODO extract differences around positions of EVERY start and end question mark
+                task.content = task.content.replaceAll("§§_§§", "?___?");
+                taskContent.setEnabled(true);
+                taskContent.setText(Html.fromHtml(task.content, TaskActivity.this, null));
+                taskContent.setMovementMethod(new ScrollingMovementMethod());
+
+                InputFilter filter = new EditorFilter(task);
+
+                taskContent.setFilters(new InputFilter[] { filter });
+
+                //taskContent.addTextChangedListener(watcher);
+            }
         }
 
         // TODO Collections.sort(agentDtoList, (o1, o2) -> o1.getCustomerCount() - o2.getCustomerCount());
+    }
+
+    public void clearTaskLayout() {
+        LinearLayout taskLayout = findViewById(R.id.taskLayout);
+
+
+        taskContent.setFilters(new InputFilter[] {});
+
+        for (int i = taskLayout.getChildCount() - 1; i >= 0; --i) {
+            View view = taskLayout.getChildAt(i);
+            if (view.getTag() != null) {
+                taskLayout.removeView(view);
+            }
+        }
     }
 
     ArrayList<Task> tasks = null;
