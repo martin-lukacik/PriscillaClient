@@ -10,6 +10,7 @@ import android.graphics.drawable.LevelListDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Contacts;
 import android.text.Editable;
 import android.text.Html;
 import android.text.InputFilter;
@@ -27,6 +28,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.Toolbar;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -60,6 +62,7 @@ public class TaskActivity extends AppCompatActivity implements
     boolean updateLayout = true;
 
     EditText taskContent;
+    EditorFilter filter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,8 +131,6 @@ public class TaskActivity extends AppCompatActivity implements
 
             clearTaskLayout();
 
-            taskContent.setEnabled(false);
-
             tasks = (ArrayList<Task>) response;
 
             Task task = tasks.get(currentTask);
@@ -151,16 +152,13 @@ public class TaskActivity extends AppCompatActivity implements
             if (task.type == TaskType.TASK_FILL) {
                 // TODO compare taskContent to task.content
                 // TODO extract differences around positions of EVERY start and end question mark
-                task.content = task.content.replaceAll("§§_§§", "?___?");
-                taskContent.setEnabled(true);
+                task.content = task.content.replaceAll("§§_§§", "|███|");
+                taskContent.setFocusableInTouchMode(true);
                 taskContent.setText(Html.fromHtml(task.content, TaskActivity.this, null));
                 taskContent.setMovementMethod(new ScrollingMovementMethod());
 
-                InputFilter filter = new EditorFilter(task);
-
+                filter = new EditorFilter(task);
                 taskContent.setFilters(new InputFilter[] { filter });
-
-                //taskContent.addTextChangedListener(watcher);
             }
         }
 
@@ -170,13 +168,28 @@ public class TaskActivity extends AppCompatActivity implements
     public void clearTaskLayout() {
         LinearLayout taskLayout = findViewById(R.id.taskLayout);
 
-
-        taskContent.setFilters(new InputFilter[] {});
+        taskContent.setFocusable(false);
+        taskContent.setFilters(new InputFilter[] { });
 
         for (int i = taskLayout.getChildCount() - 1; i >= 0; --i) {
             View view = taskLayout.getChildAt(i);
             if (view.getTag() != null) {
                 taskLayout.removeView(view);
+            }
+        }
+    }
+
+    public void submit(View view) {
+        if (tasks != null) {
+            Task task = tasks.get(currentTask);
+            if (task.type == TaskType.TASK_FILL) {
+                ArrayList<String> userAnswers = new ArrayList<>();
+                for (int i = 0; i < filter.startPositions.size(); ++i) {
+                    int start = filter.startPositions.get(i);
+                    int end = filter.endPositions.get(i);
+
+                    userAnswers.add(taskContent.getText().toString().substring(start + 1, end + 1));
+                }
             }
         }
     }

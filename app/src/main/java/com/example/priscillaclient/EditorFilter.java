@@ -9,7 +9,6 @@ import java.util.ArrayList;
 
 public class EditorFilter implements InputFilter {
 
-
     Task task;
 
     public EditorFilter(Task task) {
@@ -17,8 +16,8 @@ public class EditorFilter implements InputFilter {
         this.task = task;
     }
 
-    ArrayList<Integer> startPositions = new ArrayList<>();
-    ArrayList<Integer> endPositions = new ArrayList<>();
+    public ArrayList<Integer> startPositions = new ArrayList<>();
+    public ArrayList<Integer> endPositions = new ArrayList<>();
 
     @Override
     public CharSequence filter(CharSequence str, int sstart, int send, Spanned dest, int start, int end) {
@@ -26,7 +25,7 @@ public class EditorFilter implements InputFilter {
         startPositions.clear();
         endPositions.clear();
         for (int i = 0; i < dest.length(); ++i) {
-            if (dest.charAt(i) == '?') {
+            if (dest.charAt(i) == '|') {
                 if (startPositions.size() == endPositions.size()) {
                     startPositions.add(i);
                 } else {
@@ -35,23 +34,20 @@ public class EditorFilter implements InputFilter {
             }
         }
 
-        boolean flag = false;
         for (int i = 0; i < startPositions.size(); ++i) {
 
-            if (start > startPositions.get(i) && end <= endPositions.get(i)) {
-                flag = true;
-                break;
+            int startPos = startPositions.get(i);
+            int endPos = endPositions.get(i);
+
+            if (start > startPos && end <= endPos) {
+                return null;
             }
         }
 
-        if (flag == false) {
-
-            if (str.equals("") && start < end) {
-                return dest.subSequence(start, end);
-            }
-
-            return "";
+        if (str.equals("") && start < end) {
+            return dest.subSequence(start, end);
         }
-        return null;
+
+        return "";
     }
 }
