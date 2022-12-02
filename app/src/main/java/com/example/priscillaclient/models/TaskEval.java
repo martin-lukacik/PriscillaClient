@@ -15,7 +15,7 @@ public class TaskEval {
 
         public Answer(JSONObject json) throws JSONException {
             answer = json.getString("answer");
-            feedback = json.getString("feedback");
+            feedback = json.optString("feedback");
             rating = json.getInt("rating");
         }
     }

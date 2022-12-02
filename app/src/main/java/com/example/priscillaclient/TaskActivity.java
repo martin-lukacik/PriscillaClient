@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -35,6 +36,8 @@ import com.example.priscillaclient.models.Task;
 import com.example.priscillaclient.models.TaskEval;
 import com.example.priscillaclient.models.TaskType;
 import com.google.android.material.navigation.NavigationView;
+
+import org.json.JSONArray;
 
 import java.util.ArrayList;
 
@@ -120,12 +123,31 @@ public class TaskActivity extends AppCompatActivity implements
         }
     }
 
+    WebView webView;
+
     public void updateTasks(ArrayList<Task> tasks) {
         clearTaskLayout();
 
+
         Task task = tasks.get(currentTask);
 
-        taskContent.setText(Html.fromHtml(task.content, TaskActivity.this, null));
+        // WEBVIEW TEST
+        // TODO webview when reading task, otherwise edittext for interaction
+        // TODO webview can maybe catch input events?
+        if (webView != null) {
+            taskLayout.removeView(webView);
+        }
+        webView = new WebView(this);
+        webView.getSettings().setJavaScriptEnabled(true);
+        String css = ".ql-syntax{background-color:#dcdcdc;color:#000;overflow:visible}.myCode,.myParagraph{padding:1px;margin:1px;cursor:move;float:left}.CodeMirror{border:1px solid #eee;border:1px solid #000;height:auto}";
+        webView.loadData(css, "text/css; charset=utf-8", "UTF-8");
+        webView.loadData(task.content, "text/html; charset=utf-8", "UTF-8");
+        taskLayout.addView(webView, 0);
+        // WEBVIEW TEST END
+
+        Log.i("CONTENT", task.content.replaceAll("<pre class=\"ql-syntax\" spellcheck=\"false\">", "<blockquote style=\"color:red\">").replaceAll("</pre>", "</blockquote>"));
+
+        taskContent.setText(Html.fromHtml(task.content.replaceAll("<pre class=\"ql-syntax\" spellcheck=\"false\">", "<font face=\"monospace\">").replaceAll("</pre>", "</blockquote>").replaceAll("&nbsp;", "\t"), TaskActivity.this, null));
         taskContent.setMovementMethod(new ScrollingMovementMethod());
 
         if (task.type == TaskType.TASK_CHOICE) {
@@ -187,14 +209,18 @@ public class TaskActivity extends AppCompatActivity implements
         ArrayList<Task> tasks = Client.getInstance().tasks;
         if (tasks != null) {
             Task task = tasks.get(currentTask);
+            filter.clear(taskContent.getText());
             if (task.type == TaskType.TASK_FILL) {
                 ArrayList<String> userAnswers = new ArrayList<>();
                 for (int i = 0; i < filter.startPositions.size(); ++i) {
                     int start = filter.startPositions.get(i);
                     int end = filter.endPositions.get(i);
 
-                    userAnswers.add(taskContent.getText().toString().substring(start + 1, end + 1));
+                    userAnswers.add(taskContent.getText().toString().substring(start + 1, end));
+
                 }
+
+                new TaskEvaluate(this).execute(new JSONArray(userAnswers).toString(), task.task_id + "", task.task_type_id + "", "10");
             }
 
             if (task.type == TaskType.TASK_CHOICE) {

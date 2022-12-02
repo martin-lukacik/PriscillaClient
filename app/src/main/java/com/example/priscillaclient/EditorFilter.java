@@ -19,9 +19,7 @@ public class EditorFilter implements InputFilter {
     public ArrayList<Integer> startPositions = new ArrayList<>();
     public ArrayList<Integer> endPositions = new ArrayList<>();
 
-    @Override
-    public CharSequence filter(CharSequence str, int sstart, int send, Spanned dest, int start, int end) {
-
+    public void clear(Spanned dest) {
         startPositions.clear();
         endPositions.clear();
         for (int i = 0; i < dest.length(); ++i) {
@@ -33,6 +31,12 @@ public class EditorFilter implements InputFilter {
                 }
             }
         }
+    }
+
+    @Override
+    public CharSequence filter(CharSequence str, int sstart, int send, Spanned dest, int start, int end) {
+
+        clear(dest);
 
         for (int i = 0; i < startPositions.size(); ++i) {
 
