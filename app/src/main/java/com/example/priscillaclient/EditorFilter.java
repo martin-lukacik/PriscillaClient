@@ -37,15 +37,21 @@ public class EditorFilter implements InputFilter {
 
         boolean flag = false;
         for (int i = 0; i < startPositions.size(); ++i) {
+
             if (start > startPositions.get(i) && end <= endPositions.get(i)) {
                 flag = true;
                 break;
             }
         }
 
-        if (flag == false)
-            return "";
+        if (flag == false) {
 
+            if (str.equals("") && start < end) {
+                return dest.subSequence(start, end);
+            }
+
+            return "";
+        }
         return null;
     }
 }
