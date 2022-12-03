@@ -1,5 +1,6 @@
 package com.example.priscillaclient;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -16,6 +17,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -125,9 +127,24 @@ public class TaskActivity extends AppCompatActivity implements
 
     WebView webView;
 
+    class TaskViewInterface {
+
+        Context context;
+        String data;
+
+        public TaskViewInterface(Context context){
+            this.context = context;
+        }
+
+        @JavascriptInterface
+        public void sendData(String data) {
+            this.data = data;
+            taskContent.setText(data);
+        }
+    }
+
     public void updateTasks(ArrayList<Task> tasks) {
         clearTaskLayout();
-
 
         Task task = tasks.get(currentTask);
 
@@ -139,9 +156,14 @@ public class TaskActivity extends AppCompatActivity implements
         }
         webView = new WebView(this);
         webView.getSettings().setJavaScriptEnabled(true);
+
+        // TODO webview oninput/onchange -> process() -> collect all inputs and turn them into json string
         String css = ".ql-syntax{background-color:#dcdcdc;color:#000;overflow:visible}.myCode,.myParagraph{padding:1px;margin:1px;cursor:move;float:left}.CodeMirror{border:1px solid #eee;border:1px solid #000;height:auto}";
         webView.loadData(css, "text/css; charset=utf-8", "UTF-8");
-        webView.loadData(task.content, "text/html; charset=utf-8", "UTF-8");
+        //webView.loadData(task.content, "text/html; charset=utf-8", "UTF-8");
+        webView.loadData("<script>function process() { let val = document.getElementById(\"input\").value; Android.sendData(val); }</script><input type=\"text\" id=\"input\"><button onclick=\"return process();\">Send</button>", "text/html; charset=utf-8", "UTF-8");
+        webView.addJavascriptInterface(new TaskViewInterface(this), "Android");
+
         taskLayout.addView(webView, 0);
         // WEBVIEW TEST END
 
