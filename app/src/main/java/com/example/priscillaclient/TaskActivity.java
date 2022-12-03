@@ -1,5 +1,7 @@
 package com.example.priscillaclient;
 
+import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -18,7 +20,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.JavascriptInterface;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -139,8 +144,41 @@ public class TaskActivity extends AppCompatActivity implements
         @JavascriptInterface
         public void sendData(String data) {
             this.data = data;
-            taskContent.setText(data);
+            Toast.makeText(this.context, data, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    TaskViewInterface jsInterface = new TaskViewInterface(this);
+
+    public void LOADWEBVIEW(Task task) {
+        // WEBVIEW TEST
+        // TODO webview when reading task, otherwise edittext for interaction
+        // TODO webview can maybe catch input events?
+        if (webView != null) {
+            webView.removeJavascriptInterface("Android");
+            taskLayout.removeView(webView);
+        }
+
+        webView = new WebView(this);
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.addJavascriptInterface(jsInterface, "Android");
+        taskLayout.addView(webView, 0);
+
+        // TODO webview oninput/onchange -> process() -> collect all inputs and turn them into json string
+        String css = "<style>.ql-syntax{background-color:#dcdcdc;color:#000;overflow:visible}.myCode,.myParagraph{padding:1px;margin:1px;cursor:move;float:left}.CodeMirror{border:1px solid #eee;border:1px solid #000;height:auto}</style>";
+        //webView.loadData(css, "text/css; charset=utf-8", "UTF-8");
+        //webView.loadData(task.content, "text/html; charset=utf-8", "UTF-8");
+
+        //String javascript = "<script>function process() { let arr = []; let val = document.querySelectorAll(\".answer\"); for (let i = 0; i < val.length; ++i) { arr.push(val[i].value); } Android.sendData(JSON.stringify(arr)); }</script>";
+        String javascript = "<script>function process() { let arr = []; let els = document.querySelectorAll(\".answer\"); for (let i = 0; i < els.length; ++i) { arr.push(els[i].value); } Android.sendData(JSON.stringify(arr)); }</script>";
+
+        String content = task.content.replaceAll("§§_§§", "<input class=\"answer\" type=\"text\" oninput=\"process();\">");
+
+        Log.i("CONTENT_WEB", javascript + content);
+
+        webView.loadData(javascript + content + "<button onclick=\"return process();\">Send</button>", "text/html; charset=utf-8", "UTF-8");
+
+        // WEBVIEW TEST END
     }
 
     public void updateTasks(ArrayList<Task> tasks) {
@@ -148,26 +186,7 @@ public class TaskActivity extends AppCompatActivity implements
 
         Task task = tasks.get(currentTask);
 
-        // WEBVIEW TEST
-        // TODO webview when reading task, otherwise edittext for interaction
-        // TODO webview can maybe catch input events?
-        if (webView != null) {
-            taskLayout.removeView(webView);
-        }
-        webView = new WebView(this);
-        webView.getSettings().setJavaScriptEnabled(true);
-
-        // TODO webview oninput/onchange -> process() -> collect all inputs and turn them into json string
-        String css = ".ql-syntax{background-color:#dcdcdc;color:#000;overflow:visible}.myCode,.myParagraph{padding:1px;margin:1px;cursor:move;float:left}.CodeMirror{border:1px solid #eee;border:1px solid #000;height:auto}";
-        webView.loadData(css, "text/css; charset=utf-8", "UTF-8");
-        //webView.loadData(task.content, "text/html; charset=utf-8", "UTF-8");
-        webView.loadData("<script>function process() { let val = document.getElementById(\"input\").value; Android.sendData(val); }</script><input type=\"text\" id=\"input\"><button onclick=\"return process();\">Send</button>", "text/html; charset=utf-8", "UTF-8");
-        webView.addJavascriptInterface(new TaskViewInterface(this), "Android");
-
-        taskLayout.addView(webView, 0);
-        // WEBVIEW TEST END
-
-        Log.i("CONTENT", task.content.replaceAll("<pre class=\"ql-syntax\" spellcheck=\"false\">", "<blockquote style=\"color:red\">").replaceAll("</pre>", "</blockquote>"));
+        LOADWEBVIEW(task);
 
         taskContent.setText(Html.fromHtml(task.content.replaceAll("<pre class=\"ql-syntax\" spellcheck=\"false\">", "<font face=\"monospace\">").replaceAll("</pre>", "</blockquote>").replaceAll("&nbsp;", "\t"), TaskActivity.this, null));
         taskContent.setMovementMethod(new ScrollingMovementMethod());
