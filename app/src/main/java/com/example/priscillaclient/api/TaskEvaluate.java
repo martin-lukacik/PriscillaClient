@@ -28,6 +28,7 @@ public class TaskEvaluate extends AsyncTask<String, String, TaskEval> {
 
     @Override
     protected TaskEval doInBackground(String... strings) {
+        Log.i("TASK_EVAL", "Evaluating task");
         try {
             HttpURLConnection connection = HttpURLConnectionFactory.getConnection("/task-evaluate2", "POST", true);
 
@@ -38,6 +39,8 @@ public class TaskEvaluate extends AsyncTask<String, String, TaskEval> {
             json.put("task_type_id", strings[2]);
             json.put("time_length", strings[3]);
 
+            Log.i("TASK_EVAL", "Building json");
+
             Log.i("JSON", json.toString());
             DataOutputStream os = new DataOutputStream(connection.getOutputStream());
             os.writeBytes(json.toString());
@@ -45,8 +48,8 @@ public class TaskEvaluate extends AsyncTask<String, String, TaskEval> {
             os.flush();
             os.close();
 
-            Log.i("STATUS", String.valueOf(connection.getResponseCode()));
-            Log.i("MSG", connection.getResponseMessage());
+            Log.i("TASK_STATUS", String.valueOf(connection.getResponseCode()));
+            Log.i("TASK_MSG", connection.getResponseMessage());
 
             // RESPONSE
 
@@ -60,7 +63,7 @@ public class TaskEvaluate extends AsyncTask<String, String, TaskEval> {
             responseStreamReader.close();
 
             JSONObject response = new JSONObject(stringBuilder.toString());
-            Log.i("RESPONSE", response.toString());
+            Log.i("TASK_RESPONSE", response.toString());
 
             connection.disconnect();
 

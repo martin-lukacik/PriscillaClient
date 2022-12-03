@@ -22,6 +22,7 @@ import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.EditText;
@@ -135,7 +136,7 @@ public class TaskActivity extends AppCompatActivity implements
     class TaskViewInterface {
 
         Context context;
-        String data;
+        public String data;
 
         public TaskViewInterface(Context context){
             this.context = context;
@@ -144,50 +145,58 @@ public class TaskActivity extends AppCompatActivity implements
         @JavascriptInterface
         public void sendData(String data) {
             this.data = data;
-            Toast.makeText(this.context, data, Toast.LENGTH_SHORT).show();
         }
     }
 
     TaskViewInterface jsInterface = new TaskViewInterface(this);
 
     public void LOADWEBVIEW(Task task) {
-        // WEBVIEW TEST
-        // TODO webview when reading task, otherwise edittext for interaction
-        // TODO webview can maybe catch input events?
-        if (webView != null) {
-            webView.removeJavascriptInterface("Android");
-            taskLayout.removeView(webView);
+        if (webView == null) {
+            webView = new WebView(this);
+            webView.getSettings().setJavaScriptEnabled(true);
+            webView.addJavascriptInterface(jsInterface, "Android");
+            taskLayout.addView(webView);
         }
 
-        webView = new WebView(this);
-        webView.getSettings().setJavaScriptEnabled(true);
-        webView.addJavascriptInterface(jsInterface, "Android");
-        taskLayout.addView(webView, 0);
-
-        // TODO webview oninput/onchange -> process() -> collect all inputs and turn them into json string
-        String css = "<style>.ql-syntax{background-color:#dcdcdc;color:#000;overflow:visible}.myCode,.myParagraph{padding:1px;margin:1px;cursor:move;float:left}.CodeMirror{border:1px solid #eee;border:1px solid #000;height:auto}</style>";
-        //webView.loadData(css, "text/css; charset=utf-8", "UTF-8");
-        //webView.loadData(task.content, "text/html; charset=utf-8", "UTF-8");
-
-        //String javascript = "<script>function process() { let arr = []; let val = document.querySelectorAll(\".answer\"); for (let i = 0; i < val.length; ++i) { arr.push(val[i].value); } Android.sendData(JSON.stringify(arr)); }</script>";
+        String css = "<style>.answer { max-width:4em } pre{ background:lightgrey; color:black; overflow-y:scroll; }</style>";
         String javascript = "<script>function process() { let arr = []; let els = document.querySelectorAll(\".answer\"); for (let i = 0; i < els.length; ++i) { arr.push(els[i].value); } Android.sendData(JSON.stringify(arr)); }</script>";
 
-        String content = task.content.replaceAll("§§_§§", "<input class=\"answer\" type=\"text\" oninput=\"process();\">");
+        String content = task.content;
 
-        Log.i("CONTENT_WEB", javascript + content);
+        switch (task.type) {
+            case TASK_CHOICE:
+                if (task.answers != null) {
+                    LinearLayout taskLayout = findViewById(R.id.taskLayout);
+                    RadioGroup radioGroup = new RadioGroup(this);
+                    radioGroup.setTag("CLEAR");
 
-        webView.loadData(javascript + content + "<button onclick=\"return process();\">Send</button>", "text/html; charset=utf-8", "UTF-8");
+                    for (String answer : task.answers) {
+                        RadioButton checkBox = new RadioButton(this);
+                        checkBox.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                        checkBox.setText(answer);
+                        radioGroup.addView(checkBox);
+                    }
+                    taskLayout.addView(radioGroup);
+                }
+                break;
+            case TASK_FILL:
+                content = task.content.replaceAll("§§_§§", "<input class=\"answer\" type=\"text\" oninput=\"process();\">");
+                break;
+        }
 
-        // WEBVIEW TEST END
+        webView.loadData(css + javascript + content, "text/html; charset=utf-8", "UTF-8");
     }
 
     public void updateTasks(ArrayList<Task> tasks) {
         clearTaskLayout();
 
+        taskContent.setVisibility(View.INVISIBLE);
+
         Task task = tasks.get(currentTask);
 
         LOADWEBVIEW(task);
 
+/*
         taskContent.setText(Html.fromHtml(task.content.replaceAll("<pre class=\"ql-syntax\" spellcheck=\"false\">", "<font face=\"monospace\">").replaceAll("</pre>", "</blockquote>").replaceAll("&nbsp;", "\t"), TaskActivity.this, null));
         taskContent.setMovementMethod(new ScrollingMovementMethod());
 
@@ -217,7 +226,7 @@ public class TaskActivity extends AppCompatActivity implements
 
             filter = new EditorFilter(task);
             taskContent.setFilters(new InputFilter[] { filter });
-        }
+        }*/
     }
 
     @Override
@@ -250,9 +259,9 @@ public class TaskActivity extends AppCompatActivity implements
         ArrayList<Task> tasks = Client.getInstance().tasks;
         if (tasks != null) {
             Task task = tasks.get(currentTask);
-            filter.clear(taskContent.getText());
+            //filter.clear(taskContent.getText());
             if (task.type == TaskType.TASK_FILL) {
-                ArrayList<String> userAnswers = new ArrayList<>();
+                /*ArrayList<String> userAnswers = new ArrayList<>();
                 for (int i = 0; i < filter.startPositions.size(); ++i) {
                     int start = filter.startPositions.get(i);
                     int end = filter.endPositions.get(i);
@@ -262,6 +271,9 @@ public class TaskActivity extends AppCompatActivity implements
                 }
 
                 new TaskEvaluate(this).execute(new JSONArray(userAnswers).toString(), task.task_id + "", task.task_type_id + "", "10");
+                */
+
+                new TaskEvaluate(this).execute(jsInterface.data, task.task_id + "", task.task_type_id + "", "10");
             }
 
             if (task.type == TaskType.TASK_CHOICE) {
