@@ -66,15 +66,17 @@
                     android:layout_gravity="end"/>
             </LinearLayout>
 
+
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="18sp"
-                android:padding="15dp"
-                android:scrollbars="vertical"
-                android:inputType="textNoSuggestions|textMultiLine"
-
-                android:id="@+id/taskContent" />
+                android:id="@+id/inputEditText"
+                android:inputType="textNoSuggestions"
+                android:hint="Answer..." /><!-- Ak je pod WebView, nefunguju cisla -->
+            <WebView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/webView" />
         </LinearLayout>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

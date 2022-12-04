@@ -1,35 +1,22 @@
 package com.example.priscillaclient;
 
-import android.annotation.TargetApi;
-import android.app.Activity;
-import android.content.Context;
+import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LevelListDrawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.Html;
 import android.text.InputFilter;
-import android.text.method.ScrollingMovementMethod;
-import android.util.Base64;
+import android.text.InputType;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.JavascriptInterface;
-import android.webkit.WebResourceError;
-import android.webkit.WebResourceRequest;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -46,13 +33,11 @@ import com.example.priscillaclient.models.TaskType;
 import com.google.android.material.navigation.NavigationView;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class TaskActivity extends AppCompatActivity implements
-        HttpResponse<Object>,
-        NavigationView.OnNavigationItemSelectedListener,
-        Html.ImageGetter {
+public class TaskActivity extends AppCompatActivity implements HttpResponse<Object> {
 
     int courseId;
     int chapterId;
@@ -65,17 +50,23 @@ public class TaskActivity extends AppCompatActivity implements
     boolean updateLayout = true;
 
     LinearLayout taskLayout;
+    WebView webView;
+    EditText inputEditText;
 
-    EditText taskContent;
-    EditorFilter filter;
+    TaskViewInterface jsInterface = new TaskViewInterface(this);
 
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task);
 
         taskLayout = findViewById(R.id.taskLayout);
-        taskContent = findViewById(R.id.taskContent);
+        inputEditText = findViewById(R.id.inputEditText);
+
+        webView = findViewById(R.id.webView);
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.addJavascriptInterface(jsInterface, "Android");
 
         Intent intent = getIntent();
 
@@ -89,8 +80,6 @@ public class TaskActivity extends AppCompatActivity implements
         new GetActiveLessons(this, chapterId).execute();
 
         if (currentLesson != -1 && currentLessonId != -1) {
-            // TODO get tasks for this lesson
-
             new GetActiveTasks(this, courseId, chapterId, currentLessonId).execute();
         }
     }
@@ -131,32 +120,10 @@ public class TaskActivity extends AppCompatActivity implements
         }
     }
 
-    WebView webView;
+    public void updateTasks(ArrayList<Task> tasks) {
+        clearTaskLayout();
 
-    class TaskViewInterface {
-
-        Context context;
-        public String data;
-
-        public TaskViewInterface(Context context){
-            this.context = context;
-        }
-
-        @JavascriptInterface
-        public void sendData(String data) {
-            this.data = data;
-        }
-    }
-
-    TaskViewInterface jsInterface = new TaskViewInterface(this);
-
-    public void LOADWEBVIEW(Task task) {
-        if (webView == null) {
-            webView = new WebView(this);
-            webView.getSettings().setJavaScriptEnabled(true);
-            webView.addJavascriptInterface(jsInterface, "Android");
-            taskLayout.addView(webView);
-        }
+        Task task = tasks.get(currentTask);
 
         String css = "<style>.answer { max-width:4em } pre{ background:lightgrey; color:black; overflow-y:scroll; }</style>";
         String javascript = "<script>function process() { let arr = []; let els = document.querySelectorAll(\".answer\"); for (let i = 0; i < els.length; ++i) { arr.push(els[i].value); } Android.sendData(JSON.stringify(arr)); }</script>";
@@ -166,15 +133,14 @@ public class TaskActivity extends AppCompatActivity implements
         switch (task.type) {
             case TASK_CHOICE:
                 if (task.answers != null) {
-                    LinearLayout taskLayout = findViewById(R.id.taskLayout);
                     RadioGroup radioGroup = new RadioGroup(this);
                     radioGroup.setTag("CLEAR");
 
                     for (String answer : task.answers) {
-                        RadioButton checkBox = new RadioButton(this);
-                        checkBox.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                        checkBox.setText(answer);
-                        radioGroup.addView(checkBox);
+                        RadioButton radioButton = new RadioButton(this);
+                        radioButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                        radioButton.setText(answer);
+                        radioGroup.addView(radioButton);
                     }
                     taskLayout.addView(radioGroup);
                 }
@@ -182,51 +148,82 @@ public class TaskActivity extends AppCompatActivity implements
             case TASK_FILL:
                 content = task.content.replaceAll("§§_§§", "<input class=\"answer\" type=\"text\" oninput=\"process();\">");
                 break;
+
+            case TASK_INPUT:
+                inputEditText.setVisibility(View.VISIBLE);
+                break;
+            case TASK_MULTI:
+                if (task.answers != null) {
+                    for (String answer : task.answers) {
+                        CheckBox checkBox = new CheckBox(this);
+                        checkBox.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                        checkBox.setText(answer);
+                        checkBox.setTag("CLEAR");
+                        taskLayout.addView(checkBox);
+                    }
+                }
+                break;
+            case TASK_DRAG:
+
+                content = task.content.replaceAll("§§_§§", "<span onclick=\"return remove(this);\" class=\"drag\" style=\"text-align:center; color:white; display:inline-block; background:black; width:4em\"></span>");
+
+                javascript += "<script>function add(el) {\n" +
+                        "\n" +
+                        "\tif (el.disabled) {\n" +
+                        "\t\treturn;\n" +
+                        "\t}\n" +
+                        "\n" +
+                        "\tel.disabled = true;\n" +
+                        "\n" +
+                        "\tlet els = document.getElementsByTagName(\"span\");\n" +
+                        "\n" +
+                        "\tfor (let i = 0; i < els.length; ++i) {\n" +
+                        "\t\tif (els[i].innerText == \"\") {\n" +
+                        "\t\t\tels[i].innerText = el.innerText;\n" +
+                        "\t\t\tbreak;\n" +
+                        "\t\t}\n" +
+                        "\t}\n" +
+                        "\n" +
+                        "\tlet arr = [];\n" +
+                        "\tfor (let i = 0; i < els.length; ++i) {\n" +
+                        "\t\tarr.push(els[i].innerText);\n" +
+                        "\t}\n" +
+                        "\n" +
+                        "\tAndroid.sendData(JSON.stringify(arr));\n" +
+                        "}\n" +
+                        "\n" +
+                        "function remove(el) {\n" +
+                        "\t\n" +
+                        "\tif (el.innerText == \"\") {\n" +
+                        "\t\treturn;\n" +
+                        "\t}\n" +
+                        "\n" +
+                        "\tlet els = document.getElementsByTagName(\"button\");\n" +
+                        "\n" +
+                        "\tfor (let i = 0; i < els.length; ++i) {\n" +
+                        "\t\tif (els[i].disabled && els[i].innerText == el.innerText) {\n" +
+                        "\t\t\tels[i].disabled = false;\n" +
+                        "\t\t\tbreak;\n" +
+                        "\t\t}\n" +
+                        "\t}\n" +
+                        "\n" +
+                        "\tel.innerText = \"\";\n" +
+                        "}</script>";
+
+                String html = "";
+                if (task.fakes != null) {
+                    html = "<hr>";
+                    for (String fake : task.fakes) {
+                        html += "<button onclick=\"return add(this);\">" + fake + "</button>";
+                    }
+                }
+
+                content += html;
+
+                break;
         }
 
         webView.loadData(css + javascript + content, "text/html; charset=utf-8", "UTF-8");
-    }
-
-    public void updateTasks(ArrayList<Task> tasks) {
-        clearTaskLayout();
-
-        taskContent.setVisibility(View.INVISIBLE);
-
-        Task task = tasks.get(currentTask);
-
-        LOADWEBVIEW(task);
-
-/*
-        taskContent.setText(Html.fromHtml(task.content.replaceAll("<pre class=\"ql-syntax\" spellcheck=\"false\">", "<font face=\"monospace\">").replaceAll("</pre>", "</blockquote>").replaceAll("&nbsp;", "\t"), TaskActivity.this, null));
-        taskContent.setMovementMethod(new ScrollingMovementMethod());
-
-        if (task.type == TaskType.TASK_CHOICE) {
-            if (task.answers != null) {
-                LinearLayout taskLayout = findViewById(R.id.taskLayout);
-                RadioGroup radioGroup = new RadioGroup(this);
-                radioGroup.setTag("CLEAR");
-
-                for (String answer : task.answers) {
-                    RadioButton checkBox = new RadioButton(this);
-                    checkBox.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                    checkBox.setText(answer);
-                    radioGroup.addView(checkBox);
-                }
-                taskLayout.addView(radioGroup);
-            }
-        }
-
-        if (task.type == TaskType.TASK_FILL) {
-            // TODO compare taskContent to task.content
-            // TODO extract differences around positions of EVERY start and end question mark
-            task.content = task.content.replaceAll("§§_§§", "|███|");
-            taskContent.setFocusableInTouchMode(true);
-            taskContent.setText(Html.fromHtml(task.content, TaskActivity.this, null));
-            taskContent.setMovementMethod(new ScrollingMovementMethod());
-
-            filter = new EditorFilter(task);
-            taskContent.setFilters(new InputFilter[] { filter });
-        }*/
     }
 
     @Override
@@ -238,15 +235,17 @@ public class TaskActivity extends AppCompatActivity implements
                 updateTasks((ArrayList<Task>) response);
         } catch (Exception ignore) {
             TaskEval taskEval = (TaskEval) response;
+
+            if (response == null)
+                return;
+
             Toast.makeText(this, "Rating: " + taskEval.rating, Toast.LENGTH_SHORT).show();
         }
     }
 
     public void clearTaskLayout() {
-
-        taskContent.setFocusable(false);
-        taskContent.setFilters(new InputFilter[] { });
-
+        inputEditText.setText("");
+        inputEditText.setVisibility(View.GONE);
         for (int i = taskLayout.getChildCount() - 1; i >= 0; --i) {
             View view = taskLayout.getChildAt(i);
             if (view.getTag() != null) {
@@ -259,49 +258,53 @@ public class TaskActivity extends AppCompatActivity implements
         ArrayList<Task> tasks = Client.getInstance().tasks;
         if (tasks != null) {
             Task task = tasks.get(currentTask);
-            //filter.clear(taskContent.getText());
-            if (task.type == TaskType.TASK_FILL) {
-                /*ArrayList<String> userAnswers = new ArrayList<>();
-                for (int i = 0; i < filter.startPositions.size(); ++i) {
-                    int start = filter.startPositions.get(i);
-                    int end = filter.endPositions.get(i);
+            ArrayList<String> postedAnswers = new ArrayList<>();
 
-                    userAnswers.add(taskContent.getText().toString().substring(start + 1, end));
+            switch (task.type) {
 
-                }
+                case TASK_FILL:
+                case TASK_DRAG:
+                    new TaskEvaluate(this).execute(jsInterface.data, task.task_id + "", task.task_type_id + "", "10");
+                    break;
 
-                new TaskEvaluate(this).execute(new JSONArray(userAnswers).toString(), task.task_id + "", task.task_type_id + "", "10");
-                */
+                case TASK_CHOICE:
+                    int index = -1;
+                    for (int i = taskLayout.getChildCount() - 1; i >= 0; --i) {
+                        View v = taskLayout.getChildAt(i);
+                        if (v instanceof RadioGroup) {
+                            RadioGroup radioGroup = (RadioGroup) v;
 
-                new TaskEvaluate(this).execute(jsInterface.data, task.task_id + "", task.task_type_id + "", "10");
-            }
-
-            if (task.type == TaskType.TASK_CHOICE) {
-                int index = -1;
-                for (int i = taskLayout.getChildCount() - 1; i >= 0; --i) {
-                    View v = taskLayout.getChildAt(i);
-                    if (v instanceof RadioGroup) {
-                        RadioGroup radioGroup = (RadioGroup) v;
-
-                        for (int j = 0; j < radioGroup.getChildCount(); ++j) {
-                            if (((RadioButton) radioGroup.getChildAt(j)).isChecked()) {
-                                index = j;
-                                break;
+                            for (int j = 0; j < radioGroup.getChildCount(); ++j) {
+                                if (((RadioButton) radioGroup.getChildAt(j)).isChecked()) {
+                                    index = j;
+                                    break;
+                                }
                             }
                         }
                     }
-                }
 
-                new TaskEvaluate(this).execute("[\"" + task.answers.get(index) + "\"]", task.task_id + "", task.task_type_id + "", "10");
+                    new TaskEvaluate(this).execute("[\"" + task.answers.get(index) + "\"]", task.task_id + "", task.task_type_id + "", "10");
+                    break;
+
+                case TASK_INPUT:
+                    new TaskEvaluate(this).execute("[\"" + inputEditText.getText().toString() + "\"]", task.task_id + "", task.task_type_id + "", "10");
+                    break;
+
+                case TASK_MULTI:
+                    for (int i = taskLayout.getChildCount() - 1; i >= 0; --i) {
+                        View v = taskLayout.getChildAt(i);
+                        if (v instanceof CheckBox) {
+                            CheckBox checkBox = (CheckBox) v;
+
+                            if (checkBox.isChecked()) {
+                                postedAnswers.add(checkBox.getText().toString());
+                            }
+                        }
+                    }
+                    new TaskEvaluate(this).execute(new JSONArray(postedAnswers).toString(), task.task_id + "", task.task_type_id + "", "10");
+                    break;
             }
         }
-    }
-
-
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        Log.i("TEST", "PASS " + item.getItemId());
-        return true;
     }
 
     public void nextTask(View view) {
@@ -317,63 +320,6 @@ public class TaskActivity extends AppCompatActivity implements
         if (currentTask - 1 >= 0) {
             --currentTask;
             onUpdate(tasks);
-        }
-    }
-
-    Drawable empty;
-    @Override
-    public Drawable getDrawable(String s) {/*
-        LevelListDrawable d = new LevelListDrawable();
-        empty = getResources().getDrawable(R.drawable.profile_icon);
-        d.addLevel(0, 0, empty);
-        d.setBounds(0, 0, empty.getIntrinsicWidth(), empty.getIntrinsicHeight());
-        new LoadImage().execute(s, d);*/
-        s = s.replace("data:image/png;base64,", "");
-        byte[] data = Base64.decode(s, Base64.DEFAULT);
-        Bitmap d = BitmapFactory.decodeByteArray(data, 0, data.length);
-        BitmapDrawable dr = new BitmapDrawable(getResources(), d);
-        dr.setBounds(0, 0, d.getWidth(), d.getHeight());
-        return dr;
-    }
-
-    class LoadImage extends AsyncTask<Object, Void, Bitmap> {
-        private LevelListDrawable mDrawable;
-
-        @Override
-        protected Bitmap doInBackground(Object... params) {
-            String source = (String) params[0];
-            mDrawable = (LevelListDrawable) params[1];
-            Log.d("TAG", "doInBackground " + source);
-
-            source = source.replace("data:image/png;base64,", "");
-            try {
-
-
-                byte[] data = Base64.decode(source, Base64.DEFAULT);
-                Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-
-                return bitmap;
-
-                /*InputStream is = new URL(source).openStream();
-                return BitmapFactory.decodeStream(is);*/
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            if (bitmap != null) {
-                BitmapDrawable d = new BitmapDrawable(bitmap);
-                mDrawable.addLevel(1, 1, d);
-                //mDrawable.setBounds(0, 0, bitmap.getWidth(), bitmap.getHeight());
-                mDrawable.setBounds(0, 0, empty.getIntrinsicWidth(), empty.getIntrinsicHeight());
-                mDrawable.setLevel(1);
-                TextView textView = findViewById(R.id.taskContent);
-                CharSequence t = textView.getText();
-                textView.setText(t);
-            }
         }
     }
 }

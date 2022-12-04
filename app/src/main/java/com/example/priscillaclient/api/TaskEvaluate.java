@@ -3,7 +3,9 @@ package com.example.priscillaclient.api;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.example.priscillaclient.Client;
 import com.example.priscillaclient.HttpURLConnectionFactory;
 import com.example.priscillaclient.TaskActivity;
 import com.example.priscillaclient.models.TaskEval;
@@ -26,6 +28,8 @@ public class TaskEvaluate extends AsyncTask<String, String, TaskEval> {
         this.context = context;
     }
 
+    String error = null;
+
     @Override
     protected TaskEval doInBackground(String... strings) {
         Log.i("TASK_EVAL", "Evaluating task");
@@ -38,6 +42,7 @@ public class TaskEvaluate extends AsyncTask<String, String, TaskEval> {
             json.put("task_id", strings[1]);
             json.put("task_type_id", strings[2]);
             json.put("time_length", strings[3]);
+            json.put("tasks", Client.getInstance().tasks);
 
             Log.i("TASK_EVAL", "Building json");
 
@@ -48,8 +53,21 @@ public class TaskEvaluate extends AsyncTask<String, String, TaskEval> {
             os.flush();
             os.close();
 
-            Log.i("TASK_STATUS", String.valueOf(connection.getResponseCode()));
-            Log.i("TASK_MSG", connection.getResponseMessage());
+           if (connection.getResponseCode() >= 400 && connection.getResponseCode() < 600) {
+                InputStream is = connection.getErrorStream();
+
+                BufferedReader br = new BufferedReader(new InputStreamReader(is));
+                String line = "";
+                StringBuilder stringBuilder = new StringBuilder();
+                while ((line = br.readLine()) != null) {
+                    stringBuilder.append(line);
+                }
+                br.close();
+                is.close();
+
+                error = stringBuilder.toString();
+                return null;
+            }
 
             // RESPONSE
 
@@ -77,6 +95,12 @@ public class TaskEvaluate extends AsyncTask<String, String, TaskEval> {
     @Override
     protected void onPostExecute(TaskEval taskEval) {
         super.onPostExecute(taskEval);
+
+        if (error != null) {
+            Toast.makeText(((TaskActivity) context), error, Toast.LENGTH_LONG).show();
+            return;
+        }
+
         ((TaskActivity) context).onUpdate(taskEval);
     }
 }

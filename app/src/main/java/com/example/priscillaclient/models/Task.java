@@ -28,6 +28,7 @@ public class Task {
 
     String help;
     public ArrayList<String> answers = null;
+    public ArrayList<String> fakes = null;
 
     public TaskType type;
     static TaskType[] taskTypes = TaskType.values();
@@ -70,20 +71,14 @@ public class Task {
                     answers.add(jAnswers.getJSONObject(i).getString("answer"));
                 }
             }
-        } catch (Exception ignore) { }
 
-        /*
-            {
-                "content":"<p>Ktorá štruktúra vracia prvky usporiadané?<\/p>",
-                "help":"",
-                "answer_list":
-                    [
-                        {"answer":"TreeSet","feedback":""},
-                        {"answer":"Set","feedback":""},
-                        {"answer":"HashSet","feedback":""},
-                        {"answer":"ani jedna","feedback":""}
-                    ]
-             }
-        */
+            if (j.has("fakes")) {
+                fakes = new ArrayList<>();
+                JSONArray jFakes = j.getJSONArray("fakes");
+                for (int i = 0; i < jFakes.length(); ++i) {
+                    fakes.add(jFakes.optString(i));
+                }
+            }
+        } catch (Exception ignore) { }
     }
 }
