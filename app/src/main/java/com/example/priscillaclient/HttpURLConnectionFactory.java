@@ -2,6 +2,9 @@ package com.example.priscillaclient;
 
 import android.util.Log;
 
+import com.example.priscillaclient.client.Client;
+import com.example.priscillaclient.client.ClientData;
+
 import java.net.HttpURLConnection;
 import java.net.URL;
 

@@ -1,4 +1,4 @@
-package com.example.priscillaclient;
+package com.example.priscillaclient.client;
 
 import com.example.priscillaclient.models.Chapter;
 import com.example.priscillaclient.models.Course;
@@ -10,8 +10,6 @@ import com.example.priscillaclient.models.User;
 import java.util.ArrayList;
 
 public class Client {
-
-    // TODO rename to cache
 
     // Client data
 

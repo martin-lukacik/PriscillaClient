@@ -8,8 +8,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.view.WindowManager;
 
-import com.example.priscillaclient.Client;
-import com.example.priscillaclient.ClientData;
+import com.example.priscillaclient.client.Client;
+import com.example.priscillaclient.client.ClientData;
 import com.example.priscillaclient.HttpURLConnectionFactory;
 import com.example.priscillaclient.MainActivity;
 import com.example.priscillaclient.models.User;
@@ -23,12 +23,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 
-public class RequestTokenTask extends AsyncTask<String, String, User> {
+public class RequestToken extends AsyncTask<String, String, User> {
 
     Context context; // TODO fix the leak || do it outside || null check?
     ProgressDialog dialog;
 
-    public RequestTokenTask(Context context, ProgressDialog dialog) {
+    public RequestToken(Context context, ProgressDialog dialog) {
         super();
 
         this.context = context;

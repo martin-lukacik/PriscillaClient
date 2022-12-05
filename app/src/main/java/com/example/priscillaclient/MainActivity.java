@@ -12,9 +12,10 @@ import android.widget.GridView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.example.priscillaclient.api.GetUserCoursesTask;
-import com.example.priscillaclient.api.GetUserParamsTask;
+import com.example.priscillaclient.api.GetUserCourses;
+import com.example.priscillaclient.api.GetUserParams;
 import com.example.priscillaclient.api.HttpResponse;
+import com.example.priscillaclient.client.Client;
 import com.example.priscillaclient.models.Course;
 
 import org.json.JSONObject;
@@ -40,8 +41,8 @@ public class MainActivity extends BaseActivity implements HttpResponse {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET}, 1);
         }
 
-        new GetUserParamsTask(this).execute();
-        new GetUserCoursesTask(this).execute();
+        new GetUserParams(this).execute();
+        new GetUserCourses(this).execute();
     }
 
     public void sendPost() {

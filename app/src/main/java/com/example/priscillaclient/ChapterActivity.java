@@ -8,15 +8,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 
-import com.example.priscillaclient.api.GetActiveChaptersTask;
+import com.example.priscillaclient.api.GetActiveChapters;
 import com.example.priscillaclient.api.HttpResponse;
+import com.example.priscillaclient.client.Client;
 import com.example.priscillaclient.models.Chapter;
-import com.example.priscillaclient.models.Course;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class ChapterActivity extends AppCompatActivity implements HttpResponse {
@@ -32,7 +30,7 @@ public class ChapterActivity extends AppCompatActivity implements HttpResponse {
         courseId = intent.getExtras().getInt("course_id", -1);
         Log.i("Course ID", "=" + courseId);
 
-        new GetActiveChaptersTask(this, courseId).execute();
+        new GetActiveChapters(this, courseId).execute();
 
         // https://app.priscilla.fitped.eu/get-active-chapters2/{COURSE_ID}
     }

@@ -8,7 +8,7 @@ import android.view.Menu;
 
 import androidx.appcompat.view.menu.MenuBuilder;
 
-import com.example.priscillaclient.Client;
+import com.example.priscillaclient.client.Client;
 import com.example.priscillaclient.HttpURLConnectionFactory;
 import com.example.priscillaclient.models.Language;
 
@@ -21,12 +21,12 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 // TODO do we even need this? probs for quiz translations
-public class GetLanguageListTask extends AsyncTask<String, String, ArrayList<Language>> {
+public class GetLanguageList extends AsyncTask<String, String, ArrayList<Language>> {
 
     Context context;
     Menu menu;
 
-    public GetLanguageListTask(Context context, Menu menu) {
+    public GetLanguageList(Context context, Menu menu) {
         super();
         this.context = context;
         this.menu = menu;

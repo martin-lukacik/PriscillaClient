@@ -1,4 +1,4 @@
-package com.example.priscillaclient;
+package com.example.priscillaclient.client;
 
 public class ClientData {
     public static final String url = "https://app.priscilla.fitped.eu";

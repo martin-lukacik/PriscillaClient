@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.priscillaclient.api.HttpResponse;
+import com.example.priscillaclient.client.Client;
 import com.example.priscillaclient.models.User;
 
 public class BaseActivity extends AppCompatActivity implements HttpResponse {

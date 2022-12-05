@@ -1,32 +1,16 @@
 package com.example.priscillaclient;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.view.menu.MenuBuilder;
 
-import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 
-import com.example.priscillaclient.api.GetLanguageListTask;
-import com.example.priscillaclient.api.RequestTokenTask;
+import com.example.priscillaclient.api.RequestToken;
 import com.example.priscillaclient.views.LoadingDialog;
-
-import org.json.JSONObject;
-
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -56,7 +40,7 @@ public class LoginActivity extends AppCompatActivity {
         loadingDialog = new LoadingDialog(LoginActivity.this, "Logging in...");
         loadingDialog.show();
 
-        new RequestTokenTask(this, loadingDialog)
+        new RequestToken(this, loadingDialog)
                 .execute(username, password, username);
     }
 }

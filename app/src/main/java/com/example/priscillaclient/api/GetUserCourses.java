@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.example.priscillaclient.Client;
+import com.example.priscillaclient.client.Client;
 import com.example.priscillaclient.HttpURLConnectionFactory;
 import com.example.priscillaclient.MainActivity;
 import com.example.priscillaclient.models.Course;
@@ -17,11 +17,11 @@ import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class GetUserCoursesTask extends AsyncTask<String, String, ArrayList<Course>> {
+public class GetUserCourses extends AsyncTask<String, String, ArrayList<Course>> {
 
     Context context;
 
-    public GetUserCoursesTask(Context context) {
+    public GetUserCourses(Context context) {
         super();
         this.context = context;
     }

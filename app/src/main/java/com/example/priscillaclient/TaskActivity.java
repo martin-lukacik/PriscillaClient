@@ -1,13 +1,8 @@
 package com.example.priscillaclient;
 
 import android.annotation.SuppressLint;
-import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.InputFilter;
-import android.text.InputType;
-import android.text.Spanned;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,18 +21,17 @@ import com.example.priscillaclient.api.GetActiveLessons;
 import com.example.priscillaclient.api.GetActiveTasks;
 import com.example.priscillaclient.api.HttpResponse;
 import com.example.priscillaclient.api.TaskEvaluate;
+import com.example.priscillaclient.client.Client;
 import com.example.priscillaclient.models.Lesson;
 import com.example.priscillaclient.models.Task;
 import com.example.priscillaclient.models.TaskEval;
-import com.example.priscillaclient.models.TaskType;
 import com.google.android.material.navigation.NavigationView;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class TaskActivity extends AppCompatActivity implements HttpResponse<Object> {
+public class TaskActivity extends AppCompatActivity implements HttpResponse {
 
     int courseId;
     int chapterId;
@@ -228,19 +222,15 @@ public class TaskActivity extends AppCompatActivity implements HttpResponse<Obje
 
     @Override
     public void onUpdate(Object response) {
-        try {
-            if (((ArrayList<?>) response).get(0) instanceof Lesson)
-                updateLessons((ArrayList<Lesson>) response);
-            else if (((ArrayList<?>) response).get(0) instanceof Task)
-                updateTasks((ArrayList<Task>) response);
-        } catch (Exception ignore) {
-            TaskEval taskEval = (TaskEval) response;
+        if (((ArrayList<?>) response).get(0) instanceof Lesson)
+            updateLessons((ArrayList<Lesson>) response);
+        else if (((ArrayList<?>) response).get(0) instanceof Task)
+            updateTasks((ArrayList<Task>) response);
+    }
 
-            if (response == null)
-                return;
 
-            Toast.makeText(this, "Rating: " + taskEval.rating, Toast.LENGTH_SHORT).show();
-        }
+    public void taskEvalResponse(TaskEval taskEval) {
+        Toast.makeText(this, "Rating: " + taskEval.rating, Toast.LENGTH_SHORT).show();
     }
 
     public void clearTaskLayout() {

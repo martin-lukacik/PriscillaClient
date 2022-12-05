@@ -4,14 +4,9 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.example.priscillaclient.Client;
-import com.example.priscillaclient.ClientData;
 import com.example.priscillaclient.HttpURLConnectionFactory;
 import com.example.priscillaclient.LeaderboardActivity;
-import com.example.priscillaclient.TaskActivity;
-import com.example.priscillaclient.models.Language;
 import com.example.priscillaclient.models.LeaderboardItem;
-import com.example.priscillaclient.models.Lesson;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

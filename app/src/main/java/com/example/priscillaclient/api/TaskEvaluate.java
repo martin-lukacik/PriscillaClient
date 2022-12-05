@@ -5,7 +5,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.example.priscillaclient.Client;
+import com.example.priscillaclient.client.Client;
 import com.example.priscillaclient.HttpURLConnectionFactory;
 import com.example.priscillaclient.TaskActivity;
 import com.example.priscillaclient.models.TaskEval;
@@ -43,8 +43,6 @@ public class TaskEvaluate extends AsyncTask<String, String, TaskEval> {
             json.put("task_type_id", strings[2]);
             json.put("time_length", strings[3]);
             json.put("tasks", Client.getInstance().tasks);
-
-            Log.i("TASK_EVAL", "Building json");
 
             Log.i("JSON", json.toString());
             DataOutputStream os = new DataOutputStream(connection.getOutputStream());
@@ -101,6 +99,6 @@ public class TaskEvaluate extends AsyncTask<String, String, TaskEval> {
             return;
         }
 
-        ((TaskActivity) context).onUpdate(taskEval);
+        ((TaskActivity) context).taskEvalResponse(taskEval);
     }
 }
