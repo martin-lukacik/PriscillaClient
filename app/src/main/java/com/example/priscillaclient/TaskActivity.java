@@ -167,13 +167,12 @@ public class TaskActivity extends AppCompatActivity implements HttpResponse {
                         "\t\treturn;\n" +
                         "\t}\n" +
                         "\n" +
-                        "\tel.disabled = true;\n" +
-                        "\n" +
                         "\tlet els = document.getElementsByTagName(\"span\");\n" +
                         "\n" +
                         "\tfor (let i = 0; i < els.length; ++i) {\n" +
                         "\t\tif (els[i].innerText == \"\") {\n" +
                         "\t\t\tels[i].innerText = el.innerText;\n" +
+                        "\t\t\tel.disabled = true;\n" +
                         "\t\t\tbreak;\n" +
                         "\t\t}\n" +
                         "\t}\n" +
