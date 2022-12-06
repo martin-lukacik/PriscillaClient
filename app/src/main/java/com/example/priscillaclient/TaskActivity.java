@@ -224,8 +224,10 @@ public class TaskActivity extends AppCompatActivity implements HttpResponse {
     public void onUpdate(Object response) {
         if (((ArrayList<?>) response).get(0) instanceof Lesson)
             updateLessons((ArrayList<Lesson>) response);
-        else if (((ArrayList<?>) response).get(0) instanceof Task)
+        else if (((ArrayList<?>) response).get(0) instanceof Task) {
+            currentTask = 0;
             updateTasks((ArrayList<Task>) response);
+        }
     }
 
 
