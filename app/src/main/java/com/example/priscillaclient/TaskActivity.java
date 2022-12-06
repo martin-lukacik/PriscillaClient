@@ -57,6 +57,7 @@ public class TaskActivity extends AppCompatActivity implements HttpResponse {
 
         taskLayout = findViewById(R.id.taskLayout);
         inputEditText = findViewById(R.id.inputEditText);
+        inputEditText.setVisibility(View.GONE);
 
         webView = findViewById(R.id.webView);
         webView.getSettings().setJavaScriptEnabled(true);
