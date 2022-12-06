@@ -230,7 +230,6 @@ public class TaskActivity extends AppCompatActivity implements HttpResponse {
         }
     }
 
-
     public void taskEvalResponse(TaskEval taskEval) {
         Toast.makeText(this, "Rating: " + taskEval.rating, Toast.LENGTH_SHORT).show();
     }
@@ -303,7 +302,7 @@ public class TaskActivity extends AppCompatActivity implements HttpResponse {
         ArrayList<Task> tasks = Client.getInstance().tasks;
         if (tasks.size() > currentTask + 1) {
             ++currentTask;
-            onUpdate(tasks);
+            updateTasks(tasks);
         }
     }
 
@@ -311,7 +310,7 @@ public class TaskActivity extends AppCompatActivity implements HttpResponse {
         ArrayList<Task> tasks = Client.getInstance().tasks;
         if (currentTask - 1 >= 0) {
             --currentTask;
-            onUpdate(tasks);
+            updateTasks(tasks);
         }
     }
 }
