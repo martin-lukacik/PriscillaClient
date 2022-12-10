@@ -4,7 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Area {
-    int id;
+    public int id;
     String area_name;
     String area_color;
     String area_icon;

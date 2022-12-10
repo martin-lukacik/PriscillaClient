@@ -15,6 +15,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PriscillaClient">
         <activity
+            android:name=".AreaCourseActivity"
+            android:exported="false" />
+        <activity
             android:name=".AreaActivity"
             android:exported="false" />
         <activity

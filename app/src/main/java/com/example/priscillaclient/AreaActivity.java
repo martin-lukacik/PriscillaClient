@@ -4,12 +4,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.priscillaclient.api.GetAreas;
 import com.example.priscillaclient.api.GetCategories;
 import com.example.priscillaclient.api.HttpResponse;
+import com.example.priscillaclient.client.Client;
 import com.example.priscillaclient.models.Area;
 import com.example.priscillaclient.models.Category;
 
@@ -28,7 +31,6 @@ public class AreaActivity extends AppCompatActivity implements HttpResponse {
         new GetAreas(this, categoryId).execute();
     }
 
-
     @Override
     public void onUpdate(Object response) {
         ArrayList<Area> areas = (ArrayList<Area>) response;
@@ -36,7 +38,15 @@ public class AreaActivity extends AppCompatActivity implements HttpResponse {
         ArrayAdapter<Area> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, areas);
         ListView areaListView = findViewById(R.id.areaListView);
         areaListView.setAdapter(adapter);
-        //areaListView.setOnItemClickListener(this::categorySelected);
+        areaListView.setOnItemClickListener(this::areaSelected);
+    }
+
+    private void areaSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        Area area = Client.getInstance().areas.get(i);
+
+        Intent intent = new Intent(AreaActivity.this, AreaCourseActivity.class);
+        intent.putExtra("area_id", area.id);
+        startActivity(intent);
     }
 
 }
