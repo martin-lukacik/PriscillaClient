@@ -1,5 +1,7 @@
 package com.example.priscillaclient.client;
 
+import com.example.priscillaclient.models.Area;
+import com.example.priscillaclient.models.Category;
 import com.example.priscillaclient.models.Chapter;
 import com.example.priscillaclient.models.Course;
 import com.example.priscillaclient.models.Language;
@@ -30,6 +32,8 @@ public class Client {
     public ArrayList<Task> tasks = null;
 
     public ArrayList<Language> languageList = null;
+    public ArrayList<Category> categories = null;
+    public ArrayList<Area> areas = null;
 
     public boolean hasValidToken() {
         return !(token_type.isEmpty() || access_token.isEmpty() || isTokenExpired());

@@ -44,6 +44,10 @@ public class BaseActivity extends AppCompatActivity implements HttpResponse {
                 startActivity(intent);
 
                 return true;
+            case R.id.all_courses:
+                intent = new Intent(BaseActivity.this, CategoryActivity.class);
+                startActivity(intent);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
