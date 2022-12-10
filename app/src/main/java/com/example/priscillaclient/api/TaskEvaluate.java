@@ -17,7 +17,10 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.net.HttpURLConnection;
+import java.nio.charset.StandardCharsets;
 
 public class TaskEvaluate extends AsyncTask<String, String, TaskEval> {
 
@@ -42,14 +45,13 @@ public class TaskEvaluate extends AsyncTask<String, String, TaskEval> {
             json.put("task_id", strings[1]);
             json.put("task_type_id", strings[2]);
             json.put("time_length", strings[3]);
-            json.put("tasks", Client.getInstance().tasks);
+            //json.put("tasks", Client.getInstance().tasks);
 
             Log.i("JSON", json.toString());
-            DataOutputStream os = new DataOutputStream(connection.getOutputStream());
-            os.writeBytes(json.toString());
 
-            os.flush();
-            os.close();
+            Writer writer = new OutputStreamWriter(connection.getOutputStream(), StandardCharsets.UTF_8);
+            writer.write(json.toString());
+            writer.close();
 
            if (connection.getResponseCode() >= 400 && connection.getResponseCode() < 600) {
                 InputStream is = connection.getErrorStream();
