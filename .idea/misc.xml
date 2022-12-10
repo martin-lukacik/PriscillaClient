@@ -33,6 +33,7 @@
         <entry key="app/src/main/res/drawable/flag_pl.xml" value="0.135" />
         <entry key="app/src/main/res/drawable/flag_ru.xml" value="0.135" />
         <entry key="app/src/main/res/drawable/flag_sk.xml" value="0.135" />
+        <entry key="app/src/main/res/drawable/ic_push_pin.xml" value="0.1555" />
         <entry key="app/src/main/res/drawable/round_outline.xml" value="0.135" />
         <entry key="app/src/main/res/layout/activity_chapter.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.1" />

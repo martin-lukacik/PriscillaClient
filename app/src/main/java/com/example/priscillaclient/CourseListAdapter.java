@@ -67,6 +67,10 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
         //titleText.setBackgroundColor(color);
         titleText.setTextColor(Color.WHITE);
 
+        if (courses.get(i).isPinned) {
+            titleText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_push_pin, 0);
+        }
+
         return rowView;
     }
 }

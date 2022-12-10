@@ -9,6 +9,8 @@ public class Course {
 
     // Required
 
+    public boolean isPinned = false;
+
     public int course_id;
     public String name;
     public String description;
