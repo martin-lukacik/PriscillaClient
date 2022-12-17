@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.example.priscillaclient.client.Client;
 import com.example.priscillaclient.HttpURLConnectionFactory;
 import com.example.priscillaclient.TaskActivity;
 import com.example.priscillaclient.models.TaskEval;
@@ -14,7 +13,6 @@ import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -57,7 +55,7 @@ public class TaskEvaluate extends AsyncTask<String, String, TaskEval> {
                 InputStream is = connection.getErrorStream();
 
                 BufferedReader br = new BufferedReader(new InputStreamReader(is));
-                String line = "";
+                String line;
                 StringBuilder stringBuilder = new StringBuilder();
                 while ((line = br.readLine()) != null) {
                     stringBuilder.append(line);
@@ -73,7 +71,7 @@ public class TaskEvaluate extends AsyncTask<String, String, TaskEval> {
 
             InputStream responseStream = new BufferedInputStream(connection.getInputStream());
             BufferedReader responseStreamReader = new BufferedReader(new InputStreamReader(responseStream));
-            String line = "";
+            String line;
             StringBuilder stringBuilder = new StringBuilder();
             while ((line = responseStreamReader.readLine()) != null) {
                 stringBuilder.append(line);
@@ -97,7 +95,7 @@ public class TaskEvaluate extends AsyncTask<String, String, TaskEval> {
         super.onPostExecute(taskEval);
 
         if (error != null) {
-            Toast.makeText(((TaskActivity) context), error, Toast.LENGTH_LONG).show();
+            Toast.makeText(context, error, Toast.LENGTH_LONG).show();
             return;
         }
 

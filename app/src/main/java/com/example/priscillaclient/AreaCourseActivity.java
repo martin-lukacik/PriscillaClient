@@ -32,7 +32,7 @@ public class AreaCourseActivity extends AppCompatActivity implements HttpRespons
 
     @Override
     public void onUpdate(Object response) {
-        ArrayList<AreaCourse> areaCourses = (ArrayList<AreaCourse>) response;
+        ArrayList<AreaCourse> areaCourses = Client.getInstance().areaCourses;
 
         ArrayAdapter<AreaCourse> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, areaCourses);
         ListView areaCourseList = findViewById(R.id.areaCourseList);

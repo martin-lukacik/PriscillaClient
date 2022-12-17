@@ -44,7 +44,7 @@ public class GetActiveTasks extends AsyncTask<String, String, ArrayList<Task>> {
 
             InputStream responseStream = connection.getInputStream();
 
-            String responseStr = "";
+            String responseStr;
             try (Scanner scanner = new Scanner(responseStream)) {
                 responseStr = scanner.useDelimiter("\\A").next();
             }

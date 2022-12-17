@@ -53,7 +53,7 @@ public class BaseActivity extends AppCompatActivity implements HttpResponse {
         }
     }
 
-    private void setMenuTitle(User user) {
+    protected void setMenuTitle(User user) {
         String fullName = user.name + " " + user.surname;
         menu.add(0, 0, 0, fullName)
                 .setEnabled(false);
@@ -61,8 +61,5 @@ public class BaseActivity extends AppCompatActivity implements HttpResponse {
 
     @Override
     public void onUpdate(Object response) {
-        if (response instanceof User) {
-            setMenuTitle((User) response);
-        }
     }
 }

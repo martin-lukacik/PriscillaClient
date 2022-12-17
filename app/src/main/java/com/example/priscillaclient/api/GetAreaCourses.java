@@ -3,11 +3,9 @@ package com.example.priscillaclient.api;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import com.example.priscillaclient.AreaActivity;
 import com.example.priscillaclient.AreaCourseActivity;
 import com.example.priscillaclient.HttpURLConnectionFactory;
 import com.example.priscillaclient.client.Client;
-import com.example.priscillaclient.models.Area;
 import com.example.priscillaclient.models.AreaCourse;
 
 import org.json.JSONArray;
@@ -40,7 +38,7 @@ public class GetAreaCourses extends AsyncTask<String, String, ArrayList<AreaCour
 
             InputStream responseStream = connection.getInputStream();
 
-            String responseStr = "";
+            String responseStr;
             try (Scanner scanner = new Scanner(responseStream)) {
                 responseStr = scanner.useDelimiter("\\A").next();
             }

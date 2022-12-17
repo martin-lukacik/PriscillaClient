@@ -1,10 +1,10 @@
 package com.example.priscillaclient;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +12,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.core.content.res.ResourcesCompat;
 
 import com.example.priscillaclient.models.Course;
 
@@ -27,50 +29,74 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
         this.courses = courses;
     }
 
+    static class ViewHolder{
+        TextView titleText;
+        TextView subtitleText;
+        TextView contentText;
+        TextView taskText;
+        TextView programText;
+
+        ProgressBar courseProgress;
+
+        ImageView descriptionIcon;
+        ImageView codeIcon;
+        ImageView contactIcon;
+    }
+
     public View getView(int i, View view, ViewGroup parent) {
-        LayoutInflater inflater = context.getLayoutInflater();
-        View rowView = inflater.inflate(R.layout.listview_course, null,true);
 
-        TextView titleText = rowView.findViewById(R.id.title);
-        TextView subtitleText = rowView.findViewById(R.id.subtitle);
-        TextView contentText = rowView.findViewById(R.id.content_passed);
-        TextView taskText = rowView.findViewById(R.id.task_passed);
-        TextView programText = rowView.findViewById(R.id.program_passed);
-        ProgressBar courseProgress = rowView.findViewById(R.id.course_progress);
+        ViewHolder holder;
 
-        ImageView descriptionIcon = rowView.findViewById(R.id.ic_description);
-        ImageView codeIcon = rowView.findViewById(R.id.ic_code);
-        ImageView contactIcon = rowView.findViewById(R.id.ic_contact_support);
+        if (view == null) {
+            holder = new ViewHolder();
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            view = inflater.inflate(R.layout.listview_course, parent, false);
 
-        titleText.setText(courses.get(i).name);
-        subtitleText.setText(courses.get(i).description);
-        contentText.setText(courses.get(i).getUserData("content_passed") + " / " + courses.get(i).getUserData("content_count"));
-        taskText.setText(courses.get(i).getUserData("task_passed") + " / " + courses.get(i).getUserData("task_count"));
-        programText.setText(courses.get(i).getUserData("program_passed") + " / " + courses.get(i).getUserData("program_count"));
+            holder.titleText = view.findViewById(R.id.title);
+            holder.subtitleText = view.findViewById(R.id.subtitle);
+            holder.contentText = view.findViewById(R.id.content_passed);
+            holder.taskText = view.findViewById(R.id.task_passed);
+            holder.programText = view.findViewById(R.id.program_passed);
+            holder.courseProgress = view.findViewById(R.id.course_progress);
+            holder.descriptionIcon = view.findViewById(R.id.ic_description);
+            holder.codeIcon = view.findViewById(R.id.ic_code);
+            holder.contactIcon = view.findViewById(R.id.ic_contact_support);
+
+            view.setTag(holder);
+        } else {
+            holder = (ViewHolder) view.getTag();
+        }
+
+        holder.titleText.setText(courses.get(i).name);
+        holder.subtitleText.setText(courses.get(i).description);
+        holder.contentText.setText(courses.get(i).getUserData("content_passed") + " / " + courses.get(i).getUserData("content_count"));
+        holder.taskText.setText(courses.get(i).getUserData("task_passed") + " / " + courses.get(i).getUserData("task_count"));
+        holder.programText.setText(courses.get(i).getUserData("program_passed") + " / " + courses.get(i).getUserData("program_count"));
 
         int progress = (int) ((courses.get(i).getUserData("passed") / ((double) courses.get(i).getUserData("all"))) * 100);
-        courseProgress.setProgress(progress);
+        holder.courseProgress.setProgress(progress);
 
         int color = Color.parseColor(courses.get(i).area_color);
 
-        descriptionIcon.setColorFilter(color);
-        codeIcon.setColorFilter(color);
-        contactIcon.setColorFilter(color);
+        holder.descriptionIcon.setColorFilter(color);
+        holder.codeIcon.setColorFilter(color);
+        holder.contactIcon.setColorFilter(color);
 
-        Drawable drawable = context.getResources().getDrawable(R.drawable.course_title_border);
-        drawable.mutate().setColorFilter(color, PorterDuff.Mode.SRC_IN);
-        titleText.setBackground(drawable);
+        Drawable drawable = ResourcesCompat.getDrawable(context.getResources(), R.drawable.course_title_border, null);//context.getResources().getDrawable(R.drawable.course_title_border);
+        if (drawable != null)
+            drawable.mutate().setColorFilter(color, PorterDuff.Mode.SRC_IN);
+        holder.titleText.setBackground(drawable);
 
-        Drawable progressDrawable = courseProgress.getProgressDrawable();
-        progressDrawable.mutate().setColorFilter(color, PorterDuff.Mode.MULTIPLY);
-        courseProgress.setProgressDrawable(progressDrawable);
-        //titleText.setBackgroundColor(color);
-        titleText.setTextColor(Color.WHITE);
+        Drawable progressDrawable = holder.courseProgress.getProgressDrawable();
+        if (progressDrawable != null)
+            progressDrawable.mutate().setColorFilter(color, PorterDuff.Mode.MULTIPLY);
+        holder.courseProgress.setProgressDrawable(progressDrawable);
+        holder.titleText.setTextColor(Color.WHITE);
 
         if (courses.get(i).isPinned) {
-            titleText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_push_pin, 0);
+            holder.titleText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_push_pin, 0);
         }
 
-        return rowView;
+        return view;
     }
 }

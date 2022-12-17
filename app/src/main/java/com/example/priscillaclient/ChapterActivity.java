@@ -42,7 +42,7 @@ public class ChapterActivity extends AppCompatActivity implements HttpResponse {
         if (response == null)
             return;
 
-        ArrayList<Chapter> chapters = (ArrayList<Chapter>) response;
+        ArrayList<Chapter> chapters = Client.getInstance().chapters;
 
         ListView chaptersListView = findViewById(R.id.chapterListView);
 

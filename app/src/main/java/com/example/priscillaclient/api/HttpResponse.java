@@ -1,5 +1,5 @@
 package com.example.priscillaclient.api;
 
-public interface HttpResponse<T> {
-    void onUpdate(T response); // TODO generify all calls or ungenerify interface
+public interface HttpResponse {
+    void onUpdate(Object response);
 }

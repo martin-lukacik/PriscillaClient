@@ -1,10 +1,9 @@
 package com.example.priscillaclient;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.priscillaclient.api.GetLeaders;
 import com.example.priscillaclient.api.HttpResponse;

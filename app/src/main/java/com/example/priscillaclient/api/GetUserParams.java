@@ -43,7 +43,7 @@ public class GetUserParams extends AsyncTask<String, String, User> {
             Log.i("STATUS", status + " MESSAGE: " + message);
             InputStream responseStream = connection.getInputStream();
 
-            String responseStr = "";
+            String responseStr;
             try (Scanner scanner = new Scanner(responseStream)) {
                 responseStr = scanner.useDelimiter("\\A").next();
             }

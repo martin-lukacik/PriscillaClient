@@ -1,7 +1,5 @@
 package com.example.priscillaclient;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -9,12 +7,12 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.priscillaclient.api.GetAreas;
-import com.example.priscillaclient.api.GetCategories;
 import com.example.priscillaclient.api.HttpResponse;
 import com.example.priscillaclient.client.Client;
 import com.example.priscillaclient.models.Area;
-import com.example.priscillaclient.models.Category;
 
 import java.util.ArrayList;
 
@@ -33,7 +31,10 @@ public class AreaActivity extends AppCompatActivity implements HttpResponse {
 
     @Override
     public void onUpdate(Object response) {
-        ArrayList<Area> areas = (ArrayList<Area>) response;
+        ArrayList<Area> areas = Client.getInstance().areas;
+
+        if (areas == null)
+            return;
 
         ArrayAdapter<Area> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, areas);
         ListView areaListView = findViewById(R.id.areaListView);

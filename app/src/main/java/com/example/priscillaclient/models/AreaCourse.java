@@ -1,5 +1,6 @@
 package com.example.priscillaclient.models;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -48,6 +49,7 @@ public class AreaCourse {
         }
     }
 
+    @NotNull
     @Override
     public String toString() {
         return title;

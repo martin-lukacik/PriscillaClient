@@ -1,5 +1,6 @@
 package com.example.priscillaclient.models;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -23,6 +24,7 @@ public class Area {
         number_of_courses = json.getInt("number_of_courses");
     }
 
+    @NotNull
     @Override
     public String toString() {
         return area_name;

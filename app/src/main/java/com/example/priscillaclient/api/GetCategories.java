@@ -5,10 +5,8 @@ import android.os.AsyncTask;
 
 import com.example.priscillaclient.CategoryActivity;
 import com.example.priscillaclient.HttpURLConnectionFactory;
-import com.example.priscillaclient.TaskActivity;
 import com.example.priscillaclient.client.Client;
 import com.example.priscillaclient.models.Category;
-import com.example.priscillaclient.models.Task;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

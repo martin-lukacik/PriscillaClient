@@ -38,7 +38,7 @@ public class GetActiveLessons extends AsyncTask<String, String, ArrayList<Lesson
 
             InputStream responseStream = connection.getInputStream();
 
-            String responseStr = "";
+            String responseStr;
             try (Scanner scanner = new Scanner(responseStream)) {
                 responseStr = scanner.useDelimiter("\\A").next();
             }

@@ -28,7 +28,7 @@ public class CategoryActivity extends AppCompatActivity implements HttpResponse 
 
     @Override
     public void onUpdate(Object response) {
-        ArrayList<Category> categories = (ArrayList<Category>) response;
+        ArrayList<Category> categories = Client.getInstance().categories;
 
         ArrayAdapter<Category> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, categories);
         ListView categoryListView = findViewById(R.id.categoryListView);

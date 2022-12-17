@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -19,16 +18,8 @@ import com.example.priscillaclient.api.GetUserParams;
 import com.example.priscillaclient.api.HttpResponse;
 import com.example.priscillaclient.client.Client;
 import com.example.priscillaclient.models.Course;
+import com.example.priscillaclient.models.User;
 
-import org.json.JSONObject;
-
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 
 public class MainActivity extends BaseActivity implements HttpResponse {
@@ -47,64 +38,6 @@ public class MainActivity extends BaseActivity implements HttpResponse {
         new GetUserCourses(this).execute();
     }
 
-    public void sendPost() {
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    URL url = new URL("https://app.priscilla.fitped.eu/oauth/token");
-                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                    conn.setRequestMethod("POST");
-                    conn.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
-                    conn.setRequestProperty("Accept", "application/json");
-                    conn.setDoOutput(true);
-                    conn.setDoInput(true);
-
-                    JSONObject jsonParam = new JSONObject();
-                    jsonParam.put("client_id", 2);
-                    jsonParam.put("client_secret", "iQuGUAzqc187j7IKQ94tTVJAywHCAzYBGAMTxEtr");
-                    jsonParam.put("email", "martin.lukacik@student.ukf.sk");
-                    jsonParam.put("grant_type", "password");
-                    jsonParam.put("password", "9701092533");
-                    jsonParam.put("username", "martin.lukacik@student.ukf.sk");
-
-                    Log.i("JSON", jsonParam.toString());
-                    DataOutputStream os = new DataOutputStream(conn.getOutputStream());
-                    //os.writeBytes(URLEncoder.encode(jsonParam.toString(), "UTF-8"));
-                    os.writeBytes(jsonParam.toString());
-
-                    os.flush();
-                    os.close();
-
-                    Log.i("STATUS", String.valueOf(conn.getResponseCode()));
-                    Log.i("MSG", conn.getResponseMessage());
-
-                    // RESPONSE
-
-                    InputStream responseStream = new BufferedInputStream(conn.getInputStream());
-                    BufferedReader responseStreamReader = new BufferedReader(new InputStreamReader(responseStream));
-                    String line = "";
-                    StringBuilder stringBuilder = new StringBuilder();
-                    while ((line = responseStreamReader.readLine()) != null) {
-                        stringBuilder.append(line);
-                    }
-                    responseStreamReader.close();
-
-                    String response = stringBuilder.toString();
-                    JSONObject jsonResponse = new JSONObject(response);
-                    Log.i("RESPONSe", response.toString());
-
-
-                    conn.disconnect();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
-        thread.start();
-    }
-
     CourseListAdapter adapter;
 
     @Override
@@ -112,8 +45,12 @@ public class MainActivity extends BaseActivity implements HttpResponse {
 
         super.onUpdate(response);
 
-        if (response instanceof ArrayList<?>) {
-            courses = new ArrayList<>((ArrayList<Course>) response);
+        if (response instanceof User) {
+            super.setMenuTitle((User) response);
+        }
+
+        else if (response instanceof ArrayList<?>) {
+            courses = Client.getInstance().courses;
 
             SharedPreferences settings = getApplicationContext().getSharedPreferences(PREF_SET, 0);
             int pinnedCourseId = settings.getInt("pinnedCourseId", -1);

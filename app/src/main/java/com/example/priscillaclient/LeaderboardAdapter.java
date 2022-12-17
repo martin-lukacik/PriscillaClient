@@ -2,8 +2,6 @@ package com.example.priscillaclient;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,18 +23,35 @@ public class LeaderboardAdapter extends ArrayAdapter<LeaderboardItem> {
         this.leaders = leaders;
     }
 
+    static class ViewHolder {
+        TextView position;
+        TextView name;
+        TextView xp;
+    }
+
     public View getView(int i, View view, ViewGroup parent) {
-        LayoutInflater inflater = context.getLayoutInflater();
-        View rowView = inflater.inflate(R.layout.listview_leaderboard, null,true);
 
-        TextView position = rowView.findViewById(R.id.leaderboard_position);
-        TextView name = rowView.findViewById(R.id.leaderboard_name);
-        TextView xp = rowView.findViewById(R.id.leaderboard_xp);
+        ViewHolder holder;
 
-        position.setText((i + 1) + ".");
-        name.setText(leaders.get(i).nickname);
-        xp.setText("" + leaders.get(i).xp);
+        if (view == null) {
+            holder = new ViewHolder();
 
-        return rowView;
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            view = inflater.inflate(R.layout.listview_leaderboard, parent, false);
+
+            holder.position = view.findViewById(R.id.leaderboard_position);
+            holder.name = view.findViewById(R.id.leaderboard_name);
+            holder.xp = view.findViewById(R.id.leaderboard_xp);
+
+            view.setTag(holder);
+        } else {
+            holder = (ViewHolder) view.getTag();
+        }
+
+        holder.position.setText((i + 1) + ".");
+        holder.name.setText(leaders.get(i).nickname);
+        holder.xp.setText("" + leaders.get(i).xp);
+
+        return view;
     }
 }

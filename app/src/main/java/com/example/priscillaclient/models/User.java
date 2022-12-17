@@ -18,7 +18,7 @@ public class User {
 
     public Performance performance;
 
-    public class Performance {
+    public static class Performance {
         public int xp;
         public int coins;
         public int level;

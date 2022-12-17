@@ -1,5 +1,6 @@
 package com.example.priscillaclient.models;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -27,6 +28,7 @@ public class Chapter {
         programs_nonfinished = json.getInt("programs_nonfinished");
     }
 
+    @NotNull
     @Override
     public String toString() {
         return name;
