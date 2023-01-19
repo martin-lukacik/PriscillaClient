@@ -21,11 +21,11 @@ public class GetUserCourses extends ApiTask {
     @Override
     protected ArrayList<Course> doInBackground(String... strings) {
 
-        if (client.courses != null)
+        if (!client.courses.isEmpty())
             return client.courses;
 
         try {
-            HttpURLConnection connection = HttpURLConnectionFactory.getConnection("/get-active-user-courses2", "GET", false);
+            HttpURLConnection connection = getConnection("/get-active-user-courses2", "GET", false);
 
             int status = connection.getResponseCode();
 
@@ -35,27 +35,19 @@ public class GetUserCourses extends ApiTask {
             }
 
             InputStream responseStream = connection.getInputStream();
+            String response = new Scanner(responseStream).useDelimiter("\\A").next();
+            JSONArray json = new JSONObject(response).getJSONArray("list");
 
-            String responseStr = "";
-            try (Scanner scanner = new Scanner(responseStream)) {
-                responseStr = scanner.useDelimiter("\\A").next();
-            }
-
-            client.courses = new ArrayList<>();
-
-            JSONArray json = new JSONObject(responseStr).getJSONArray("list");
-
+            client.courses.clear();
             for (int i = 0; i < json.length(); ++i) {
                 JSONObject j = json.getJSONObject(i);
                 client.courses.add(new Course(j));
             }
 
-            return client.courses;
-
         } catch (Exception e) {
             logError(e.getMessage());
         }
 
-        return null;
+        return client.courses;
     }
 }

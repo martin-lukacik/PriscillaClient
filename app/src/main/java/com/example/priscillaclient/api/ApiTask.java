@@ -15,8 +15,9 @@ import java.net.URL;
 
 public abstract class ApiTask extends AsyncTask<String, String, Object> {
 
-    final FragmentBase fragment;
     final static Client client = Client.getInstance();
+
+    final FragmentBase fragment;
 
     String errorMessage = null;
 
@@ -25,7 +26,16 @@ public abstract class ApiTask extends AsyncTask<String, String, Object> {
         this.fragment = fragment;
     }
 
-    public static HttpURLConnection getConnection(String endpoint, String method, boolean doOutput) {
+    protected void onPostExecute(Object response) {
+
+        if (errorMessage != null) {
+            Toast.makeText(fragment.getActivity(), errorMessage, Toast.LENGTH_LONG).show();
+        }
+
+        fragment.onUpdate(response);
+    }
+
+    public HttpURLConnection getConnection(String endpoint, String method, boolean doOutput) {
 
         try {
             URL url = new URL(ClientData.url + endpoint);
@@ -35,21 +45,17 @@ public abstract class ApiTask extends AsyncTask<String, String, Object> {
             connection.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
             connection.setRequestProperty("Accept", "application/json");
 
-            if (Client.getInstance().hasValidToken()) {
-                String auth = Client.getInstance().token_type + " " + Client.getInstance().access_token;
-                connection.setRequestProperty("Authorization", auth);
+            if (client.hasValidToken()) {
+                connection.setRequestProperty("Authorization", client.token_type + " " + client.access_token);
             }
 
-            if (doOutput) {
-                connection.setDoOutput(true);
-            }
-
+            connection.setDoOutput(doOutput);
             connection.setDoInput(true);
 
             return connection;
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logError(e.getMessage());
         }
 
         return null;
@@ -74,14 +80,5 @@ public abstract class ApiTask extends AsyncTask<String, String, Object> {
         } catch (Exception ignore) {
 
         }
-    }
-
-    protected void onPostExecute(Object response) {
-
-        if (errorMessage != null) {
-            Toast.makeText(fragment.getActivity(), errorMessage, Toast.LENGTH_SHORT).show();
-        }
-
-        fragment.onUpdate(response);
     }
 }

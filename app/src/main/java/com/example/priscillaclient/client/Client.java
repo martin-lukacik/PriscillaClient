@@ -24,7 +24,7 @@ public class Client {
 
     public User user = null;
 
-    public ArrayList<Course> courses = null;
+    public ArrayList<Course> courses = new ArrayList<>();
 
     public ArrayList<Chapter> chapters = null;
 
