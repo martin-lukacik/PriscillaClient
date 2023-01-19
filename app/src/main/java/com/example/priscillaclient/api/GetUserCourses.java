@@ -21,6 +21,7 @@ public class GetUserCourses extends ApiTask {
     @Override
     protected ArrayList<Course> doInBackground(String... strings) {
 
+        // Use the cached result
         if (!client.courses.isEmpty())
             return client.courses;
 
@@ -28,7 +29,6 @@ public class GetUserCourses extends ApiTask {
             HttpURLConnection connection = getConnection("/get-active-user-courses2", "GET", false);
 
             int status = connection.getResponseCode();
-
             if (status >= 400 && status < 600) {
                 logError(connection.getErrorStream());
                 return null;

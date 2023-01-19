@@ -30,12 +30,6 @@
             android:name=".LeaderboardActivity"
             android:exported="false" />
         <activity
-            android:name=".TaskActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ChapterActivity"
-            android:exported="false" />
-        <activity
             android:name=".LoginActivity"
             android:exported="true">
             <intent-filter>

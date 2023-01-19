@@ -43,7 +43,7 @@ public class AreaCourseActivity extends AppCompatActivity implements HttpRespons
     private void courseSelected(AdapterView<?> adapterView, View view, int i, long l) {
         AreaCourse course = Client.getInstance().areaCourses.get(i);
         if (course.status == AreaCourse.CourseStatus.OPENED) {
-            Intent intent = new Intent(AreaCourseActivity.this, ChapterActivity.class);
+            Intent intent = new Intent(AreaCourseActivity.this, MainActivity.class /* TODO ChapterActivity.class */);
             intent.putExtra("course_id", course.id);
             startActivity(intent);
         }

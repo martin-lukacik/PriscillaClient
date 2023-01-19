@@ -1,7 +1,5 @@
 package com.example.priscillaclient.api;
 
-import com.example.priscillaclient.HttpURLConnectionFactory;
-import com.example.priscillaclient.client.Client;
 import com.example.priscillaclient.fragments.FragmentBase;
 import com.example.priscillaclient.models.Chapter;
 
@@ -15,45 +13,39 @@ import java.util.Scanner;
 
 public class GetActiveChapters extends ApiTask {
 
-    final int activeCourseId;
+    final int courseId;
 
-    public GetActiveChapters(FragmentBase fragment, int activeCourseId) {
+    public GetActiveChapters(FragmentBase fragment, int courseId) {
         super(fragment);
-        this.activeCourseId = activeCourseId;
+        this.courseId = courseId;
+        client.lastCourseId = courseId;
     }
 
     @Override
     protected ArrayList<Chapter> doInBackground(String... strings) {
         try {
-            HttpURLConnection connection = HttpURLConnectionFactory.getConnection("/get-active-chapters2/" + activeCourseId, "GET", false);
+            HttpURLConnection connection = getConnection("/get-active-chapters2/" + courseId, "GET", false);
 
             int status = connection.getResponseCode();
-            String message = connection.getResponseMessage();
-
-            InputStream responseStream = connection.getInputStream();
-
-            String responseStr;
-            try (Scanner scanner = new Scanner(responseStream)) {
-                responseStr = scanner.useDelimiter("\\A").next();
+            if (status >= 400 && status < 600) {
+                logError(connection.getErrorStream());
+                return client.chapters;
             }
 
-            JSONArray json = new JSONObject(responseStr).getJSONArray("chapter_list");
+            InputStream responseStream = connection.getInputStream();
+            String response = new Scanner(responseStream).useDelimiter("\\A").next();
+            JSONArray json = new JSONObject(response).getJSONArray("chapter_list");
 
-            Client client = Client.getInstance();
-
-            client.chapters = new ArrayList<>();
-
+            client.chapters.clear();
             for (int i = 0; i < json.length(); ++i) {
                 Chapter c = new Chapter(json.getJSONObject(i));
                 client.chapters.add(c);
             }
 
-            return client.chapters;
-
         } catch (Exception e) {
-            e.printStackTrace();
+            logError(e.getMessage());
         }
 
-        return null;
+        return client.chapters;
     }
 }

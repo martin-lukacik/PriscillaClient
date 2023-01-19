@@ -142,10 +142,7 @@ public class CoursesFragment extends FragmentBase {
     }
 
     private void courseSelected(AdapterView<?> adapterView, View view, int i, long l){
-        Bundle bundle = new Bundle();
         int courseId = courses.get(i).course_id;
-        bundle.putInt("courseId", courseId);
-
         swapFragment(ChapterFragment.newInstance(courseId));
     }
 }

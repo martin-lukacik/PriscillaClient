@@ -1,6 +1,5 @@
 package com.example.priscillaclient.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -11,15 +10,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import com.example.priscillaclient.ChapterActivity;
 import com.example.priscillaclient.R;
-import com.example.priscillaclient.TaskActivity;
 import com.example.priscillaclient.api.GetActiveChapters;
 import com.example.priscillaclient.client.Client;
 import com.example.priscillaclient.models.Chapter;
-import com.example.priscillaclient.models.Course;
 
 import java.util.ArrayList;
 
@@ -80,7 +75,7 @@ public class ChapterFragment extends FragmentBase {
 
         chapters = Client.getInstance().chapters;
 
-        ListView chaptersListView = getActivity().findViewById(R.id.chapterListView);
+        ListView chaptersListView = findViewById(R.id.chapterListView);
 
         String[] chaps = new String[chapters.size()];
         for (int i = 0; i < chapters.size(); ++i) {
@@ -106,6 +101,12 @@ public class ChapterFragment extends FragmentBase {
         intent.putExtra("chapter_id", client.chapters.get(i).id);
         intent.putExtra("course_id", courseId);
         startActivity(intent);*/
-        Toast.makeText(getActivity(), "Chapter ID " + Client.getInstance().chapters.get(i).id, Toast.LENGTH_SHORT).show();
+
+        int chapterId = chapters.get(i).id;
+        swapFragment(TaskFragment.newInstance(courseId, chapterId));
+
+        // , currentLesson, currentLessonId, currentTask
+
+        //Toast.makeText(getActivity(), "Chapter ID " + Client.getInstance().chapters.get(i).id, Toast.LENGTH_SHORT).show();
     }
 }

@@ -3,7 +3,7 @@ package com.example.priscillaclient;
 import android.content.Context;
 import android.webkit.JavascriptInterface;
 
-class TaskViewInterface {
+public class TaskViewInterface {
 
     Context context;
     public String data;

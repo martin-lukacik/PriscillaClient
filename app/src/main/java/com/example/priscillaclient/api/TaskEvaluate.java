@@ -1,12 +1,6 @@
 package com.example.priscillaclient.api;
 
-import android.content.Context;
-import android.os.AsyncTask;
-import android.util.Log;
-import android.widget.Toast;
-
-import com.example.priscillaclient.HttpURLConnectionFactory;
-import com.example.priscillaclient.TaskActivity;
+import com.example.priscillaclient.fragments.FragmentBase;
 import com.example.priscillaclient.models.TaskEval;
 
 import org.json.JSONObject;
@@ -20,22 +14,16 @@ import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.nio.charset.StandardCharsets;
 
-public class TaskEvaluate extends AsyncTask<String, String, TaskEval> {
+public class TaskEvaluate extends ApiTask {
 
-    Context context;
-
-    public TaskEvaluate(Context context) {
-        super();
-        this.context = context;
+    public TaskEvaluate(FragmentBase fragment) {
+        super(fragment);
     }
-
-    String error = null;
 
     @Override
     protected TaskEval doInBackground(String... strings) {
-        Log.i("TASK_EVAL", "Evaluating task");
         try {
-            HttpURLConnection connection = HttpURLConnectionFactory.getConnection("/task-evaluate2", "POST", true);
+            HttpURLConnection connection = getConnection("/task-evaluate2", "POST", true);
 
             JSONObject json = new JSONObject();
             json.put("answer_list", strings[0]);
@@ -43,27 +31,14 @@ public class TaskEvaluate extends AsyncTask<String, String, TaskEval> {
             json.put("task_id", strings[1]);
             json.put("task_type_id", strings[2]);
             json.put("time_length", strings[3]);
-            //json.put("tasks", Client.getInstance().tasks);
-
-            Log.i("JSON", json.toString());
 
             Writer writer = new OutputStreamWriter(connection.getOutputStream(), StandardCharsets.UTF_8);
             writer.write(json.toString());
             writer.close();
 
-           if (connection.getResponseCode() >= 400 && connection.getResponseCode() < 600) {
-                InputStream is = connection.getErrorStream();
-
-                BufferedReader br = new BufferedReader(new InputStreamReader(is));
-                String line;
-                StringBuilder stringBuilder = new StringBuilder();
-                while ((line = br.readLine()) != null) {
-                    stringBuilder.append(line);
-                }
-                br.close();
-                is.close();
-
-                error = stringBuilder.toString();
+            int status = connection.getResponseCode();
+            if (status >= 400 && status < 600) {
+                logError(connection.getErrorStream());
                 return null;
             }
 
@@ -71,34 +46,21 @@ public class TaskEvaluate extends AsyncTask<String, String, TaskEval> {
 
             InputStream responseStream = new BufferedInputStream(connection.getInputStream());
             BufferedReader responseStreamReader = new BufferedReader(new InputStreamReader(responseStream));
+
             String line;
             StringBuilder stringBuilder = new StringBuilder();
             while ((line = responseStreamReader.readLine()) != null) {
                 stringBuilder.append(line);
             }
+
             responseStreamReader.close();
 
             JSONObject response = new JSONObject(stringBuilder.toString());
-            Log.i("TASK_RESPONSE", response.toString());
-
-            connection.disconnect();
-
             return new TaskEval(response.getJSONObject("result"));
         } catch (Exception e) {
-            e.printStackTrace();
+            logError(e.getMessage());
         }
+
         return null;
-    }
-
-    @Override
-    protected void onPostExecute(TaskEval taskEval) {
-        super.onPostExecute(taskEval);
-
-        if (error != null) {
-            Toast.makeText(context, error, Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        ((TaskActivity) context).taskEvalResponse(taskEval);
     }
 }

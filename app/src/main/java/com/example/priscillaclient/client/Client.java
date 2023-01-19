@@ -26,11 +26,14 @@ public class Client {
 
     public ArrayList<Course> courses = new ArrayList<>();
 
-    public ArrayList<Chapter> chapters = null;
+    public ArrayList<Chapter> chapters = new ArrayList<>();
+    public int lastCourseId = -1;
 
-    public ArrayList<Lesson> lessons = null;
+    public ArrayList<Lesson> lessons = new ArrayList<>();
+    public int lastChapterId = -1;
 
-    public ArrayList<Task> tasks = null;
+    public ArrayList<Task> tasks = new ArrayList<>();
+    public int lastLessonId = -1;
 
     public ArrayList<Language> languageList = null;
     public ArrayList<Category> categories = null;

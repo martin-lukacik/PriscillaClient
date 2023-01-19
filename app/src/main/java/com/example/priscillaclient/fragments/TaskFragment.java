@@ -1,12 +1,19 @@
-package com.example.priscillaclient;
+package com.example.priscillaclient.fragments;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
+
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -14,12 +21,10 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.drawerlayout.widget.DrawerLayout;
-
+import com.example.priscillaclient.R;
+import com.example.priscillaclient.TaskViewInterface;
 import com.example.priscillaclient.api.GetActiveLessons;
 import com.example.priscillaclient.api.GetActiveTasks;
-import com.example.priscillaclient.api.HttpResponse;
 import com.example.priscillaclient.api.TaskEvaluate;
 import com.example.priscillaclient.client.Client;
 import com.example.priscillaclient.models.Lesson;
@@ -29,31 +34,67 @@ import com.google.android.material.navigation.NavigationView;
 
 import org.json.JSONArray;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 
-public class TaskActivity extends AppCompatActivity implements HttpResponse {
+/**
+ * A simple {@link Fragment} subclass.
+ * Use the {@link TaskFragment#newInstance} factory method to
+ * create an instance of this fragment.
+ */
+public class TaskFragment extends FragmentBase {
 
-    int courseId;
-    int chapterId;
+    private static final String ARG_COURSE_ID = "courseId";
+    private static final String ARG_CHAPTER_ID = "chapterId";
 
-    int currentLesson = -1;
-    int currentLessonId = -1;
+    private int courseId;
+    private int chapterId;
+    private int currentLesson = -1;
+    private int lessonId = -1;
+    private int currentTask = 0;
 
-    int currentTask = 0;
+    // ==============================================================================
 
-    boolean updateLayout = true;
-
+    Button buttonTaskNext;
+    Button buttonTaskPrevious;
+    Button buttonTaskHelp;
+    Button buttonTaskSubmit;
     LinearLayout taskLayout;
     WebView webView;
     EditText inputEditText;
 
-    TaskViewInterface jsInterface = new TaskViewInterface(this);
+    TaskViewInterface jsInterface = new TaskViewInterface(getActivity());
+
+    public TaskFragment() { }
+
+    public static TaskFragment newInstance(int courseId, int chapterId) {
+        TaskFragment fragment = new TaskFragment();
+        Bundle args = new Bundle();
+        args.putInt(ARG_COURSE_ID, courseId);
+        args.putInt(ARG_CHAPTER_ID, chapterId);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            courseId = getArguments().getInt(ARG_COURSE_ID);
+            chapterId = getArguments().getInt(ARG_CHAPTER_ID);
+        }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        new GetActiveLessons(this, chapterId).execute();
+
+        return inflater.inflate(R.layout.fragment_task, container, false);
+    }
 
     @SuppressLint("SetJavaScriptEnabled")
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_task);
+    public void createLayout() {
 
         taskLayout = findViewById(R.id.taskLayout);
         inputEditText = findViewById(R.id.inputEditText);
@@ -63,76 +104,82 @@ public class TaskActivity extends AppCompatActivity implements HttpResponse {
         webView.getSettings().setJavaScriptEnabled(true);
         webView.addJavascriptInterface(jsInterface, "Android");
 
-        Intent intent = getIntent();
+        buttonTaskNext = findViewById(R.id.buttonTaskNext);
+        buttonTaskPrevious = findViewById(R.id.buttonTaskPrevious);
+        buttonTaskHelp = findViewById(R.id.buttonTaskHelp);
+        buttonTaskSubmit = findViewById(R.id.buttonTaskSubmit);
 
-        courseId = intent.getIntExtra("course_id", -1);
-        chapterId = intent.getIntExtra("chapter_id", -1);
+        buttonTaskNext.setOnClickListener(this::nextTask);
+        buttonTaskPrevious.setOnClickListener(this::previousTask);
+        buttonTaskSubmit.setOnClickListener(this::submit);
+    }
 
-        currentLesson = intent.getIntExtra("current_lesson", -1);
-        currentLessonId = intent.getIntExtra("current_lesson_id", -1);
-        currentTask = intent.getIntExtra("current_task", 0);
+    @Override
+    public void onUpdate(Object response) {
 
-        new GetActiveLessons(this, chapterId).execute();
+        if (taskLayout == null) {
+            createLayout();
+        }
 
-        if (currentLesson != -1 && currentLessonId != -1) {
-            new GetActiveTasks(this, courseId, chapterId, currentLessonId).execute();
+        Client client = Client.getInstance();
+
+        if (response.equals(client.lessons)) {
+            int id = lessonId == -1 ? client.lessons.get(0).id : lessonId;
+            new GetActiveTasks(this, id).execute();
+
+            updateLessonList(client.lessons);
+        } else if (response.equals(client.tasks)) {
+            currentTask = 0;
+            updateTaskList(client.tasks);
+        } else if (response instanceof TaskEval) {
+            Toast.makeText(getActivity(), "Rating: " + ((TaskEval) response).rating, Toast.LENGTH_SHORT).show();
         }
     }
 
-    public void updateLessons(ArrayList<Lesson> lessons) {
+    public void updateLessonList(ArrayList<Lesson> lessons) {
+        NavigationView navigationView = findViewById(R.id.navigationView);
+        Menu menu = navigationView.getMenu();
+        menu.clear();
 
-        if (currentLesson == -1 || currentLessonId == -1) {
-            new GetActiveTasks(this, courseId, chapterId, lessons.get(0).id).execute();
-        } else {
-            new GetActiveTasks(this, courseId, chapterId, currentLessonId).execute();
+        menu.add("Lessons");
+        menu.getItem(0).setEnabled(false);
+
+        navigationView.bringToFront();
+
+        for (Lesson lesson : lessons) {
+            MenuItem item = menu.add(lesson.name);
+
+            item.setOnMenuItemClickListener((e) -> {
+                currentLesson = item.getItemId();
+                lessonId = lesson.id;
+                updateLessonList(lessons);
+                DrawerLayout drawer = findViewById(R.id.drawerLayout);
+                drawer.closeDrawers();
+                return false;
+            });
         }
 
-        if (updateLayout) {
-            updateLayout = false;
-            NavigationView navigationView = findViewById(R.id.navigationView);
-            Menu menu = navigationView.getMenu();
-            menu.clear();
-
-            menu.add("Lessons");
-            menu.getItem(0).setEnabled(false);
-
-            navigationView.bringToFront();
-
-            for (Lesson lesson : lessons) {
-                MenuItem item = menu.add(lesson.name);
-
-                item.setOnMenuItemClickListener((e) -> {
-                    currentLesson = item.getItemId();
-                    currentLessonId = lesson.id;
-                    onUpdate(lessons);
-                    DrawerLayout drawer = findViewById(R.id.drawerLayout);
-                    drawer.closeDrawers();
-                    return false;
-                });
-            }
-
-            navigationView.invalidate();
-        }
+        navigationView.invalidate();
     }
 
-    public void updateTasks(ArrayList<Task> tasks) {
+    public void updateTaskList(ArrayList<Task> tasks) {
         clearTaskLayout();
 
         Task task = tasks.get(currentTask);
 
-        String css = "<style>.answer { max-width:4em } pre{ background:lightgrey; color:black; overflow-y:scroll; }</style>";
-        String javascript = "<script>function process() { let arr = []; let els = document.querySelectorAll(\".answer\"); for (let i = 0; i < els.length; ++i) { arr.push(els[i].value); } Android.sendData(JSON.stringify(arr)); }</script>";
+        String css = "<style>" + readFile(R.raw.task_style) + "</style>";
+        String javascript = "<script>" + readFile(R.raw.task_script) + "</script>";
 
         String content = task.content;
 
         switch (task.type) {
             case TASK_CHOICE:
                 if (task.answers != null) {
-                    RadioGroup radioGroup = new RadioGroup(this);
+                    RadioGroup radioGroup = new RadioGroup(getActivity());
                     radioGroup.setTag("CLEAR");
 
                     for (String answer : task.answers) {
-                        RadioButton radioButton = new RadioButton(this);
+                        RadioButton radioButton = new RadioButton(getActivity());
                         radioButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                         radioButton.setText(answer);
                         radioGroup.addView(radioButton);
@@ -150,7 +197,7 @@ public class TaskActivity extends AppCompatActivity implements HttpResponse {
             case TASK_MULTI:
                 if (task.answers != null) {
                     for (String answer : task.answers) {
-                        CheckBox checkBox = new CheckBox(this);
+                        CheckBox checkBox = new CheckBox(getActivity());
                         checkBox.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                         checkBox.setText(answer);
                         checkBox.setTag("CLEAR");
@@ -161,48 +208,6 @@ public class TaskActivity extends AppCompatActivity implements HttpResponse {
             case TASK_DRAG:
 
                 content = task.content.replaceAll("§§_§§", "<span onclick=\"return remove(this);\" class=\"drag\" style=\"text-align:center; color:white; display:inline-block; background:black; width:4em\"></span>");
-
-                javascript += "<script>function add(el) {\n" +
-                        "\n" +
-                        "\tif (el.disabled) {\n" +
-                        "\t\treturn;\n" +
-                        "\t}\n" +
-                        "\n" +
-                        "\tlet els = document.getElementsByTagName(\"span\");\n" +
-                        "\n" +
-                        "\tfor (let i = 0; i < els.length; ++i) {\n" +
-                        "\t\tif (els[i].innerText == \"\") {\n" +
-                        "\t\t\tels[i].innerText = el.innerText;\n" +
-                        "\t\t\tel.disabled = true;\n" +
-                        "\t\t\tbreak;\n" +
-                        "\t\t}\n" +
-                        "\t}\n" +
-                        "\n" +
-                        "\tlet arr = [];\n" +
-                        "\tfor (let i = 0; i < els.length; ++i) {\n" +
-                        "\t\tarr.push(els[i].innerText);\n" +
-                        "\t}\n" +
-                        "\n" +
-                        "\tAndroid.sendData(JSON.stringify(arr));\n" +
-                        "}\n" +
-                        "\n" +
-                        "function remove(el) {\n" +
-                        "\t\n" +
-                        "\tif (el.innerText == \"\") {\n" +
-                        "\t\treturn;\n" +
-                        "\t}\n" +
-                        "\n" +
-                        "\tlet els = document.getElementsByTagName(\"button\");\n" +
-                        "\n" +
-                        "\tfor (let i = 0; i < els.length; ++i) {\n" +
-                        "\t\tif (els[i].disabled && els[i].innerText == el.innerText) {\n" +
-                        "\t\t\tels[i].disabled = false;\n" +
-                        "\t\t\tbreak;\n" +
-                        "\t\t}\n" +
-                        "\t}\n" +
-                        "\n" +
-                        "\tel.innerText = \"\";\n" +
-                        "}</script>";
 
                 String html = "";
                 if (task.fakes != null) {
@@ -220,21 +225,7 @@ public class TaskActivity extends AppCompatActivity implements HttpResponse {
         webView.loadData(css + javascript + content, "text/html; charset=utf-8", "UTF-8");
     }
 
-    @Override
-    public void onUpdate(Object response) {
-        if (((ArrayList<?>) response).get(0) instanceof Lesson)
-            updateLessons(Client.getInstance().lessons);
-        else if (((ArrayList<?>) response).get(0) instanceof Task) {
-            currentTask = 0;
-            updateTasks(Client.getInstance().tasks);
-        }
-    }
-
-    public void taskEvalResponse(TaskEval taskEval) {
-        Toast.makeText(this, "Rating: " + taskEval.rating, Toast.LENGTH_SHORT).show();
-    }
-
-    public void clearTaskLayout() {
+    private void clearTaskLayout() {
         inputEditText.setText("");
         inputEditText.setVisibility(View.GONE);
         for (int i = taskLayout.getChildCount() - 1; i >= 0; --i) {
@@ -302,7 +293,7 @@ public class TaskActivity extends AppCompatActivity implements HttpResponse {
         ArrayList<Task> tasks = Client.getInstance().tasks;
         if (tasks.size() > currentTask + 1) {
             ++currentTask;
-            updateTasks(tasks);
+            updateTaskList(tasks);
         }
     }
 
@@ -310,7 +301,7 @@ public class TaskActivity extends AppCompatActivity implements HttpResponse {
         ArrayList<Task> tasks = Client.getInstance().tasks;
         if (currentTask - 1 >= 0) {
             --currentTask;
-            updateTasks(tasks);
+            updateTaskList(tasks);
         }
     }
 }

@@ -5,8 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:id="@+id/drawerLayout"
-    tools:context=".TaskActivity">
+    android:id="@+id/drawerLayout">
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigationView"
@@ -35,14 +34,14 @@
                     android:layout_height="wrap_content"
                     android:text="Previous"
                     android:layout_weight="1"
-                    android:onClick="previousTask"
+                    android:id="@+id/buttonTaskPrevious"
                     android:layout_gravity="start"/>
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Next"
                     android:layout_weight="1"
-                    android:onClick="nextTask"
+                    android:id="@+id/buttonTaskNext"
                     android:layout_gravity="end"/>
             </LinearLayout>
 
@@ -56,13 +55,14 @@
                     android:layout_height="wrap_content"
                     android:text="Help"
                     android:layout_weight="1"
+                    android:id="@+id/buttonTaskHelp"
                     android:layout_gravity="start"/>
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Submit"
                     android:layout_weight="1"
-                    android:onClick="submit"
+                    android:id="@+id/buttonTaskSubmit"
                     android:layout_gravity="end"/>
             </LinearLayout>
 

@@ -1,0 +1,8 @@
+.answer {
+    max-width:4em
+}
+pre {
+    background:lightgrey;
+    color:black;
+    overflow-y:scroll;
+}

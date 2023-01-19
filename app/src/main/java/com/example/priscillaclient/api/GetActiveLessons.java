@@ -1,11 +1,6 @@
 package com.example.priscillaclient.api;
 
-import android.content.Context;
-import android.os.AsyncTask;
-
-import com.example.priscillaclient.client.Client;
-import com.example.priscillaclient.HttpURLConnectionFactory;
-import com.example.priscillaclient.TaskActivity;
+import com.example.priscillaclient.fragments.FragmentBase;
 import com.example.priscillaclient.models.Lesson;
 
 import org.json.JSONArray;
@@ -16,53 +11,40 @@ import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+public class GetActiveLessons extends ApiTask {
 
-// TODO Get lessons & tasks at the same time, need them in one view anyway
-public class GetActiveLessons extends AsyncTask<String, String, ArrayList<Lesson>> {
-
-    final Context context;
     final int chapterId;
-    public GetActiveLessons(Context context, int chapterId) {
-        super();
-        this.context = context;
+    public GetActiveLessons(FragmentBase fragment, int chapterId) {
+        super(fragment);
         this.chapterId = chapterId;
+        client.lastChapterId = chapterId;
     }
 
     @Override
     protected ArrayList<Lesson> doInBackground(String... strings) {
         try {
-            HttpURLConnection connection = HttpURLConnectionFactory.getConnection("/get-active-lessons2/" + chapterId, "GET", false);
+            HttpURLConnection connection = getConnection("/get-active-lessons2/" + chapterId, "GET", false);
 
             int status = connection.getResponseCode();
-            String message = connection.getResponseMessage();
-
-            InputStream responseStream = connection.getInputStream();
-
-            String responseStr;
-            try (Scanner scanner = new Scanner(responseStream)) {
-                responseStr = scanner.useDelimiter("\\A").next();
+            if (status >= 400 && status < 600) {
+                logError(connection.getErrorStream());
+                return client.lessons;
             }
 
-            JSONArray json = new JSONObject(responseStr).getJSONArray("lesson_list");
+            InputStream responseStream = connection.getInputStream();
+            String response = new Scanner(responseStream).useDelimiter("\\A").next();
+            JSONArray json = new JSONObject(response).getJSONArray("lesson_list");
 
-            Client client = Client.getInstance();
-
-            client.lessons = new ArrayList<>();
-
+            client.lessons.clear();
             for (int i = 0; i < json.length(); ++i) {
                 Lesson c = new Lesson(json.getJSONObject(i));
                 client.lessons.add(c);
             }
 
-            return client.lessons;
         } catch (Exception e) {
-            e.printStackTrace();
+            logError(e.getMessage());
         }
 
-        return null;
-    }
-
-    protected void onPostExecute(ArrayList<Lesson> tasks) {
-        ((TaskActivity) context).onUpdate(tasks);
+        return client.lessons;
     }
 }
