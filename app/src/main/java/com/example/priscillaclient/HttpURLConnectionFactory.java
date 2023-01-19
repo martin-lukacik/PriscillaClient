@@ -20,17 +20,15 @@ public class HttpURLConnectionFactory {
             connection.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
             connection.setRequestProperty("Accept", "application/json");
 
-            // TODO determine if actually needed before call to save bandwidth
             if (Client.getInstance().hasValidToken()) {
                 String auth = Client.getInstance().token_type + " " + Client.getInstance().access_token;
                 connection.setRequestProperty("Authorization", auth);
-                Log.i("AUTHORIZATION", auth);
-                Log.i("AUTHORIZATION", "Refresh " + Client.getInstance().refresh_token);
             }
 
             if (doOutput) {
                 connection.setDoOutput(true);
             }
+
             connection.setDoInput(true);
 
             return connection;

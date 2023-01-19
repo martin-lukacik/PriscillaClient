@@ -42,7 +42,6 @@ public class GetActiveChapters extends AsyncTask<String, String, ArrayList<Chapt
                 responseStr = scanner.useDelimiter("\\A").next();
             }
 
-
             JSONArray json = new JSONObject(responseStr).getJSONArray("chapter_list");
 
             Client client = Client.getInstance();

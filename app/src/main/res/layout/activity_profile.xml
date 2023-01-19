@@ -20,7 +20,7 @@
             android:background="@drawable/profile_icon"
             android:textColor="@color/black"
             android:gravity="center"
-            android:text="MM"
+            android:text="@string/placeholder_2em"
             android:id="@+id/usernameShort" />
 
         <TextView
@@ -28,6 +28,7 @@
             android:layout_height="wrap_content"
             android:textSize="24sp"
             android:gravity="center"
+            android:text="@string/placeholder_user"
             android:textColor="@color/black"
             android:id="@+id/usernameFull" />
     </LinearLayout>
@@ -41,21 +42,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="15dp">
+        android:padding="20dp">
 
         <TextView
             android:textSize="18sp"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="LEVEL" />
+            android:text="@string/level" />
         <TextView
             android:textSize="18sp"
             android:id="@+id/profileLevel"
             android:layout_weight="2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="LEVEL" />
+            android:text="@string/placeholder_number" />
 
     </LinearLayout>
 
@@ -70,14 +71,14 @@
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="XP" />
+            android:text="@string/xp" />
         <TextView
             android:textSize="18sp"
             android:id="@+id/profileXP"
             android:layout_weight="2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="LEVEL" />
+            android:text="@string/placeholder_number" />
 
     </LinearLayout>
 
@@ -92,14 +93,14 @@
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="COINS"/>
+            android:text="@string/coins"/>
         <TextView
             android:textSize="18sp"
             android:id="@+id/profileCoins"
             android:layout_weight="2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="LEVEL"
+            android:text="@string/placeholder_number"
             app:drawableLeftCompat="@drawable/ic_tonality" />
 
     </LinearLayout>
@@ -121,14 +122,14 @@
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="E-MAIL"/>
+            android:text="@string/e_mail"/>
         <TextView
             android:textSize="18sp"
             android:id="@+id/profileEmail"
             android:layout_weight="2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="LEVEL" />
+            android:text="@string/placeholder_email" />
 
     </LinearLayout>
 

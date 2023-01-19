@@ -20,7 +20,7 @@
             android:textSize="18sp"
             android:gravity="center_vertical"
             android:textStyle="bold"
-            android:text="Position" />
+            android:text="@string/position" />
 
         <TextView
             android:layout_width="0dp"
@@ -29,7 +29,7 @@
             android:textSize="18sp"
             android:gravity="center_vertical"
             android:textStyle="bold"
-            android:text="Nickname" />
+            android:text="@string/nickname" />
 
         <TextView
             android:layout_width="0dp"
@@ -38,7 +38,7 @@
             android:textSize="18sp"
             android:gravity="center_vertical"
             android:textStyle="bold"
-            android:text="XP" />
+            android:text="@string/xp" />
 
     </LinearLayout>
 

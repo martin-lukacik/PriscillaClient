@@ -10,4 +10,20 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="u_registrovat"><u>Registracia</u></string>
+    <string name="position">Position</string>
+    <string name="nickname">Nickname</string>
+    <string name="xp">XP</string>
+    <string name="username_or_email">Používateľské meno alebo e-mail</string>
+    <string name="password">Heslo</string>
+    <string name="remember_login">Zapamätať si údaje</string>
+    <string name="sign_in">Prihlásiť sa</string>
+    <string name="register">Registrácia</string>
+    <string name="my_courses">Moje kurzy</string>
+    <string name="placeholder_2em">MM</string>
+    <string name="placeholder_user">Priscilla User</string>
+    <string name="level">LEVEL</string>
+    <string name="placeholder_number">9999</string>
+    <string name="coins">COINS</string>
+    <string name="e_mail">E-MAIL</string>
+    <string name="placeholder_email">user@priscilla.eu</string>
 </resources>
