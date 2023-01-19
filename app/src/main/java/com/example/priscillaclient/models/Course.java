@@ -22,6 +22,8 @@ public class Course {
         name = json.getString("name");
         description = json.getString("description");
         area_color = json.getString("area_color");
+
+        fillUserData(json);
     }
 
     @NotNull

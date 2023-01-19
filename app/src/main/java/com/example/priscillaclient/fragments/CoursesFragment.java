@@ -71,31 +71,20 @@ public class CoursesFragment extends FragmentBase {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        if (this.courses == null)
-            new GetUserCourses(this).execute();
+        new GetUserCourses(this).execute();
 
         return inflater.inflate(R.layout.fragment_courses, container, false);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        if (this.courses != null)
-            onUpdate(this.courses);
-    }
-
     CourseListAdapter adapter;
     ArrayList<Course> courses;
+
     final String PREF_SET = "settings";
 
     @Override
     public void onUpdate(Object response) {
 
         courses = Client.getInstance().courses;
-
-        if (courses == null)
-            return;
 
         SharedPreferences settings = getActivity().getApplicationContext().getSharedPreferences(PREF_SET, 0);
         int pinnedCourseId = settings.getInt("pinnedCourseId", -1);
