@@ -18,13 +18,10 @@ import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class GetUserCourses extends AsyncTask<String, String, ArrayList<Course>> {
-
-    FragmentBase fragment;
+public class GetUserCourses extends ApiTask {
 
     public GetUserCourses(FragmentBase fragment) {
-        super();
-        this.fragment = fragment;
+        super(fragment);
     }
 
     @Override
@@ -64,9 +61,5 @@ public class GetUserCourses extends AsyncTask<String, String, ArrayList<Course>>
         }
 
         return null;
-    }
-
-    protected void onPostExecute(ArrayList<Course> courses) {
-        fragment.onUpdate(courses);
     }
 }

@@ -1,11 +1,7 @@
 package com.example.priscillaclient.api;
 
-import android.content.Context;
-import android.os.AsyncTask;
-
-import com.example.priscillaclient.ChapterActivity;
-import com.example.priscillaclient.client.Client;
 import com.example.priscillaclient.HttpURLConnectionFactory;
+import com.example.priscillaclient.client.Client;
 import com.example.priscillaclient.fragments.FragmentBase;
 import com.example.priscillaclient.models.Chapter;
 
@@ -17,14 +13,12 @@ import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class GetActiveChapters extends AsyncTask<String, String, ArrayList<Chapter>> {
+public class GetActiveChapters extends ApiTask {
 
-    final FragmentBase fragment;
     final int activeCourseId;
-    public GetActiveChapters(FragmentBase fragment, int activeCourseId) {
-        super();
 
-        this.fragment = fragment;
+    public GetActiveChapters(FragmentBase fragment, int activeCourseId) {
+        super(fragment);
         this.activeCourseId = activeCourseId;
     }
 
@@ -61,9 +55,5 @@ public class GetActiveChapters extends AsyncTask<String, String, ArrayList<Chapt
         }
 
         return null;
-    }
-
-    protected void onPostExecute(ArrayList<Chapter> chapters) {
-        fragment.onUpdate(chapters);
     }
 }
