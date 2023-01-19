@@ -12,11 +12,16 @@ import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentContainerView;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.priscillaclient.api.GetUserCourses;
 import com.example.priscillaclient.api.GetUserParams;
 import com.example.priscillaclient.api.HttpResponse;
 import com.example.priscillaclient.client.Client;
+import com.example.priscillaclient.fragments.CoursesFragment;
 import com.example.priscillaclient.models.Course;
 import com.example.priscillaclient.models.User;
 
@@ -33,6 +38,13 @@ public class MainActivity extends BaseActivity implements HttpResponse {
                 PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET}, 1);
         }
+
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+
+        transaction.replace(R.id.fragmentContainerView, new CoursesFragment());
+        transaction.addToBackStack(null);
+        transaction.commit();
 
         new GetUserParams(this).execute();
         new GetUserCourses(this).execute();
