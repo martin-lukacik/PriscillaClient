@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.view.WindowManager;
 
+import com.example.priscillaclient.LoginActivity;
 import com.example.priscillaclient.client.Client;
 import com.example.priscillaclient.client.ClientData;
 import com.example.priscillaclient.HttpURLConnectionFactory;
@@ -26,13 +27,11 @@ import java.net.HttpURLConnection;
 public class RequestToken extends AsyncTask<String, String, User> {
 
     Context context; // TODO fix the leak || do it outside || null check?
-    ProgressDialog dialog;
 
-    public RequestToken(Context context, ProgressDialog dialog) {
+    public RequestToken(Context context) {
         super();
 
         this.context = context;
-        this.dialog = dialog;
     }
 
     protected User doInBackground(String... strings) {
@@ -95,9 +94,6 @@ public class RequestToken extends AsyncTask<String, String, User> {
     }
 
     protected void onPostExecute(User user) {
-        dialog.dismiss();
-        ((Activity) context).getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        Intent intent = new Intent(context, MainActivity.class);
-        context.startActivity(intent);
+        ((LoginActivity) context).onUpdate(user);
     }
 }

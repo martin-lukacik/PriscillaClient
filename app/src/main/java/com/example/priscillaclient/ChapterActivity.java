@@ -30,7 +30,7 @@ public class ChapterActivity extends AppCompatActivity implements HttpResponse {
         courseId = intent.getExtras().getInt("course_id", -1);
         Log.i("Course ID", "=" + courseId);
 
-        new GetActiveChapters(this, courseId).execute();
+        //new GetActiveChapters(this, courseId).execute();
 
         // https://app.priscilla.fitped.eu/get-active-chapters2/{COURSE_ID}
     }

@@ -7,6 +7,7 @@ import android.util.Log;
 import com.example.priscillaclient.client.Client;
 import com.example.priscillaclient.HttpURLConnectionFactory;
 import com.example.priscillaclient.MainActivity;
+import com.example.priscillaclient.fragments.FragmentBase;
 import com.example.priscillaclient.models.Course;
 
 import org.json.JSONArray;
@@ -19,11 +20,11 @@ import java.util.Scanner;
 
 public class GetUserCourses extends AsyncTask<String, String, ArrayList<Course>> {
 
-    Context context;
+    FragmentBase fragment;
 
-    public GetUserCourses(Context context) {
+    public GetUserCourses(FragmentBase fragment) {
         super();
-        this.context = context;
+        this.fragment = fragment;
     }
 
     @Override
@@ -66,6 +67,6 @@ public class GetUserCourses extends AsyncTask<String, String, ArrayList<Course>>
     }
 
     protected void onPostExecute(ArrayList<Course> courses) {
-        ((MainActivity) this.context).onUpdate(courses);
+        fragment.onUpdate(courses);
     }
 }

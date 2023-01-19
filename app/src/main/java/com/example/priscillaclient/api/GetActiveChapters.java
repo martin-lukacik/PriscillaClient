@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import com.example.priscillaclient.ChapterActivity;
 import com.example.priscillaclient.client.Client;
 import com.example.priscillaclient.HttpURLConnectionFactory;
+import com.example.priscillaclient.fragments.FragmentBase;
 import com.example.priscillaclient.models.Chapter;
 
 import org.json.JSONArray;
@@ -18,12 +19,12 @@ import java.util.Scanner;
 
 public class GetActiveChapters extends AsyncTask<String, String, ArrayList<Chapter>> {
 
-    final Context context;
+    final FragmentBase fragment;
     final int activeCourseId;
-    public GetActiveChapters(Context context, int activeCourseId) {
+    public GetActiveChapters(FragmentBase fragment, int activeCourseId) {
         super();
 
-        this.context = context;
+        this.fragment = fragment;
         this.activeCourseId = activeCourseId;
     }
 
@@ -63,6 +64,6 @@ public class GetActiveChapters extends AsyncTask<String, String, ArrayList<Chapt
     }
 
     protected void onPostExecute(ArrayList<Chapter> chapters) {
-        ((ChapterActivity) this.context).onUpdate(chapters);
+        fragment.onUpdate(chapters);
     }
 }

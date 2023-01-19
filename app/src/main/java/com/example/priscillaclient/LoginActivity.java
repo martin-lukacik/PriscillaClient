@@ -9,10 +9,11 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 
+import com.example.priscillaclient.api.HttpResponse;
 import com.example.priscillaclient.api.RequestToken;
 import com.example.priscillaclient.views.LoadingDialog;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements HttpResponse {
 
     LoadingDialog loadingDialog;
 
@@ -40,7 +41,16 @@ public class LoginActivity extends AppCompatActivity {
         loadingDialog = new LoadingDialog(LoginActivity.this, "Logging in...");
         loadingDialog.show();
 
-        new RequestToken(this, loadingDialog)
+        new RequestToken(this)
                 .execute(username, password, username);
+    }
+
+    @Override
+    public void onUpdate(Object response) {
+        loadingDialog.dismiss();
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 }
