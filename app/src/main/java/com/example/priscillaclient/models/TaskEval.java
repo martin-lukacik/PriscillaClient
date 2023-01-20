@@ -12,6 +12,10 @@ public class TaskEval {
 
     public ArrayList<Answer> answers = new ArrayList<>();
 
+    public TaskEval(int rating) {
+        this.rating = rating;
+    }
+
     public TaskEval(JSONObject json) throws JSONException {
         rating = json.getInt("rating");
 

@@ -2,8 +2,12 @@ package com.example.priscillaclient.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 
+import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.view.LayoutInflater;
@@ -125,43 +129,38 @@ public class TaskFragment extends FragmentBase {
             currentTask = 0;
             updateTaskList(client.tasks);
         } else if (response instanceof TaskEval) {
-            Dialog dialog = new Dialog(getActivity());
-
-            View view = View.inflate(getActivity(), R.layout.layout_dialog_taskeval, null);
-
-            int rating = ((TaskEval) response).rating;
-
-            ImageView star1 = view.findViewById(R.id.dialog_star_1);
-            ImageView star2 = view.findViewById(R.id.dialog_star_2);
-            ImageView star3 = view.findViewById(R.id.dialog_star_3);
-            ImageView star4 = view.findViewById(R.id.dialog_star_4);
-            ImageView star5 = view.findViewById(R.id.dialog_star_5);
-
-            int color = 0xffffd700;
-
-            if (rating >= 20)
-                star1.setColorFilter(color);
-            if (rating >= 40)
-                star2.setColorFilter(color);
-            if (rating >= 60)
-                star3.setColorFilter(color);
-            if (rating >= 80)
-                star4.setColorFilter(color);
-            if (rating >= 100)
-                star5.setColorFilter(color);
-
-            ((TextView) view.findViewById(R.id.dialog_title)).setText("Rating");
-
-            view.findViewById(R.id.dialog_dismiss).setOnClickListener(e -> {
-                dialog.dismiss();
-            });
-
-            dialog.setCancelable(true);
-            dialog.setContentView(view);
-            dialog.show();
-
-            //Toast.makeText(getActivity(), "Rating: " + ((TaskEval) response).rating, Toast.LENGTH_SHORT).show();
+            showRatingDialog(((TaskEval) response));
         }
+    }
+
+    public void showRatingDialog(TaskEval eval) {
+
+        Dialog dialog = new Dialog(getActivity());
+
+        View view = View.inflate(getActivity(), R.layout.layout_dialog_taskeval, null);
+
+        LinearLayout stars = view.findViewById(R.id.dialog_stars);
+        for (int i = 1; i <= 5; ++i) {
+            ImageView star = new ImageView(getActivity());
+            star.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
+
+            int ratingAdjusted = (int) Math.ceil(eval.rating / 20f) * 20;
+            if (ratingAdjusted >= i * 20) {
+                star.setBackgroundResource(R.drawable.ic_star_full);
+            } else {
+                star.setBackgroundResource(R.drawable.ic_star);
+            }
+
+            stars.addView(star);
+        }
+
+        view.findViewById(R.id.dialog_dismiss).setOnClickListener(e -> {
+            dialog.dismiss();
+        });
+
+        dialog.setCancelable(true);
+        dialog.setContentView(view);
+        dialog.show();
     }
 
     public void updateLessonList(ArrayList<Lesson> lessons) {
@@ -265,6 +264,11 @@ public class TaskFragment extends FragmentBase {
     }
 
     public void submit(View view) {
+
+        showRatingDialog(new TaskEval(50));
+        if (true)
+            return;
+
         ArrayList<Task> tasks = Client.getInstance().tasks;
         if (tasks != null) {
             Task task = tasks.get(currentTask);
