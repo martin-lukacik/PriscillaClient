@@ -27,22 +27,43 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="15dp"
+                android:padding="10dp"
+                android:paddingBottom="0dp"
                 android:orientation="horizontal">
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Previous"
+                    android:textSize="32sp"
+                    android:textColor="@color/black"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:backgroundTint="@android:color/transparent"
                     android:layout_weight="1"
+                    android:textStyle="bold"
+                    android:text="«"
                     android:id="@+id/buttonTaskPrevious"
-                    android:layout_gravity="start"/>
+                    android:layout_gravity="start" />
+                <TextView
+                    android:id="@+id/taskCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:text="1 / 1"
+                    android:gravity="center"
+                    android:layout_gravity="center" />
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Next"
+                    android:textSize="32sp"
+                    android:textColor="@color/black"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:backgroundTint="@android:color/transparent"
                     android:layout_weight="1"
+                    android:textStyle="bold"
+                    android:text="»"
                     android:id="@+id/buttonTaskNext"
-                    android:layout_gravity="end"/>
+                    android:layout_gravity="end" />
             </LinearLayout>
 
             <LinearLayout
@@ -57,13 +78,18 @@
                     android:layout_weight="1"
                     android:id="@+id/buttonTaskHelp"
                     android:layout_gravity="start"/>
-                <Button
-                    android:layout_width="wrap_content"
+                <Space
                     android:layout_height="wrap_content"
-                    android:text="Submit"
-                    android:layout_weight="1"
+                    android:layout_width="1dp"
+                    android:layout_weight="5"
+                    android:layout_gravity="center" />
+                <Button
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/ic_submit"
                     android:id="@+id/buttonTaskSubmit"
-                    android:layout_gravity="end"/>
+                    android:layout_gravity="center" />
             </LinearLayout>
 
 

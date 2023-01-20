@@ -2,14 +2,7 @@ package com.example.priscillaclient.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
-
-import androidx.core.content.ContextCompat;
-import androidx.core.graphics.drawable.DrawableCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,10 +17,10 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.priscillaclient.R;
-import com.example.priscillaclient.views.JavascriptInterface;
 import com.example.priscillaclient.api.GetActiveLessons;
 import com.example.priscillaclient.api.GetActiveTasks;
 import com.example.priscillaclient.api.TaskEvaluate;
@@ -35,6 +28,7 @@ import com.example.priscillaclient.client.Client;
 import com.example.priscillaclient.models.Lesson;
 import com.example.priscillaclient.models.Task;
 import com.example.priscillaclient.models.TaskEval;
+import com.example.priscillaclient.views.JavascriptInterface;
 import com.google.android.material.navigation.NavigationView;
 
 import org.json.JSONArray;
@@ -57,6 +51,7 @@ public class TaskFragment extends FragmentBase {
     Button buttonTaskHelp;
     Button buttonTaskSubmit;
     LinearLayout taskLayout;
+    TextView taskCount;
     WebView webView;
     EditText inputEditText;
 
@@ -94,6 +89,7 @@ public class TaskFragment extends FragmentBase {
     public void createLayout() {
 
         taskLayout = findViewById(R.id.taskLayout);
+        taskCount = findViewById(R.id.taskCount);
         inputEditText = findViewById(R.id.inputEditText);
         inputEditText.setVisibility(View.GONE);
 
@@ -127,6 +123,7 @@ public class TaskFragment extends FragmentBase {
             updateLessonList(client.lessons);
         } else if (response.equals(client.tasks)) {
             currentTask = 0;
+            buttonTaskPrevious.setVisibility(View.INVISIBLE);
             updateTaskList(client.tasks);
         } else if (response instanceof TaskEval) {
             showRatingDialog(((TaskEval) response));
@@ -144,8 +141,8 @@ public class TaskFragment extends FragmentBase {
             ImageView star = new ImageView(getActivity());
             star.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
 
-            int ratingAdjusted = (int) Math.ceil(eval.rating / 20f) * 20;
-            if (ratingAdjusted >= i * 20) {
+            int ratingAdjusted = (int) Math.ceil(eval.rating / 20f);
+            if (ratingAdjusted >= i) {
                 star.setBackgroundResource(R.drawable.ic_star_full);
             } else {
                 star.setBackgroundResource(R.drawable.ic_star);
@@ -191,6 +188,8 @@ public class TaskFragment extends FragmentBase {
 
     public void updateTaskList(ArrayList<Task> tasks) {
         clearTaskLayout();
+
+        taskCount.setText((currentTask + 1) + " / " + tasks.size());
 
         Task task = tasks.get(currentTask);
 
@@ -264,12 +263,8 @@ public class TaskFragment extends FragmentBase {
     }
 
     public void submit(View view) {
-
-        showRatingDialog(new TaskEval(50));
-        if (true)
-            return;
-
         ArrayList<Task> tasks = Client.getInstance().tasks;
+
         if (tasks != null) {
             Task task = tasks.get(currentTask);
             ArrayList<String> postedAnswers = new ArrayList<>();
@@ -327,6 +322,14 @@ public class TaskFragment extends FragmentBase {
             ++currentTask;
             updateTaskList(tasks);
         }
+
+        if (currentTask > 0) {
+            buttonTaskPrevious.setVisibility(View.VISIBLE);
+        }
+
+        if (currentTask + 1 >= tasks.size()) {
+            buttonTaskNext.setVisibility(View.INVISIBLE);
+        }
     }
 
     public void previousTask(View view) {
@@ -334,6 +337,14 @@ public class TaskFragment extends FragmentBase {
         if (currentTask - 1 >= 0) {
             --currentTask;
             updateTaskList(tasks);
+        }
+
+        if (currentTask == 0) {
+            buttonTaskPrevious.setVisibility(View.INVISIBLE);
+        }
+
+        if (currentTask + 1 < tasks.size()) {
+            buttonTaskNext.setVisibility(View.VISIBLE);
         }
     }
 }
