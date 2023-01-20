@@ -1,18 +1,13 @@
 package com.example.priscillaclient.api;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.view.WindowManager;
 
+import com.example.priscillaclient.HttpURLConnectionFactory;
 import com.example.priscillaclient.LoginActivity;
 import com.example.priscillaclient.client.Client;
 import com.example.priscillaclient.client.ClientData;
-import com.example.priscillaclient.HttpURLConnectionFactory;
-import com.example.priscillaclient.MainActivity;
 import com.example.priscillaclient.models.User;
 
 import org.json.JSONObject;
@@ -24,24 +19,20 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 
-public class RequestToken extends AsyncTask<String, String, User> {
+public class RequestToken extends ApiTask {
 
-    Context context; // TODO fix the leak || do it outside || null check?
-
-    public RequestToken(Context context) {
-        super();
-
-        this.context = context;
+    public RequestToken(HttpResponse context) {
+        super(context);
     }
 
-    protected User doInBackground(String... strings) {
+    protected Client doInBackground(String... strings) {
         return requestToken(strings[0], strings[1], strings[2], strings[3]);
     }
 
-    protected User requestToken(String username, String password, String email, String grant_type) {
+    protected Client requestToken(String username, String password, String email, String grant_type) {
 
         try {
-            HttpURLConnection connection = HttpURLConnectionFactory.getConnection("/oauth/token", "POST", true);
+            HttpURLConnection connection = getConnection("/oauth/token", "POST", true);
 
             JSONObject json = new JSONObject();
             json.put("client_id", ClientData.client_id);
@@ -51,18 +42,17 @@ public class RequestToken extends AsyncTask<String, String, User> {
             json.put(grant_type, password);
             json.put("username", username);
 
-            Log.i("JSON", json.toString());
             DataOutputStream os = new DataOutputStream(connection.getOutputStream());
-            //os.writeBytes(URLEncoder.encode(jsonParam.toString(), "UTF-8"));
             os.writeBytes(json.toString());
 
             os.flush();
             os.close();
 
-            Log.i("STATUS", String.valueOf(connection.getResponseCode()));
-            Log.i("MSG", connection.getResponseMessage());
-
-            // RESPONSE
+            int status = connection.getResponseCode();
+            if (status >= 400 && status < 600) {
+                logError(connection.getErrorStream());
+                return Client.getInstance();
+            }
 
             InputStream responseStream = new BufferedInputStream(connection.getInputStream());
             BufferedReader responseStreamReader = new BufferedReader(new InputStreamReader(responseStream));
@@ -72,32 +62,21 @@ public class RequestToken extends AsyncTask<String, String, User> {
                 stringBuilder.append(line);
             }
             responseStreamReader.close();
-
-            JSONObject response = new JSONObject(stringBuilder.toString());
-            Log.i("RESPONSE", response.toString());
-
             connection.disconnect();
 
-            Client.getInstance().token_type = response.getString("token_type");
-            Client.getInstance().expires_in = response.getInt("expires_in");
-            Client.getInstance().access_token = response.getString("access_token");
-            Client.getInstance().refresh_token = response.getString("refresh_token");
-            Client.getInstance().logged_in = System.currentTimeMillis() / 1000;
+            JSONObject response = new JSONObject(stringBuilder.toString());
 
-            String refresh = Client.getInstance().refresh_token;
-
-
-
-            return Client.getInstance().user; // TODO why user
+            Client client = Client.getInstance();
+            client.token_type = response.getString("token_type");
+            client.expires_in = response.getInt("expires_in");
+            client.access_token = response.getString("access_token");
+            client.refresh_token = response.getString("refresh_token");
+            client.logged_in = System.currentTimeMillis() / 1000;
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logError(e.getMessage());
         }
 
-        return null;
-    }
-
-    protected void onPostExecute(User user) {
-        ((LoginActivity) context).onUpdate(user);
+        return Client.getInstance();
     }
 }

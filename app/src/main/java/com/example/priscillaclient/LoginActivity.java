@@ -8,6 +8,7 @@ import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -27,10 +28,31 @@ public class LoginActivity extends AppCompatActivity implements HttpResponse {
 
     LoadingDialog loadingDialog;
 
+    String refresh_token;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+
+        SharedPreferences settings = getApplicationContext().getSharedPreferences("settings", 0);
+
+/*
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("username", null);
+        editor.putString("refresh_token", null);
+        editor.apply();*/
+
+        String username = settings.getString("username", null);
+        refresh_token = settings.getString("refresh_token", null);
+        if (username != null && refresh_token != null) {
+            ((EditText) findViewById(R.id.inputUsername)).setText(username);
+            loadingDialog = new LoadingDialog(LoginActivity.this, "Logging in...");
+            loadingDialog.show();
+            apiCall = new RequestToken(this);
+            apiCall.execute(username, refresh_token, username, "refresh_token");
+        }
     }
 
     public void redirect(View view) {
@@ -48,32 +70,36 @@ public class LoginActivity extends AppCompatActivity implements HttpResponse {
             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
         );
 
-        AccountManager am = AccountManager.get(this);
-        Account[] accounts = am.getAccountsByType("com.example");
 
         loadingDialog = new LoadingDialog(LoginActivity.this, "Logging in...");
         loadingDialog.show();
-
-        if (accounts.length == 0) {
-            new RequestToken(this).execute(username, password, username, "password");
-        } else {
-            new RequestToken(this).execute(username, "refresh_token_from_store", username, "refresh_token");
-        }
+        apiCall = new RequestToken(this);
+        apiCall.execute(username, password, username, "password");
     }
+
+    RequestToken apiCall;
 
     @Override
     public void onUpdate(Object response) {
+
+        loadingDialog.dismiss();
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+
+        if (apiCall != null && apiCall.errorMessage != null)
+            return;
+
         String username = ((EditText) findViewById(R.id.inputUsername)).getText().toString();
 
         // TODO check if actually logged in (wrong password etc.)
         CheckBox rememberUser = findViewById(R.id.rememberUser);
         if (rememberUser.isChecked()) {
-            AccountManager am = AccountManager.get(this);
-            am.addAccountExplicitly(new Account(username, "com.example"), Client.getInstance().refresh_token, null);
+            SharedPreferences settings = getApplicationContext().getSharedPreferences("settings", 0);
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putString("username", username);
+            editor.putString("refresh_token", Client.getInstance().refresh_token);
+            editor.apply();
         }
 
-        loadingDialog.dismiss();
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();

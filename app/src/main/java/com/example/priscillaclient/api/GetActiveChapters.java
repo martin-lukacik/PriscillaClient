@@ -18,11 +18,19 @@ public class GetActiveChapters extends ApiTask {
     public GetActiveChapters(FragmentBase fragment, int courseId) {
         super(fragment);
         this.courseId = courseId;
-        client.lastCourseId = courseId;
     }
 
     @Override
     protected ArrayList<Chapter> doInBackground(String... strings) {
+
+        // Use the cached result
+        if (client.lastCourseId == courseId) {
+            if (!client.chapters.isEmpty())
+                return client.chapters;
+        }
+
+        client.lastCourseId = courseId;
+
         try {
             HttpURLConnection connection = getConnection("/get-active-chapters2/" + courseId, "GET", false);
 

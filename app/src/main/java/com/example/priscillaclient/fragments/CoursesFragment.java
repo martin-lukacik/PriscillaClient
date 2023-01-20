@@ -98,9 +98,11 @@ public class CoursesFragment extends FragmentBase {
                 }
             }
 
-            Course course = courses.remove(index);
-            course.isPinned = true;
-            courses.add(0, course);
+            if (index != -1) {
+                Course course = courses.remove(index);
+                course.isPinned = true;
+                courses.add(0, course);
+            }
         }
         Toast.makeText(getActivity(), pinnedCourseId + " pinned update", Toast.LENGTH_SHORT).show();
 

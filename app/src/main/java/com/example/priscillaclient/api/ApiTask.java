@@ -1,5 +1,6 @@
 package com.example.priscillaclient.api;
 
+import android.app.Activity;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
@@ -17,19 +18,20 @@ public abstract class ApiTask extends AsyncTask<String, String, Object> {
 
     final static Client client = Client.getInstance();
 
-    final FragmentBase fragment;
+    final HttpResponse fragment;
 
-    String errorMessage = null;
+    public String errorMessage = null;
 
-    public ApiTask(FragmentBase fragment) {
+    public ApiTask(HttpResponse fragment) {
         super();
         this.fragment = fragment;
     }
 
     protected void onPostExecute(Object response) {
 
+        Activity activity = (fragment instanceof Activity ? (Activity) fragment : ((FragmentBase) fragment).getActivity());
         if (errorMessage != null) {
-            Toast.makeText(fragment.getActivity(), errorMessage, Toast.LENGTH_LONG).show();
+            Toast.makeText(activity, errorMessage, Toast.LENGTH_LONG).show();
         }
 
         fragment.onUpdate(response);
