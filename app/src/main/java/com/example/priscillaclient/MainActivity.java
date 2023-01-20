@@ -2,31 +2,19 @@ package com.example.priscillaclient;
 
 import android.Manifest;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.GridView;
-import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentContainerView;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
-import com.example.priscillaclient.api.GetUserCourses;
 import com.example.priscillaclient.api.GetUserParams;
 import com.example.priscillaclient.api.HttpResponse;
-import com.example.priscillaclient.client.Client;
-import com.example.priscillaclient.fragments.ChapterFragment;
 import com.example.priscillaclient.fragments.CoursesFragment;
-import com.example.priscillaclient.models.Course;
 import com.example.priscillaclient.models.User;
-
-import java.util.ArrayList;
+import com.example.priscillaclient.views.adapters.CourseListAdapter;
 
 public class MainActivity extends BaseActivity implements HttpResponse {
 

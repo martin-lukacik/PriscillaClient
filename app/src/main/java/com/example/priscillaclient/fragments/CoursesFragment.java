@@ -5,7 +5,6 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +12,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
-import com.example.priscillaclient.CourseListAdapter;
+import com.example.priscillaclient.views.adapters.CourseListAdapter;
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.api.GetUserCourses;
 import com.example.priscillaclient.client.Client;
@@ -143,6 +142,6 @@ public class CoursesFragment extends FragmentBase {
 
     private void courseSelected(AdapterView<?> adapterView, View view, int i, long l){
         int courseId = courses.get(i).course_id;
-        swapFragment(ChapterFragment.newInstance(courseId));
+        swapFragment(ChaptersFragment.newInstance(courseId));
     }
 }

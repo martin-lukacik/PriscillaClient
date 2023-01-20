@@ -2,17 +2,13 @@ package com.example.priscillaclient.fragments;
 
 import android.os.Bundle;
 
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.GridView;
-import android.widget.ListView;
 
-import com.example.priscillaclient.ChapterListAdapter;
+import com.example.priscillaclient.views.adapters.ChapterListAdapter;
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.api.GetActiveChapters;
 import com.example.priscillaclient.client.Client;
@@ -20,21 +16,16 @@ import com.example.priscillaclient.models.Chapter;
 
 import java.util.ArrayList;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ChapterFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class ChapterFragment extends FragmentBase {
+public class ChaptersFragment extends FragmentBase {
 
     private static final String ARG_COURSE_ID = "courseId";
 
     private int courseId;
 
-    public ChapterFragment() { }
+    public ChaptersFragment() { }
 
-    public static ChapterFragment newInstance(int courseId) {
-        ChapterFragment fragment = new ChapterFragment();
+    public static ChaptersFragment newInstance(int courseId) {
+        ChaptersFragment fragment = new ChaptersFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COURSE_ID, courseId);
         fragment.setArguments(args);
@@ -90,28 +81,13 @@ public class ChapterFragment extends FragmentBase {
             chaps[i] = format;
         }
 
-        /*ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, chaps);
-        chaptersListView.setAdapter(adapter);*/
-
         ChapterListAdapter adapter = new ChapterListAdapter(getActivity(), chapters);
         chaptersListView.setAdapter(adapter);
         chaptersListView.setOnItemClickListener(this::onItemClick);
     }
 
     private void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-/*
-        Client client = Client.getInstance();
-
-        Intent intent = new Intent(getActivity(), TaskActivity.class);
-        intent.putExtra("chapter_id", client.chapters.get(i).id);
-        intent.putExtra("course_id", courseId);
-        startActivity(intent);*/
-
         int chapterId = chapters.get(i).id;
         swapFragment(TaskFragment.newInstance(courseId, chapterId));
-
-        // , currentLesson, currentLessonId, currentTask
-
-        //Toast.makeText(getActivity(), "Chapter ID " + Client.getInstance().chapters.get(i).id, Toast.LENGTH_SHORT).show();
     }
 }

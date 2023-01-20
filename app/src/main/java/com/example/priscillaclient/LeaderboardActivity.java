@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.priscillaclient.api.GetLeaders;
 import com.example.priscillaclient.api.HttpResponse;
 import com.example.priscillaclient.models.LeaderboardItem;
+import com.example.priscillaclient.views.adapters.LeaderboardAdapter;
 
 import java.util.ArrayList;
 

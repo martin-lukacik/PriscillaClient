@@ -1,4 +1,4 @@
-package com.example.priscillaclient;
+package com.example.priscillaclient.views.adapters;
 
 import android.app.Activity;
 import android.content.Context;
@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.example.priscillaclient.R;
 import com.example.priscillaclient.models.LeaderboardItem;
 
 import java.util.ArrayList;

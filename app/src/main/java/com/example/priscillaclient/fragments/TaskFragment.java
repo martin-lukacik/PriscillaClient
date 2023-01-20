@@ -1,11 +1,10 @@
 package com.example.priscillaclient.fragments;
 
 import android.annotation.SuppressLint;
-import android.content.res.Resources;
+import android.app.Dialog;
 import android.os.Bundle;
 
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,13 +15,15 @@ import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.priscillaclient.R;
-import com.example.priscillaclient.TaskViewInterface;
+import com.example.priscillaclient.views.JavascriptInterface;
 import com.example.priscillaclient.api.GetActiveLessons;
 import com.example.priscillaclient.api.GetActiveTasks;
 import com.example.priscillaclient.api.TaskEvaluate;
@@ -34,14 +35,8 @@ import com.google.android.material.navigation.NavigationView;
 
 import org.json.JSONArray;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link TaskFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class TaskFragment extends FragmentBase {
 
     private static final String ARG_COURSE_ID = "courseId";
@@ -53,8 +48,6 @@ public class TaskFragment extends FragmentBase {
     private int lessonId = -1;
     private int currentTask = 0;
 
-    // ==============================================================================
-
     Button buttonTaskNext;
     Button buttonTaskPrevious;
     Button buttonTaskHelp;
@@ -63,7 +56,7 @@ public class TaskFragment extends FragmentBase {
     WebView webView;
     EditText inputEditText;
 
-    TaskViewInterface jsInterface = new TaskViewInterface(getActivity());
+    JavascriptInterface javascriptInterface = new JavascriptInterface(getActivity());
 
     public TaskFragment() { }
 
@@ -102,7 +95,7 @@ public class TaskFragment extends FragmentBase {
 
         webView = findViewById(R.id.webView);
         webView.getSettings().setJavaScriptEnabled(true);
-        webView.addJavascriptInterface(jsInterface, "Android");
+        webView.addJavascriptInterface(javascriptInterface, "Android");
 
         buttonTaskNext = findViewById(R.id.buttonTaskNext);
         buttonTaskPrevious = findViewById(R.id.buttonTaskPrevious);
@@ -132,7 +125,42 @@ public class TaskFragment extends FragmentBase {
             currentTask = 0;
             updateTaskList(client.tasks);
         } else if (response instanceof TaskEval) {
-            Toast.makeText(getActivity(), "Rating: " + ((TaskEval) response).rating, Toast.LENGTH_SHORT).show();
+            Dialog dialog = new Dialog(getActivity());
+
+            View view = View.inflate(getActivity(), R.layout.layout_dialog_taskeval, null);
+
+            int rating = ((TaskEval) response).rating;
+
+            ImageView star1 = view.findViewById(R.id.dialog_star_1);
+            ImageView star2 = view.findViewById(R.id.dialog_star_2);
+            ImageView star3 = view.findViewById(R.id.dialog_star_3);
+            ImageView star4 = view.findViewById(R.id.dialog_star_4);
+            ImageView star5 = view.findViewById(R.id.dialog_star_5);
+
+            int color = 0xffffd700;
+
+            if (rating >= 20)
+                star1.setColorFilter(color);
+            if (rating >= 40)
+                star2.setColorFilter(color);
+            if (rating >= 60)
+                star3.setColorFilter(color);
+            if (rating >= 80)
+                star4.setColorFilter(color);
+            if (rating >= 100)
+                star5.setColorFilter(color);
+
+            ((TextView) view.findViewById(R.id.dialog_title)).setText("Rating");
+
+            view.findViewById(R.id.dialog_dismiss).setOnClickListener(e -> {
+                dialog.dismiss();
+            });
+
+            dialog.setCancelable(true);
+            dialog.setContentView(view);
+            dialog.show();
+
+            //Toast.makeText(getActivity(), "Rating: " + ((TaskEval) response).rating, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -246,7 +274,7 @@ public class TaskFragment extends FragmentBase {
 
                 case TASK_FILL:
                 case TASK_DRAG:
-                    new TaskEvaluate(this).execute(jsInterface.data, task.task_id + "", task.task_type_id + "", "10");
+                    new TaskEvaluate(this).execute(javascriptInterface.data, task.task_id + "", task.task_type_id + "", "10");
                     break;
 
                 case TASK_CHOICE:

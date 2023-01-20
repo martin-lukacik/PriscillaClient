@@ -1,18 +1,17 @@
-package com.example.priscillaclient;
+package com.example.priscillaclient.views;
 
 import android.content.Context;
-import android.webkit.JavascriptInterface;
 
-public class TaskViewInterface {
+public class JavascriptInterface {
 
     Context context;
     public String data;
 
-    public TaskViewInterface(Context context) {
+    public JavascriptInterface(Context context) {
         this.context = context;
     }
 
-    @JavascriptInterface
+    @android.webkit.JavascriptInterface
     public void sendData(String data) {
         this.data = data;
     }

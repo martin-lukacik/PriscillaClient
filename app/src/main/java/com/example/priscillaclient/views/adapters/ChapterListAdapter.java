@@ -1,4 +1,4 @@
-package com.example.priscillaclient;
+package com.example.priscillaclient.views.adapters;
 
 import android.app.Activity;
 import android.content.Context;
@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import androidx.core.content.res.ResourcesCompat;
 
+import com.example.priscillaclient.R;
 import com.example.priscillaclient.client.Client;
 import com.example.priscillaclient.models.Chapter;
 import com.example.priscillaclient.models.Course;
