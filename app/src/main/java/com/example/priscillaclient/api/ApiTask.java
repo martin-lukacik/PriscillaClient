@@ -23,7 +23,6 @@ public abstract class ApiTask extends AsyncTask<String, String, Object> {
     protected final static Client client = Client.getInstance();
 
     final HttpResponse fragment;
-    HttpConnection connection = null;
 
     public String errorMessage = null;
 

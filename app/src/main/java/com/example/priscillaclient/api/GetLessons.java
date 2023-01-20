@@ -26,15 +26,12 @@ public class GetLessons extends ApiTask {
         try {
             HttpConnection connection = new HttpConnection("/get-active-lessons2/" + chapterId, "GET", false);
 
-            int status = connection.getResponseCode();
-            if (status >= 400 && status < 600) {
+            if (connection.getErrorStream() != null) {
                 logError(connection.getErrorStream());
                 return client.lessons;
             }
 
-            InputStream responseStream = connection.getInputStream();
-            String response = new Scanner(responseStream).useDelimiter("\\A").next();
-            JSONArray json = new JSONObject(response).getJSONArray("lesson_list");
+            JSONArray json = new JSONObject(connection.getResponse()).getJSONArray("lesson_list");
 
             client.lessons.clear();
             for (int i = 0; i < json.length(); ++i) {

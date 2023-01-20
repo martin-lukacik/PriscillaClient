@@ -11,8 +11,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 public class HttpConnection {
 
@@ -41,10 +44,9 @@ public class HttpConnection {
     }
 
     protected void sendRequest(JSONObject json) throws IOException {
-        DataOutputStream os = new DataOutputStream(connection.getOutputStream());
-        os.writeBytes(json.toString());
-        os.flush();
-        os.close();
+        Writer writer = new OutputStreamWriter(connection.getOutputStream(), StandardCharsets.UTF_8);
+        writer.write(json.toString());
+        writer.close();
     }
 
     protected String getResponse() throws IOException {

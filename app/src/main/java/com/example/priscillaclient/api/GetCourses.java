@@ -1,6 +1,7 @@
 package com.example.priscillaclient.api;
 
 import com.example.priscillaclient.api.ApiTask;
+import com.example.priscillaclient.api.client.Client;
 import com.example.priscillaclient.fragments.FragmentBase;
 import com.example.priscillaclient.models.Course;
 
@@ -28,15 +29,12 @@ public class GetCourses extends ApiTask {
         try {
             HttpConnection connection = new HttpConnection("/get-active-user-courses2", "GET", false);
 
-            int status = connection.getResponseCode();
-            if (status >= 400 && status < 600) {
+            if (connection.getErrorStream() != null) {
                 logError(connection.getErrorStream());
-                return null;
+                return client.courses;
             }
 
-            InputStream responseStream = connection.getInputStream();
-            String response = new Scanner(responseStream).useDelimiter("\\A").next();
-            JSONArray json = new JSONObject(response).getJSONArray("list");
+            JSONArray json = new JSONObject(connection.getResponse()).getJSONArray("list");
 
             client.courses.clear();
             for (int i = 0; i < json.length(); ++i) {
