@@ -8,7 +8,7 @@ import android.view.Menu;
 
 import androidx.appcompat.view.menu.MenuBuilder;
 
-import com.example.priscillaclient.client.Client;
+import com.example.priscillaclient.api.client.Client;
 import com.example.priscillaclient.HttpURLConnectionFactory;
 import com.example.priscillaclient.models.Language;
 

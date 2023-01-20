@@ -33,7 +33,7 @@ public class GetChapters extends ApiTask {
         client.lastCourseId = courseId;
 
         try {
-            HttpURLConnection connection = getConnection("/get-active-chapters2/" + courseId, "GET", false);
+            HttpConnection connection = new HttpConnection("/get-active-chapters2/" + courseId, "GET", false);
 
             int status = connection.getResponseCode();
             if (status >= 400 && status < 600) {

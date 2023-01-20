@@ -24,7 +24,7 @@ import com.example.priscillaclient.R;
 import com.example.priscillaclient.api.GetLessons;
 import com.example.priscillaclient.api.GetTasks;
 import com.example.priscillaclient.api.EvaluateTask;
-import com.example.priscillaclient.client.Client;
+import com.example.priscillaclient.api.client.Client;
 import com.example.priscillaclient.models.Lesson;
 import com.example.priscillaclient.models.Task;
 import com.example.priscillaclient.models.TaskResult;

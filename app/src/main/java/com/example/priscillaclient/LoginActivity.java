@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.priscillaclient.api.HttpResponse;
 import com.example.priscillaclient.api.GetToken;
-import com.example.priscillaclient.client.Client;
+import com.example.priscillaclient.api.client.Client;
 import com.example.priscillaclient.views.LoadingDialog;
 
 public class LoginActivity extends AppCompatActivity implements HttpResponse {

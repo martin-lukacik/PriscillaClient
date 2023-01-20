@@ -11,7 +11,7 @@ import android.widget.GridView;
 import com.example.priscillaclient.views.adapters.ChapterListAdapter;
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.api.GetChapters;
-import com.example.priscillaclient.client.Client;
+import com.example.priscillaclient.api.client.Client;
 import com.example.priscillaclient.models.Chapter;
 
 import java.util.ArrayList;

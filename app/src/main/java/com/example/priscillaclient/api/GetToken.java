@@ -1,13 +1,9 @@
 package com.example.priscillaclient.api;
 
-import com.example.priscillaclient.client.Client;
+import com.example.priscillaclient.api.client.Client;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.net.HttpURLConnection;
 
 public class GetToken extends ApiTask {
 
@@ -22,16 +18,18 @@ public class GetToken extends ApiTask {
     protected Client requestToken(String username, String password, String email, String grant_type) {
 
         try {
-            HttpURLConnection connection = getConnection("/oauth/token", "POST", true);
+            HttpConnection connection = new HttpConnection("/oauth/token", "POST", true);
 
             JSONObject json = getJsonObject(username, password, email, grant_type);
 
-            sendRequest(connection, json);
+            connection.sendRequest(json);
 
-            if (hasError(connection))
+            if (connection.getErrorStream() != null) {
+                logError(connection.getErrorStream());
                 return Client.getInstance();
+            }
 
-            JSONObject response = new JSONObject(getResponse(connection));
+            JSONObject response = new JSONObject(connection.getResponse());
 
             Client.set(response);
 
@@ -42,13 +40,6 @@ public class GetToken extends ApiTask {
         }
 
         return Client.getInstance();
-    }
-
-    private void sendRequest(HttpURLConnection connection, JSONObject json) throws IOException {
-        DataOutputStream os = new DataOutputStream(connection.getOutputStream());
-        os.writeBytes(json.toString());
-        os.flush();
-        os.close();
     }
 
     private JSONObject getJsonObject(String username, String password, String email, String grant_type) throws JSONException {

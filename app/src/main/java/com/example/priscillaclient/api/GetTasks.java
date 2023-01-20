@@ -29,7 +29,7 @@ public class GetTasks extends ApiTask {
     @Override
     protected ArrayList<Task> doInBackground(String... strings) {
         try {
-            HttpURLConnection connection = getConnection("/get-active-tasks2/" + courseId + "/" + chapterId + "/" + lessonId, "GET", false);
+            HttpConnection connection = new HttpConnection("/get-active-tasks2/" + courseId + "/" + chapterId + "/" + lessonId, "GET", false);
 
             int status = connection.getResponseCode();
             if (status >= 400 && status < 600) {

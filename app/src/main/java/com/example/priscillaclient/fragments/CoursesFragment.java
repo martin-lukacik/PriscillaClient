@@ -10,12 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.Toast;
 
 import com.example.priscillaclient.views.adapters.CourseListAdapter;
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.api.GetCourses;
-import com.example.priscillaclient.client.Client;
+import com.example.priscillaclient.api.client.Client;
 import com.example.priscillaclient.models.Course;
 
 import java.util.ArrayList;

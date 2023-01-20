@@ -24,7 +24,7 @@ public class GetLessons extends ApiTask {
     @Override
     protected ArrayList<Lesson> doInBackground(String... strings) {
         try {
-            HttpURLConnection connection = getConnection("/get-active-lessons2/" + chapterId, "GET", false);
+            HttpConnection connection = new HttpConnection("/get-active-lessons2/" + chapterId, "GET", false);
 
             int status = connection.getResponseCode();
             if (status >= 400 && status < 600) {

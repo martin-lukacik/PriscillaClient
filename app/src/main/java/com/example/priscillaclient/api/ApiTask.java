@@ -6,16 +6,13 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
-import com.example.priscillaclient.client.Client;
-import com.example.priscillaclient.fragments.FragmentBase;
+import com.example.priscillaclient.api.client.Client;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.URL;
 
 public abstract class ApiTask extends AsyncTask<String, String, Object> {
 
@@ -26,6 +23,7 @@ public abstract class ApiTask extends AsyncTask<String, String, Object> {
     protected final static Client client = Client.getInstance();
 
     final HttpResponse fragment;
+    HttpConnection connection = null;
 
     public String errorMessage = null;
 
@@ -42,54 +40,6 @@ public abstract class ApiTask extends AsyncTask<String, String, Object> {
         }
 
         fragment.onUpdate(response);
-    }
-
-    public HttpURLConnection getConnection(String endpoint, String method, boolean doOutput) {
-
-        try {
-            URL url = new URL(baseUrl + endpoint);
-
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod(method);
-            connection.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
-            connection.setRequestProperty("Accept", "application/json");
-
-            if (client.hasValidToken()) {
-                connection.setRequestProperty("Authorization", client.token_type + " " + client.access_token);
-            }
-
-            connection.setDoOutput(doOutput);
-            connection.setDoInput(true);
-
-            return connection;
-
-        } catch (Exception e) {
-            logError(e.getMessage());
-        }
-
-        return null;
-    }
-
-    protected String getResponse(HttpURLConnection connection) throws IOException {
-        StringBuilder stringBuilder = new StringBuilder();
-        InputStream responseStream = new BufferedInputStream(connection.getInputStream());
-        BufferedReader responseStreamReader = new BufferedReader(new InputStreamReader(responseStream));
-        String line = "";
-        while ((line = responseStreamReader.readLine()) != null) {
-            stringBuilder.append(line);
-        }
-        responseStreamReader.close();
-
-        return stringBuilder.toString();
-    }
-
-    protected boolean hasError(HttpURLConnection connection) throws IOException {
-        int status = connection.getResponseCode();
-        if (status >= 400 && status < 600) {
-            logError(connection.getErrorStream());
-            return true;
-        }
-        return false;
     }
 
     protected void logError(String message) {

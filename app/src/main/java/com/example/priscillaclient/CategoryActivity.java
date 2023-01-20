@@ -11,7 +11,7 @@ import android.widget.ListView;
 
 import com.example.priscillaclient.api.GetCategories;
 import com.example.priscillaclient.api.HttpResponse;
-import com.example.priscillaclient.client.Client;
+import com.example.priscillaclient.api.client.Client;
 import com.example.priscillaclient.models.Category;
 
 import java.util.ArrayList;

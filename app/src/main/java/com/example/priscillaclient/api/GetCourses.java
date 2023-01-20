@@ -26,7 +26,7 @@ public class GetCourses extends ApiTask {
             return client.courses;
 
         try {
-            HttpURLConnection connection = getConnection("/get-active-user-courses2", "GET", false);
+            HttpConnection connection = new HttpConnection("/get-active-user-courses2", "GET", false);
 
             int status = connection.getResponseCode();
             if (status >= 400 && status < 600) {

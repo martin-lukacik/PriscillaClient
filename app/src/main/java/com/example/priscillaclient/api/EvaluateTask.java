@@ -1,6 +1,5 @@
 package com.example.priscillaclient.api;
 
-import com.example.priscillaclient.api.ApiTask;
 import com.example.priscillaclient.fragments.FragmentBase;
 import com.example.priscillaclient.models.TaskResult;
 
@@ -24,7 +23,7 @@ public class EvaluateTask extends ApiTask {
     @Override
     protected TaskResult doInBackground(String... strings) {
         try {
-            HttpURLConnection connection = getConnection("/task-evaluate2", "POST", true);
+            HttpConnection connection = new HttpConnection("/task-evaluate2", "POST", true);
 
             JSONObject json = new JSONObject();
             json.put("answer_list", strings[0]);

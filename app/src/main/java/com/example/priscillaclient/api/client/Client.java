@@ -1,4 +1,4 @@
-package com.example.priscillaclient.client;
+package com.example.priscillaclient.api.client;
 
 import com.example.priscillaclient.models.Area;
 import com.example.priscillaclient.models.AreaCourse;

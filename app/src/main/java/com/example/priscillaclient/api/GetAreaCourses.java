@@ -5,7 +5,7 @@ import android.os.AsyncTask;
 
 import com.example.priscillaclient.AreaCourseActivity;
 import com.example.priscillaclient.HttpURLConnectionFactory;
-import com.example.priscillaclient.client.Client;
+import com.example.priscillaclient.api.client.Client;
 import com.example.priscillaclient.models.AreaCourse;
 
 import org.json.JSONArray;

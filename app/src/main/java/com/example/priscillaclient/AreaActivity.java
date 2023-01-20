@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.priscillaclient.api.GetAreas;
 import com.example.priscillaclient.api.HttpResponse;
-import com.example.priscillaclient.client.Client;
+import com.example.priscillaclient.api.client.Client;
 import com.example.priscillaclient.models.Area;
 
 import java.util.ArrayList;
