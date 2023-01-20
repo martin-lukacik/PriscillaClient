@@ -13,7 +13,7 @@
         android:layout_gravity="center"
         android:textStyle="bold"
         android:textSize="18sp"
-        android:padding="2dp"
+        android:padding="5dp"
         android:layout_margin="1dp"
         android:background="@drawable/course_title_border"
         android:textColor="@color/white" />

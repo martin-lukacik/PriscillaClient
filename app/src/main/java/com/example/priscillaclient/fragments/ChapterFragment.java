@@ -9,8 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.GridView;
 import android.widget.ListView;
 
+import com.example.priscillaclient.ChapterListAdapter;
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.api.GetActiveChapters;
 import com.example.priscillaclient.client.Client;
@@ -75,7 +77,7 @@ public class ChapterFragment extends FragmentBase {
 
         chapters = Client.getInstance().chapters;
 
-        ListView chaptersListView = findViewById(R.id.chapterListView);
+        GridView chaptersListView = findViewById(R.id.chapterListView);
 
         String[] chaps = new String[chapters.size()];
         for (int i = 0; i < chapters.size(); ++i) {
@@ -88,7 +90,10 @@ public class ChapterFragment extends FragmentBase {
             chaps[i] = format;
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, chaps);
+        /*ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, chaps);
+        chaptersListView.setAdapter(adapter);*/
+
+        ChapterListAdapter adapter = new ChapterListAdapter(getActivity(), chapters);
         chaptersListView.setAdapter(adapter);
         chaptersListView.setOnItemClickListener(this::onItemClick);
     }

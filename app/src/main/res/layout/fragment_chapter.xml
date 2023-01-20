@@ -4,9 +4,22 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <ListView
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/chapters"
+        android:textStyle="bold"
+        android:paddingStart="15dp"
+        android:paddingEnd="15dp"
+        android:textSize="24sp" />
+
+    <GridView
+        android:id="@+id/chapterListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/chapterListView" />
+        android:layout_margin="10dp"
+        android:horizontalSpacing="5dp"
+        android:numColumns="1"
+        android:verticalSpacing="5dp" />
 
 </LinearLayout>
