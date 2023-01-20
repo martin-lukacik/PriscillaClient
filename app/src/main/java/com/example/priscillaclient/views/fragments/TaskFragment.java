@@ -1,4 +1,4 @@
-package com.example.priscillaclient.fragments;
+package com.example.priscillaclient.views.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
@@ -21,10 +21,10 @@ import android.widget.TextView;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.priscillaclient.R;
-import com.example.priscillaclient.api.GetLessons;
-import com.example.priscillaclient.api.GetTasks;
-import com.example.priscillaclient.api.EvaluateTask;
-import com.example.priscillaclient.api.client.Client;
+import com.example.priscillaclient.api.app.GetLessons;
+import com.example.priscillaclient.api.app.GetTasks;
+import com.example.priscillaclient.api.app.EvaluateTask;
+import com.example.priscillaclient.models.Client;
 import com.example.priscillaclient.models.Lesson;
 import com.example.priscillaclient.models.Task;
 import com.example.priscillaclient.models.TaskResult;

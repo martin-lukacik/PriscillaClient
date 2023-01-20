@@ -12,8 +12,8 @@ import android.widget.EditText;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.priscillaclient.api.HttpResponse;
-import com.example.priscillaclient.api.GetToken;
-import com.example.priscillaclient.api.client.Client;
+import com.example.priscillaclient.api.auth.GetToken;
+import com.example.priscillaclient.models.Client;
 import com.example.priscillaclient.views.LoadingDialog;
 
 public class LoginActivity extends AppCompatActivity implements HttpResponse {

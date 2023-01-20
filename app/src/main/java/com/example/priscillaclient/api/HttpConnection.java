@@ -1,12 +1,11 @@
 package com.example.priscillaclient.api;
 
-import com.example.priscillaclient.api.client.Client;
+import com.example.priscillaclient.models.Client;
 
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -43,16 +42,17 @@ public class HttpConnection {
         return connection;
     }
 
-    protected void sendRequest(JSONObject json) throws IOException {
+    public void sendRequest(JSONObject json) throws IOException {
         Writer writer = new OutputStreamWriter(connection.getOutputStream(), StandardCharsets.UTF_8);
         writer.write(json.toString());
         writer.close();
     }
 
-    protected String getResponse() throws IOException {
+    public String getResponse() throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
         InputStream responseStream = new BufferedInputStream(connection.getInputStream());
         BufferedReader responseStreamReader = new BufferedReader(new InputStreamReader(responseStream));
+
         String line = "";
         while ((line = responseStreamReader.readLine()) != null) {
             stringBuilder.append(line);
@@ -62,7 +62,7 @@ public class HttpConnection {
         return stringBuilder.toString();
     }
 
-    protected InputStream getErrorStream() throws IOException {
+    public InputStream getErrorStream() throws IOException {
         int status = connection.getResponseCode();
         if (status >= 400 && status < 600) {
             return connection.getErrorStream();
@@ -70,7 +70,7 @@ public class HttpConnection {
         return null;
     }
 
-    protected void disconnect() {
+    public void disconnect() {
         connection.disconnect();
     }
 
@@ -84,5 +84,9 @@ public class HttpConnection {
 
     public int getResponseCode() throws IOException {
         return connection.getResponseCode();
+    }
+
+    public String getResponseMessage() throws IOException {
+        return connection.getResponseMessage();
     }
 }

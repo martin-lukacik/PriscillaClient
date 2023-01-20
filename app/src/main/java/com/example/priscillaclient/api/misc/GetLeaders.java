@@ -1,4 +1,4 @@
-package com.example.priscillaclient.api;
+package com.example.priscillaclient.api.misc;
 
 import android.content.Context;
 import android.os.AsyncTask;

@@ -9,9 +9,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.example.priscillaclient.api.GetCategories;
+import com.example.priscillaclient.api.browse.GetCategories;
 import com.example.priscillaclient.api.HttpResponse;
-import com.example.priscillaclient.api.client.Client;
+import com.example.priscillaclient.models.Client;
 import com.example.priscillaclient.models.Category;
 
 import java.util.ArrayList;

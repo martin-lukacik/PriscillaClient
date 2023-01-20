@@ -10,9 +10,9 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import com.example.priscillaclient.api.GetUserParams;
+import com.example.priscillaclient.api.auth.GetUserParams;
 import com.example.priscillaclient.api.HttpResponse;
-import com.example.priscillaclient.fragments.CoursesFragment;
+import com.example.priscillaclient.views.fragments.CoursesFragment;
 import com.example.priscillaclient.models.User;
 import com.example.priscillaclient.views.adapters.CourseListAdapter;
 

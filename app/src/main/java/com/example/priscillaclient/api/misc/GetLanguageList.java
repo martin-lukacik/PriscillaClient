@@ -1,4 +1,4 @@
-package com.example.priscillaclient.api;
+package com.example.priscillaclient.api.misc;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -8,8 +8,8 @@ import android.view.Menu;
 
 import androidx.appcompat.view.menu.MenuBuilder;
 
-import com.example.priscillaclient.api.client.Client;
 import com.example.priscillaclient.HttpURLConnectionFactory;
+import com.example.priscillaclient.models.Client;
 import com.example.priscillaclient.models.Language;
 
 import org.json.JSONArray;

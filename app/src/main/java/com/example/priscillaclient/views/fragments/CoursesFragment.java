@@ -1,4 +1,4 @@
-package com.example.priscillaclient.fragments;
+package com.example.priscillaclient.views.fragments;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -13,8 +13,8 @@ import android.widget.GridView;
 
 import com.example.priscillaclient.views.adapters.CourseListAdapter;
 import com.example.priscillaclient.R;
-import com.example.priscillaclient.api.GetCourses;
-import com.example.priscillaclient.api.client.Client;
+import com.example.priscillaclient.api.app.GetCourses;
+import com.example.priscillaclient.models.Client;
 import com.example.priscillaclient.models.Course;
 
 import java.util.ArrayList;

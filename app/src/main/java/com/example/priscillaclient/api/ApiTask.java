@@ -6,13 +6,11 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
-import com.example.priscillaclient.api.client.Client;
+import com.example.priscillaclient.models.Client;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 
 public abstract class ApiTask extends AsyncTask<String, String, Object> {
 

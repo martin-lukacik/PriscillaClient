@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.priscillaclient.api.client.Client;
+import com.example.priscillaclient.models.Client;
 import com.example.priscillaclient.models.User;
 
 import java.util.Random;

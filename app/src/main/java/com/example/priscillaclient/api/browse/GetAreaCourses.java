@@ -1,12 +1,12 @@
-package com.example.priscillaclient.api;
+package com.example.priscillaclient.api.browse;
 
 import android.content.Context;
 import android.os.AsyncTask;
 
-import com.example.priscillaclient.CategoryActivity;
+import com.example.priscillaclient.AreaCourseActivity;
 import com.example.priscillaclient.HttpURLConnectionFactory;
-import com.example.priscillaclient.api.client.Client;
-import com.example.priscillaclient.models.Category;
+import com.example.priscillaclient.models.Client;
+import com.example.priscillaclient.models.AreaCourse;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -16,27 +16,29 @@ import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class GetCategories extends AsyncTask<String, String, ArrayList<Category>> {
+public class GetAreaCourses extends AsyncTask<String, String, ArrayList<AreaCourse>> {
 
     final Context context;
+    final int areaId;
 
-    public GetCategories(Context context) {
+    public GetAreaCourses(Context context, int areaId) {
         super();
         this.context = context;
+        this.areaId = areaId;
     }
 
     @Override
-    protected ArrayList<Category> doInBackground(String... strings) {
+    protected ArrayList<AreaCourse> doInBackground(String... strings) {
 
         try {
-            HttpURLConnection connection = HttpURLConnectionFactory.getConnection("/get-categories2", "GET", false);
+            HttpURLConnection connection = HttpURLConnectionFactory.getConnection("/area-all-courses/" + areaId, "GET", false);
 
             int status = connection.getResponseCode();
             String message = connection.getResponseMessage();
 
             InputStream responseStream = connection.getInputStream();
 
-            String responseStr = "";
+            String responseStr;
             try (Scanner scanner = new Scanner(responseStream)) {
                 responseStr = scanner.useDelimiter("\\A").next();
             }
@@ -46,14 +48,14 @@ public class GetCategories extends AsyncTask<String, String, ArrayList<Category>
 
             Client client = Client.getInstance();
 
-            client.categories = new ArrayList<>();
+            client.areaCourses = new ArrayList<>();
 
             for (int i = 0; i < json.length(); ++i) {
-                Category c = new Category(json.getJSONObject(i));
-                client.categories.add(c);
+                AreaCourse a = new AreaCourse(json.getJSONObject(i));
+                client.areaCourses.add(a);
             }
 
-            return client.categories;
+            return client.areaCourses;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -62,7 +64,8 @@ public class GetCategories extends AsyncTask<String, String, ArrayList<Category>
     }
 
     @Override
-    protected void onPostExecute(ArrayList<Category> categories) {
-        ((CategoryActivity) context).onUpdate(categories);
+    protected void onPostExecute(ArrayList<AreaCourse> areaCourses) {
+        ((AreaCourseActivity) context).onUpdate(areaCourses);
     }
 }
+

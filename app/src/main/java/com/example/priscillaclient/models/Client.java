@@ -1,14 +1,4 @@
-package com.example.priscillaclient.api.client;
-
-import com.example.priscillaclient.models.Area;
-import com.example.priscillaclient.models.AreaCourse;
-import com.example.priscillaclient.models.Category;
-import com.example.priscillaclient.models.Chapter;
-import com.example.priscillaclient.models.Course;
-import com.example.priscillaclient.models.Language;
-import com.example.priscillaclient.models.Lesson;
-import com.example.priscillaclient.models.Task;
-import com.example.priscillaclient.models.User;
+package com.example.priscillaclient.models;
 
 import org.json.JSONException;
 import org.json.JSONObject;

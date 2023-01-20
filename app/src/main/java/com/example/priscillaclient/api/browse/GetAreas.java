@@ -1,12 +1,12 @@
-package com.example.priscillaclient.api;
+package com.example.priscillaclient.api.browse;
 
 import android.content.Context;
 import android.os.AsyncTask;
 
-import com.example.priscillaclient.AreaCourseActivity;
+import com.example.priscillaclient.AreaActivity;
 import com.example.priscillaclient.HttpURLConnectionFactory;
-import com.example.priscillaclient.api.client.Client;
-import com.example.priscillaclient.models.AreaCourse;
+import com.example.priscillaclient.models.Client;
+import com.example.priscillaclient.models.Area;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -16,22 +16,22 @@ import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class GetAreaCourses extends AsyncTask<String, String, ArrayList<AreaCourse>> {
+public class GetAreas extends AsyncTask<String, String, ArrayList<Area>> {
 
     final Context context;
-    final int areaId;
+    final int categoryId;
 
-    public GetAreaCourses(Context context, int areaId) {
+    public GetAreas(Context context, int categoryId) {
         super();
         this.context = context;
-        this.areaId = areaId;
+        this.categoryId = categoryId;
     }
 
     @Override
-    protected ArrayList<AreaCourse> doInBackground(String... strings) {
+    protected ArrayList<Area> doInBackground(String... strings) {
 
         try {
-            HttpURLConnection connection = HttpURLConnectionFactory.getConnection("/area-all-courses/" + areaId, "GET", false);
+            HttpURLConnection connection = HttpURLConnectionFactory.getConnection("/get-areas/" + categoryId, "GET", false);
 
             int status = connection.getResponseCode();
             String message = connection.getResponseMessage();
@@ -44,18 +44,18 @@ public class GetAreaCourses extends AsyncTask<String, String, ArrayList<AreaCour
             }
 
 
-            JSONArray json = new JSONObject(responseStr).getJSONArray("list");
+            JSONArray json = new JSONObject(responseStr).getJSONArray("areas");
 
             Client client = Client.getInstance();
 
-            client.areaCourses = new ArrayList<>();
+            client.areas = new ArrayList<>();
 
             for (int i = 0; i < json.length(); ++i) {
-                AreaCourse a = new AreaCourse(json.getJSONObject(i));
-                client.areaCourses.add(a);
+                Area a = new Area(json.getJSONObject(i));
+                client.areas.add(a);
             }
 
-            return client.areaCourses;
+            return client.areas;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -64,8 +64,7 @@ public class GetAreaCourses extends AsyncTask<String, String, ArrayList<AreaCour
     }
 
     @Override
-    protected void onPostExecute(ArrayList<AreaCourse> areaCourses) {
-        ((AreaCourseActivity) context).onUpdate(areaCourses);
+    protected void onPostExecute(ArrayList<Area> areas) {
+        ((AreaActivity) context).onUpdate(areas);
     }
 }
-

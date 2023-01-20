@@ -1,4 +1,4 @@
-package com.example.priscillaclient.fragments;
+package com.example.priscillaclient.views.fragments;
 
 import android.content.res.Resources;
 import android.view.View;

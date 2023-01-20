@@ -1,7 +1,7 @@
 package com.example.priscillaclient;
 
 import com.example.priscillaclient.api.ApiTask;
-import com.example.priscillaclient.api.client.Client;
+import com.example.priscillaclient.models.Client;
 
 import java.net.HttpURLConnection;
 import java.net.URL;

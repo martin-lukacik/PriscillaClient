@@ -1,16 +1,14 @@
-package com.example.priscillaclient.api;
+package com.example.priscillaclient.api.app;
 
 import com.example.priscillaclient.api.ApiTask;
-import com.example.priscillaclient.fragments.FragmentBase;
+import com.example.priscillaclient.api.HttpConnection;
+import com.example.priscillaclient.views.fragments.FragmentBase;
 import com.example.priscillaclient.models.Lesson;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class GetLessons extends ApiTask {
 

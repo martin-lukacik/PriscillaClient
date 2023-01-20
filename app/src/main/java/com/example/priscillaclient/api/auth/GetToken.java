@@ -1,6 +1,9 @@
-package com.example.priscillaclient.api;
+package com.example.priscillaclient.api.auth;
 
-import com.example.priscillaclient.api.client.Client;
+import com.example.priscillaclient.api.ApiTask;
+import com.example.priscillaclient.models.Client;
+import com.example.priscillaclient.api.HttpConnection;
+import com.example.priscillaclient.api.HttpResponse;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -12,10 +15,10 @@ public class GetToken extends ApiTask {
     }
 
     protected Client doInBackground(String... strings) {
-        return requestToken(strings[0], strings[1], strings[2], strings[3]);
-    }
-
-    protected Client requestToken(String username, String password, String email, String grant_type) {
+        String username = strings[0];
+        String password = strings[1];
+        String email = strings[2];
+        String grant_type = strings[3];
 
         try {
             HttpConnection connection = new HttpConnection("/oauth/token", "POST", true);
@@ -26,7 +29,7 @@ public class GetToken extends ApiTask {
 
             if (connection.getErrorStream() != null) {
                 logError(connection.getErrorStream());
-                return Client.getInstance();
+                return client;
             }
 
             JSONObject response = new JSONObject(connection.getResponse());
@@ -39,7 +42,7 @@ public class GetToken extends ApiTask {
             logError(e.getMessage());
         }
 
-        return Client.getInstance();
+        return client;
     }
 
     private JSONObject getJsonObject(String username, String password, String email, String grant_type) throws JSONException {
