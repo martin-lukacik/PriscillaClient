@@ -2,15 +2,25 @@ package com.example.priscillaclient;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
+import android.accounts.AccountManagerCallback;
+import android.accounts.AccountManagerFuture;
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
 import com.example.priscillaclient.api.HttpResponse;
 import com.example.priscillaclient.api.RequestToken;
+import com.example.priscillaclient.client.Client;
+import com.example.priscillaclient.models.User;
 import com.example.priscillaclient.views.LoadingDialog;
 
 public class LoginActivity extends AppCompatActivity implements HttpResponse {
@@ -38,15 +48,30 @@ public class LoginActivity extends AppCompatActivity implements HttpResponse {
             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
         );
 
+        AccountManager am = AccountManager.get(this);
+        Account[] accounts = am.getAccountsByType("com.example");
+
         loadingDialog = new LoadingDialog(LoginActivity.this, "Logging in...");
         loadingDialog.show();
 
-        new RequestToken(this)
-                .execute(username, password, username);
+        if (accounts.length == 0) {
+            new RequestToken(this).execute(username, password, username, "password");
+        } else {
+            new RequestToken(this).execute(username, "refresh_token_from_store", username, "refresh_token");
+        }
     }
 
     @Override
     public void onUpdate(Object response) {
+        String username = ((EditText) findViewById(R.id.inputUsername)).getText().toString();
+
+        // TODO check if actually logged in (wrong password etc.)
+        CheckBox rememberUser = findViewById(R.id.rememberUser);
+        if (rememberUser.isChecked()) {
+            AccountManager am = AccountManager.get(this);
+            am.addAccountExplicitly(new Account(username, "com.example"), Client.getInstance().refresh_token, null);
+        }
+
         loadingDialog.dismiss();
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         Intent intent = new Intent(this, MainActivity.class);

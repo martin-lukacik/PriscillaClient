@@ -35,10 +35,10 @@ public class RequestToken extends AsyncTask<String, String, User> {
     }
 
     protected User doInBackground(String... strings) {
-        return requestToken(strings[0], strings[1], strings[2]);
+        return requestToken(strings[0], strings[1], strings[2], strings[3]);
     }
 
-    protected User requestToken(String username, String password, String email) {
+    protected User requestToken(String username, String password, String email, String grant_type) {
 
         try {
             HttpURLConnection connection = HttpURLConnectionFactory.getConnection("/oauth/token", "POST", true);
@@ -47,8 +47,8 @@ public class RequestToken extends AsyncTask<String, String, User> {
             json.put("client_id", ClientData.client_id);
             json.put("client_secret", ClientData.client_secret);
             json.put("email", email);
-            json.put("grant_type", "password");
-            json.put("password", password);
+            json.put("grant_type", grant_type);
+            json.put(grant_type, password);
             json.put("username", username);
 
             Log.i("JSON", json.toString());
@@ -83,6 +83,10 @@ public class RequestToken extends AsyncTask<String, String, User> {
             Client.getInstance().access_token = response.getString("access_token");
             Client.getInstance().refresh_token = response.getString("refresh_token");
             Client.getInstance().logged_in = System.currentTimeMillis() / 1000;
+
+            String refresh = Client.getInstance().refresh_token;
+
+
 
             return Client.getInstance().user; // TODO why user
 
