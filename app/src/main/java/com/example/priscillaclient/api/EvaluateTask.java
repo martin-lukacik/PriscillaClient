@@ -1,7 +1,8 @@
 package com.example.priscillaclient.api;
 
+import com.example.priscillaclient.api.ApiTask;
 import com.example.priscillaclient.fragments.FragmentBase;
-import com.example.priscillaclient.models.TaskEval;
+import com.example.priscillaclient.models.TaskResult;
 
 import org.json.JSONObject;
 
@@ -14,14 +15,14 @@ import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.nio.charset.StandardCharsets;
 
-public class TaskEvaluate extends ApiTask {
+public class EvaluateTask extends ApiTask {
 
-    public TaskEvaluate(FragmentBase fragment) {
+    public EvaluateTask(FragmentBase fragment) {
         super(fragment);
     }
 
     @Override
-    protected TaskEval doInBackground(String... strings) {
+    protected TaskResult doInBackground(String... strings) {
         try {
             HttpURLConnection connection = getConnection("/task-evaluate2", "POST", true);
 
@@ -56,7 +57,7 @@ public class TaskEvaluate extends ApiTask {
             responseStreamReader.close();
 
             JSONObject response = new JSONObject(stringBuilder.toString());
-            return new TaskEval(response.getJSONObject("result"));
+            return new TaskResult(response.getJSONObject("result"));
         } catch (Exception e) {
             logError(e.getMessage());
         }

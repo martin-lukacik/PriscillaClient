@@ -1,9 +1,7 @@
 package com.example.priscillaclient;
 
-import android.util.Log;
-
+import com.example.priscillaclient.api.ApiTask;
 import com.example.priscillaclient.client.Client;
-import com.example.priscillaclient.client.ClientData;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -13,7 +11,7 @@ public class HttpURLConnectionFactory {
     public static HttpURLConnection getConnection(String endpoint, String method, boolean doOutput) {
 
         try {
-            URL url = new URL(ClientData.url + endpoint);
+            URL url = new URL(ApiTask.baseUrl + endpoint);
 
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod(method);

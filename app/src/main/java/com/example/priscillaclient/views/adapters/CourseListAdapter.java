@@ -96,6 +96,8 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
 
         if (courses.get(i).isPinned) {
             holder.titleText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_push_pin, 0);
+        } else {
+            holder.titleText.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         }
 
         return view;

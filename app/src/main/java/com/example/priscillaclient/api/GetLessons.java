@@ -1,8 +1,8 @@
 package com.example.priscillaclient.api;
 
-import com.example.priscillaclient.HttpURLConnectionFactory;
+import com.example.priscillaclient.api.ApiTask;
 import com.example.priscillaclient.fragments.FragmentBase;
-import com.example.priscillaclient.models.Course;
+import com.example.priscillaclient.models.Lesson;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -12,42 +12,40 @@ import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class GetUserCourses extends ApiTask {
+public class GetLessons extends ApiTask {
 
-    public GetUserCourses(FragmentBase fragment) {
+    final int chapterId;
+    public GetLessons(FragmentBase fragment, int chapterId) {
         super(fragment);
+        this.chapterId = chapterId;
+        client.lastChapterId = chapterId;
     }
 
     @Override
-    protected ArrayList<Course> doInBackground(String... strings) {
-
-        // Use the cached result
-        if (!client.courses.isEmpty())
-            return client.courses;
-
+    protected ArrayList<Lesson> doInBackground(String... strings) {
         try {
-            HttpURLConnection connection = getConnection("/get-active-user-courses2", "GET", false);
+            HttpURLConnection connection = getConnection("/get-active-lessons2/" + chapterId, "GET", false);
 
             int status = connection.getResponseCode();
             if (status >= 400 && status < 600) {
                 logError(connection.getErrorStream());
-                return null;
+                return client.lessons;
             }
 
             InputStream responseStream = connection.getInputStream();
             String response = new Scanner(responseStream).useDelimiter("\\A").next();
-            JSONArray json = new JSONObject(response).getJSONArray("list");
+            JSONArray json = new JSONObject(response).getJSONArray("lesson_list");
 
-            client.courses.clear();
+            client.lessons.clear();
             for (int i = 0; i < json.length(); ++i) {
-                JSONObject j = json.getJSONObject(i);
-                client.courses.add(new Course(j));
+                Lesson c = new Lesson(json.getJSONObject(i));
+                client.lessons.add(c);
             }
 
         } catch (Exception e) {
             logError(e.getMessage());
         }
 
-        return client.courses;
+        return client.lessons;
     }
 }

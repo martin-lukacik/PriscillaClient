@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 import com.example.priscillaclient.views.adapters.CourseListAdapter;
 import com.example.priscillaclient.R;
-import com.example.priscillaclient.api.GetUserCourses;
+import com.example.priscillaclient.api.GetCourses;
 import com.example.priscillaclient.client.Client;
 import com.example.priscillaclient.models.Course;
 
@@ -70,7 +70,7 @@ public class CoursesFragment extends FragmentBase {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        new GetUserCourses(this).execute();
+        new GetCourses(this).execute();
 
         return inflater.inflate(R.layout.fragment_courses, container, false);
     }
@@ -80,29 +80,28 @@ public class CoursesFragment extends FragmentBase {
 
     final String PREF_SET = "settings";
 
+    void pinCourse(int courseId) {
+        for (int i = 0; i < courses.size(); ++i) {
+            courses.get(i).isPinned = false;
+
+            if (courseId == courses.get(i).course_id) {
+                courses.get(i).isPinned = true;
+                Course c = courses.remove(i);
+                courses.add(0, c);
+            }
+        }
+    }
+
     @Override
     public void onUpdate(Object response) {
 
-        courses = Client.getInstance().courses;
+        courses = new ArrayList<>(Client.getInstance().courses);
 
         SharedPreferences settings = getActivity().getApplicationContext().getSharedPreferences(PREF_SET, 0);
         int pinnedCourseId = settings.getInt("pinnedCourseId", -1);
 
         if (pinnedCourseId != -1) {
-            int index = -1;
-
-            for (int i = 0; i < courses.size(); ++i) {
-                if (pinnedCourseId == courses.get(i).course_id) {
-                    index = i;
-                    break;
-                }
-            }
-
-            if (index != -1) {
-                Course course = courses.remove(index);
-                course.isPinned = true;
-                courses.add(0, course);
-            }
+            pinCourse(pinnedCourseId);
         }
         Toast.makeText(getActivity(), pinnedCourseId + " pinned update", Toast.LENGTH_SHORT).show();
 
@@ -114,25 +113,25 @@ public class CoursesFragment extends FragmentBase {
     }
 
     private boolean coursePinned(AdapterView<?> adapterView, View view, int i, long l) {
-        // TODO clear this up
-        Course course = courses.get(i);
 
         SharedPreferences settings = getActivity().getApplicationContext().getSharedPreferences(PREF_SET, 0);
         int pinnedCourseId = settings.getInt("pinnedCourseId", -1);
 
+        Course course = courses.get(i);
+        int pinnedId = course.course_id;
+        SharedPreferences.Editor editor = settings.edit();
         if (pinnedCourseId == -1) {
-            SharedPreferences.Editor editor = settings.edit();
-            editor.putInt("pinnedCourseId", courses.get(i).course_id);
+            editor.putInt("pinnedCourseId", pinnedId);
             editor.apply();
-            courses.remove(i);
-            courses.add(0, course);
-            course.isPinned = true;
+            pinCourse(pinnedId);
+            adapter = new CourseListAdapter(getActivity(), courses);
+            GridView courseListView = getActivity().findViewById(R.id.courseListView);
+            courseListView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
         } else if (course.course_id == pinnedCourseId) {
-            course.isPinned = false;
-            SharedPreferences.Editor editor = settings.edit();
             editor.putInt("pinnedCourseId", -1);
             editor.apply();
+            pinCourse(-1);
             courses = new ArrayList<>(Client.getInstance().courses);
             adapter = new CourseListAdapter(getActivity(), courses);
             GridView courseListView = getActivity().findViewById(R.id.courseListView);

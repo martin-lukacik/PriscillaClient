@@ -10,7 +10,7 @@ import android.widget.GridView;
 
 import com.example.priscillaclient.views.adapters.ChapterListAdapter;
 import com.example.priscillaclient.R;
-import com.example.priscillaclient.api.GetActiveChapters;
+import com.example.priscillaclient.api.GetChapters;
 import com.example.priscillaclient.client.Client;
 import com.example.priscillaclient.models.Chapter;
 
@@ -55,7 +55,7 @@ public class ChaptersFragment extends FragmentBase {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         if (chapters == null)
-            new GetActiveChapters(this, courseId).execute();
+            new GetChapters(this, courseId).execute();
 
         return inflater.inflate(R.layout.fragment_chapter, container, false);
     }

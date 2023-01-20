@@ -12,7 +12,7 @@ import android.widget.EditText;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.priscillaclient.api.HttpResponse;
-import com.example.priscillaclient.api.RequestToken;
+import com.example.priscillaclient.api.GetToken;
 import com.example.priscillaclient.client.Client;
 import com.example.priscillaclient.views.LoadingDialog;
 
@@ -43,7 +43,7 @@ public class LoginActivity extends AppCompatActivity implements HttpResponse {
             rememberUser.setChecked(true);
             ((EditText) findViewById(R.id.inputUsername)).setText(username);
             showProgressDialog();
-            apiCall = new RequestToken(this);
+            apiCall = new GetToken(this);
             apiCall.execute(username, refresh_token, username, "refresh_token");
         }
     }
@@ -70,11 +70,11 @@ public class LoginActivity extends AppCompatActivity implements HttpResponse {
 
         showProgressDialog();
 
-        apiCall = new RequestToken(this);
+        apiCall = new GetToken(this);
         apiCall.execute(username, password, username, "password");
     }
 
-    RequestToken apiCall;
+    GetToken apiCall;
 
     @Override
     public void onUpdate(Object response) {

@@ -21,13 +21,13 @@ import android.widget.TextView;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.priscillaclient.R;
-import com.example.priscillaclient.api.GetActiveLessons;
-import com.example.priscillaclient.api.GetActiveTasks;
-import com.example.priscillaclient.api.TaskEvaluate;
+import com.example.priscillaclient.api.GetLessons;
+import com.example.priscillaclient.api.GetTasks;
+import com.example.priscillaclient.api.EvaluateTask;
 import com.example.priscillaclient.client.Client;
 import com.example.priscillaclient.models.Lesson;
 import com.example.priscillaclient.models.Task;
-import com.example.priscillaclient.models.TaskEval;
+import com.example.priscillaclient.models.TaskResult;
 import com.example.priscillaclient.views.JavascriptInterface;
 import com.google.android.material.navigation.NavigationView;
 
@@ -80,7 +80,7 @@ public class TaskFragment extends FragmentBase {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        new GetActiveLessons(this, chapterId).execute();
+        new GetLessons(this, chapterId).execute();
 
         return inflater.inflate(R.layout.fragment_task, container, false);
     }
@@ -118,19 +118,19 @@ public class TaskFragment extends FragmentBase {
 
         if (response.equals(client.lessons)) {
             int id = lessonId == -1 ? client.lessons.get(0).id : lessonId;
-            new GetActiveTasks(this, id).execute();
+            new GetTasks(this, id).execute();
 
             updateLessonList(client.lessons);
         } else if (response.equals(client.tasks)) {
             currentTask = 0;
             buttonTaskPrevious.setVisibility(View.INVISIBLE);
             updateTaskList(client.tasks);
-        } else if (response instanceof TaskEval) {
-            showRatingDialog(((TaskEval) response));
+        } else if (response instanceof TaskResult) {
+            showRatingDialog(((TaskResult) response));
         }
     }
 
-    public void showRatingDialog(TaskEval eval) {
+    public void showRatingDialog(TaskResult eval) {
 
         Dialog dialog = new Dialog(getActivity());
 
@@ -273,7 +273,7 @@ public class TaskFragment extends FragmentBase {
 
                 case TASK_FILL:
                 case TASK_DRAG:
-                    new TaskEvaluate(this).execute(javascriptInterface.data, task.task_id + "", task.task_type_id + "", "10");
+                    new EvaluateTask(this).execute(javascriptInterface.data, task.task_id + "", task.task_type_id + "", "10");
                     break;
 
                 case TASK_CHOICE:
@@ -292,11 +292,11 @@ public class TaskFragment extends FragmentBase {
                         }
                     }
 
-                    new TaskEvaluate(this).execute("[\"" + task.answers.get(index) + "\"]", task.task_id + "", task.task_type_id + "", "10");
+                    new EvaluateTask(this).execute("[\"" + task.answers.get(index) + "\"]", task.task_id + "", task.task_type_id + "", "10");
                     break;
 
                 case TASK_INPUT:
-                    new TaskEvaluate(this).execute("[\"" + inputEditText.getText().toString() + "\"]", task.task_id + "", task.task_type_id + "", "10");
+                    new EvaluateTask(this).execute("[\"" + inputEditText.getText().toString() + "\"]", task.task_id + "", task.task_type_id + "", "10");
                     break;
 
                 case TASK_MULTI:
@@ -310,7 +310,7 @@ public class TaskFragment extends FragmentBase {
                             }
                         }
                     }
-                    new TaskEvaluate(this).execute(new JSONArray(postedAnswers).toString(), task.task_id + "", task.task_type_id + "", "10");
+                    new EvaluateTask(this).execute(new JSONArray(postedAnswers).toString(), task.task_id + "", task.task_type_id + "", "10");
                     break;
             }
         }

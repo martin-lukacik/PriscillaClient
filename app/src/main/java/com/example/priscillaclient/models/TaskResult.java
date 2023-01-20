@@ -6,17 +6,17 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class TaskEval {
+public class TaskResult {
 
     public int rating;
 
     public ArrayList<Answer> answers = new ArrayList<>();
 
-    public TaskEval(int rating) {
+    public TaskResult(int rating) {
         this.rating = rating;
     }
 
-    public TaskEval(JSONObject json) throws JSONException {
+    public TaskResult(JSONObject json) throws JSONException {
         rating = json.getInt("rating");
 
         JSONArray jAnswers = json.getJSONArray("answers");

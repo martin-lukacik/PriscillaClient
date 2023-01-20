@@ -10,6 +10,9 @@ import com.example.priscillaclient.models.Lesson;
 import com.example.priscillaclient.models.Task;
 import com.example.priscillaclient.models.User;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 public class Client {
@@ -40,17 +43,6 @@ public class Client {
     public ArrayList<Area> areas = null;
     public ArrayList<AreaCourse> areaCourses = null;
 
-    public boolean hasValidToken() {
-        return !(token_type.isEmpty() || access_token.isEmpty() || isTokenExpired());
-    }
-
-    public boolean isTokenExpired() {
-        long currentTime = System.currentTimeMillis() / 1000;
-        return (currentTime > logged_in + expires_in);
-    }
-
-    // Singleton requirements
-
     private static Client instance = null;
 
     private Client() { }
@@ -62,5 +54,22 @@ public class Client {
         }
 
         return instance;
+    }
+
+    public static void set(JSONObject json) throws JSONException {
+        getInstance().token_type = json.getString("token_type");
+        getInstance().expires_in = json.getInt("expires_in");
+        getInstance().access_token = json.getString("access_token");
+        getInstance().refresh_token = json.getString("refresh_token");
+        getInstance().logged_in = System.currentTimeMillis() / 1000;
+    }
+
+    public boolean hasValidToken() {
+        return !(token_type.isEmpty() || access_token.isEmpty() || isTokenExpired());
+    }
+
+    public boolean isTokenExpired() {
+        long currentTime = System.currentTimeMillis() / 1000;
+        return (currentTime > logged_in + expires_in);
     }
 }
