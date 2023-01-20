@@ -118,20 +118,11 @@ public class CoursesFragment extends FragmentBase {
         int pinnedCourseId = settings.getInt("pinnedCourseId", -1);
 
         Course course = courses.get(i);
-        int pinnedId = course.course_id;
-        SharedPreferences.Editor editor = settings.edit();
         if (pinnedCourseId == -1) {
-            editor.putInt("pinnedCourseId", pinnedId);
-            editor.apply();
-            pinCourse(pinnedId);
-            adapter = new CourseListAdapter(getActivity(), courses);
-            GridView courseListView = getActivity().findViewById(R.id.courseListView);
-            courseListView.setAdapter(adapter);
+            togglePin(course.course_id);
             adapter.notifyDataSetChanged();
         } else if (course.course_id == pinnedCourseId) {
-            editor.putInt("pinnedCourseId", -1);
-            editor.apply();
-            pinCourse(-1);
+            togglePin(-1);
             courses = new ArrayList<>(Client.getInstance().courses);
             adapter = new CourseListAdapter(getActivity(), courses);
             GridView courseListView = getActivity().findViewById(R.id.courseListView);
@@ -139,6 +130,14 @@ public class CoursesFragment extends FragmentBase {
         }
 
         return true;
+    }
+
+    private void togglePin(int courseId) {
+        SharedPreferences settings = getActivity().getApplicationContext().getSharedPreferences(PREF_SET, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putInt("pinnedCourseId", courseId);
+        editor.apply();
+        pinCourse(courseId);
     }
 
     private void courseSelected(AdapterView<?> adapterView, View view, int i, long l){
