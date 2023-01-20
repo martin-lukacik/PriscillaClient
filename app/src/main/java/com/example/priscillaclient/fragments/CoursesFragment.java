@@ -99,11 +99,7 @@ public class CoursesFragment extends FragmentBase {
 
         SharedPreferences settings = getActivity().getApplicationContext().getSharedPreferences(PREF_SET, 0);
         int pinnedCourseId = settings.getInt("pinnedCourseId", -1);
-
-        if (pinnedCourseId != -1) {
-            pinCourse(pinnedCourseId);
-        }
-        Toast.makeText(getActivity(), pinnedCourseId + " pinned update", Toast.LENGTH_SHORT).show();
+        pinCourse(pinnedCourseId);
 
         adapter = new CourseListAdapter(getActivity(), courses);
         GridView courseListView = getActivity().findViewById(R.id.courseListView);

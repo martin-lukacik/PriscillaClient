@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
+import androidx.fragment.app.Fragment;
+
 import com.example.priscillaclient.client.Client;
 import com.example.priscillaclient.fragments.FragmentBase;
 
@@ -34,7 +36,7 @@ public abstract class ApiTask extends AsyncTask<String, String, Object> {
 
     protected void onPostExecute(Object response) {
 
-        Activity activity = (fragment instanceof Activity ? (Activity) fragment : ((FragmentBase) fragment).getActivity());
+        Activity activity = (fragment instanceof Activity ? (Activity) fragment : ((Fragment) fragment).getActivity());
         if (errorMessage != null) {
             Toast.makeText(activity, errorMessage, Toast.LENGTH_LONG).show();
         }
