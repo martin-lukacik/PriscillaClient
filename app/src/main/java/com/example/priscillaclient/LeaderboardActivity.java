@@ -35,6 +35,7 @@ public class LeaderboardActivity extends ActivityBase implements HttpResponse {
 
     @Override
     public void onUpdate(Object response) {
+        super.onUpdate(response);
         adapter = new LeaderboardAdapter(this, Client.getInstance().leaderboard);
         ListView lv = findViewById(R.id.leaderboardList);
 

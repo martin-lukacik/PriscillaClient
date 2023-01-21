@@ -32,4 +32,14 @@
     <string name="all_courses">All courses</string>
     <string name="leaderboard">Leaderboard</string>
     <string name="profile">Profile</string>
+    <string name="options">Options</string>
+    <string name="name">Name</string>
+    <string name="surname">Surname</string>
+    <string name="primary_group">Primary group</string>
+    <string name="student_type">Student type</string>
+    <string name="country">Country</string>
+    <string name="language">Language</string>
+    <string name="theme">Theme</string>
+    <string name="save_changes">Save changes</string>
+    <string name="log_out">Log out</string>
 </resources>

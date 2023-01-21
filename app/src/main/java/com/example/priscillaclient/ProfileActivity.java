@@ -157,7 +157,7 @@ public class ProfileActivity extends ActivityBase implements HttpResponse {
 
     @Override
     public void onUpdate(Object response) {
-
+        super.onUpdate(response);
         if (response == null) {
 
             ScrollView scrollView = findViewById(R.id.profileScrollView);

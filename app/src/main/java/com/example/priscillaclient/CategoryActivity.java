@@ -1,7 +1,5 @@
 package com.example.priscillaclient;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -9,10 +7,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.example.priscillaclient.api.browse.GetCategories;
 import com.example.priscillaclient.api.HttpResponse;
-import com.example.priscillaclient.models.Client;
+import com.example.priscillaclient.api.browse.GetCategories;
 import com.example.priscillaclient.models.Category;
+import com.example.priscillaclient.models.Client;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
@@ -41,12 +39,15 @@ public class CategoryActivity extends ActivityBase implements HttpResponse {
 
     @Override
     public void onUpdate(Object response) {
-        ArrayList<Category> categories = Client.getInstance().categories;
+        super.onUpdate(response);
 
-        ArrayAdapter<Category> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, categories);
-        ListView categoryListView = findViewById(R.id.categoryListView);
-        categoryListView.setAdapter(adapter);
-        categoryListView.setOnItemClickListener(this::categorySelected);
+        if (response.equals(Client.getInstance().categories)) {
+            ArrayList<Category> categories = Client.getInstance().categories;
+            ArrayAdapter<Category> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, categories);
+            ListView categoryListView = findViewById(R.id.categoryListView);
+            categoryListView.setAdapter(adapter);
+            categoryListView.setOnItemClickListener(this::categorySelected);
+        }
     }
 
     private void categorySelected(AdapterView<?> adapterView, View view, int i, long l) {

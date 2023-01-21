@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     tools:context=".ProfileActivity">
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -48,6 +50,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="24sp"
                     android:gravity="center"
+                    android:layout_gravity="center"
                     android:text="@string/placeholder_user"
                     android:textColor="@color/black"
                     android:id="@+id/usernameFull" />
@@ -162,7 +165,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="20dp"
-                android:text="Options"
+                android:text="@string/options"
                 android:textSize="24sp" />
 
             <!-- Full name -->
@@ -177,14 +180,18 @@
                     android:layout_weight="4"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:hint="Name"
-                    android:id="@+id/profileEditName" />
+                    android:hint="@string/name"
+                    android:id="@+id/profileEditName"
+                    android:autofillHints="name"
+                    android:inputType="textPersonName" />
                 <EditText
                     android:layout_weight="5"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:hint="Surname"
-                    android:id="@+id/profileEditSurname" />
+                    android:hint="@string/surname"
+                    android:id="@+id/profileEditSurname"
+                    android:autofillHints="name"
+                    android:inputType="textPersonName" />
             </LinearLayout>
 
             <!-- Nickname -->
@@ -194,8 +201,10 @@
                 android:layout_marginEnd="15dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Nickname"
-                android:id="@+id/profileEditNickname" />
+                android:hint="@string/nickname"
+                android:id="@+id/profileEditNickname"
+                android:autofillHints="username"
+                android:inputType="textPersonName" />
 
             <!-- Group -->
             <TextView
@@ -204,7 +213,7 @@
                 android:layout_marginEnd="15dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Primary group"
+                android:text="@string/primary_group"
                 android:textSize="18sp" />
             <Spinner
                 android:layout_marginStart="15dp"
@@ -222,7 +231,7 @@
                 android:layout_marginEnd="15dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Student type"
+                android:text="@string/student_type"
                 android:textSize="18sp" />
             <Spinner
                 android:layout_marginStart="15dp"
@@ -240,7 +249,7 @@
                 android:layout_marginEnd="15dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Country"
+                android:text="@string/country"
                 android:textSize="18sp" />
             <Spinner
                 android:layout_marginStart="15dp"
@@ -258,7 +267,7 @@
                 android:layout_marginEnd="15dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Language"
+                android:text="@string/language"
                 android:textSize="18sp" />
             <Spinner
                 android:layout_marginStart="15dp"
@@ -276,7 +285,7 @@
                 android:layout_marginEnd="15dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Theme"
+                android:text="@string/theme"
                 android:textSize="18sp" />
             <Spinner
                 android:layout_marginStart="15dp"
@@ -297,11 +306,13 @@
             <TextView
                 android:padding="10dp"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
-                android:layout_width="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Save changes"
+                android:gravity="center"
+                android:text="@string/save_changes"
                 android:textSize="20sp"
                 android:onClick="save"
                 android:textColor="#0000FF" />
@@ -309,11 +320,13 @@
             <TextView
                 android:padding="10dp"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="15dp"
                 android:layout_marginBottom="20dp"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Log out"
+                android:gravity="center"
+                android:text="@string/log_out"
                 android:textSize="20sp"
                 android:onClick="logout"
                 android:textColor="#FF0000" />

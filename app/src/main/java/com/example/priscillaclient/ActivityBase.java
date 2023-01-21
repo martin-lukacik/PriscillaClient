@@ -1,23 +1,70 @@
 package com.example.priscillaclient;
 
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
-abstract class ActivityBase extends AppCompatActivity {
+import com.example.priscillaclient.api.HttpResponse;
+import com.example.priscillaclient.api.user.GetUserParams;
+import com.example.priscillaclient.models.Client;
+import com.example.priscillaclient.models.User;
+
+abstract class ActivityBase extends AppCompatActivity implements HttpResponse {
+
+    Client client = Client.getInstance();
+
+    @Override
+    public void onUpdate(Object response) {
+
+        if (response == null)
+            return;
+
+        if (response.equals(client.user)) {
+            User user = client.user;
+            setActionBarTitle(user.performance.xp + " XP | " + user.performance.coins + " ©");
+        }
+    }
+
+    void setActionBarTitle(String title) {
+        TextView tv = findViewById(R.id.actionBarTitle);
+        tv.setText(title);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setTitle("");
-        getSupportActionBar().setIcon(R.drawable.priscilla_logo_dark);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setIcon(R.drawable.priscilla_logo_dark);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
+
         /*getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0xfff9f9f9));*/
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowCustomEnabled(true);
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setIcon(R.drawable.priscilla_logo_dark);
+
+        LayoutInflater inflater = (LayoutInflater) this .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View v = inflater.inflate(R.layout.actionbar, null);
+
+        actionBar.setCustomView(v);
+
+        User user = client.user;
+
+        if (user != null)
+            setActionBarTitle(user.performance.xp + " XP | " + user.performance.coins + " ©");
+
+        new GetUserParams(this).execute();
     }
 
     @Override
@@ -32,27 +79,18 @@ abstract class ActivityBase extends AppCompatActivity {
 
     protected boolean onMenuItemSelected(MenuItem item) {
 
-        Intent intent;
-        switch (item.getItemId()) {
-            case R.id.menu_dashboard:
-                intent = new Intent(ActivityBase.this, MainActivity.class);
-                break;
+        Intent intent = null;
+        if (item.getItemId() == R.id.menu_dashboard)
+            intent = new Intent(ActivityBase.this, MainActivity.class);
 
-            case R.id.menu_all_courses:
-                intent = new Intent(ActivityBase.this, CategoryActivity.class);
-                break;
+        if (item.getItemId() == R.id.menu_all_courses)
+            intent = new Intent(ActivityBase.this, CategoryActivity.class);
 
-            case R.id.menu_leaderboard:
-                intent = new Intent(ActivityBase.this, LeaderboardActivity.class);
-                break;
+        if (item.getItemId() == R.id.menu_leaderboard)
+            intent = new Intent(ActivityBase.this, LeaderboardActivity.class);
 
-            case R.id.menu_profile:
-                intent = new Intent(ActivityBase.this, ProfileActivity.class);
-                break;
-
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+        if (item.getItemId() == R.id.menu_profile)
+            intent = new Intent(ActivityBase.this, ProfileActivity.class);
 
         startActivity(intent);
         overridePendingTransition(0, 0);

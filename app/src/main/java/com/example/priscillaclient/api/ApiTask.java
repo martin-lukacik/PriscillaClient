@@ -1,6 +1,7 @@
 package com.example.priscillaclient.api;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
@@ -40,7 +41,11 @@ public abstract class ApiTask extends AsyncTask<String, String, Object> {
 
         Activity activity = (context instanceof Activity ? (Activity) context : ((Fragment) context).getActivity());
         if (errorMessage != null) {
-            Toast.makeText(activity, errorMessage, Toast.LENGTH_LONG).show();
+            if (errorMessage.equals("Unauthorized.") && activity != null) {
+                activity.startActivity(new Intent(activity, LoginActivity.class));
+            } else {
+                Toast.makeText(activity, errorMessage, Toast.LENGTH_LONG).show();
+            }
         }
 
         context.onUpdate(response);

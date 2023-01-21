@@ -122,6 +122,7 @@ public class TaskFragment extends FragmentBase {
             new GetTasks(this, id).execute();
             updateLessonList(client.lessons);
         } else if (response.equals(client.tasks)) {
+            currentTask = 0;
             updateTaskList(client.tasks);
         } else if (response instanceof TaskResult) {
             new GetTasks(this, id).execute();
@@ -150,9 +151,7 @@ public class TaskFragment extends FragmentBase {
             stars.addView(star);
         }
 
-        view.findViewById(R.id.dialog_dismiss).setOnClickListener(e -> {
-            dialog.dismiss();
-        });
+        view.findViewById(R.id.dialog_dismiss).setOnClickListener(e -> dialog.dismiss());
 
         dialog.setCancelable(true);
         dialog.setContentView(view);
