@@ -167,7 +167,7 @@ public class TaskFragment extends FragmentBase {
         Menu menu = navigationView.getMenu();
         menu.clear();
 
-        menu.add("Lessons");
+        menu.add(R.string.lessons);
         menu.getItem(0).setEnabled(false);
 
         navigationView.bringToFront();
