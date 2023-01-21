@@ -20,23 +20,23 @@ public abstract class ApiTask extends AsyncTask<String, String, Object> {
 
     protected final static Client client = Client.getInstance();
 
-    final HttpResponse fragment;
+    final HttpResponse context;
 
     public String errorMessage = null;
 
-    public ApiTask(HttpResponse fragment) {
+    public ApiTask(HttpResponse context) {
         super();
-        this.fragment = fragment;
+        this.context = context;
     }
 
     protected void onPostExecute(Object response) {
 
-        Activity activity = (fragment instanceof Activity ? (Activity) fragment : ((Fragment) fragment).getActivity());
+        Activity activity = (context instanceof Activity ? (Activity) context : ((Fragment) context).getActivity());
         if (errorMessage != null) {
             Toast.makeText(activity, errorMessage, Toast.LENGTH_LONG).show();
         }
 
-        fragment.onUpdate(response);
+        context.onUpdate(response);
     }
 
     protected void logError(String message) {

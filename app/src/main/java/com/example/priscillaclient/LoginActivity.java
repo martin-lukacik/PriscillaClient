@@ -12,7 +12,7 @@ import android.widget.EditText;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.priscillaclient.api.HttpResponse;
-import com.example.priscillaclient.api.auth.GetToken;
+import com.example.priscillaclient.api.user.GetToken;
 import com.example.priscillaclient.models.Client;
 import com.example.priscillaclient.views.LoadingDialog;
 

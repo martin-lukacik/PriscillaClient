@@ -1,7 +1,6 @@
-package com.example.priscillaclient.api.auth;
+package com.example.priscillaclient.api.user;
 
 import com.example.priscillaclient.api.ApiTask;
-import com.example.priscillaclient.models.Client;
 import com.example.priscillaclient.api.HttpConnection;
 import com.example.priscillaclient.api.HttpResponse;
 import com.example.priscillaclient.models.User;

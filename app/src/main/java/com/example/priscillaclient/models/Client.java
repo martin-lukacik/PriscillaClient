@@ -16,6 +16,8 @@ public class Client {
     public String refresh_token = "";
 
     public User user = null;
+    public RegistrationData registrationData = null;
+    public Profile profile = null;
 
     public ArrayList<Course> courses = new ArrayList<>();
 
