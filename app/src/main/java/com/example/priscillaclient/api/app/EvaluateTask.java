@@ -28,6 +28,9 @@ public class EvaluateTask extends ApiTask {
                 return null;
             }
 
+            // Invalidate user data to update XP and coins in profile
+            client.user = null;
+
             JSONObject response = new JSONObject(connection.getResponse());
             return new TaskResult(response.getJSONObject("result"));
         } catch (Exception e) {

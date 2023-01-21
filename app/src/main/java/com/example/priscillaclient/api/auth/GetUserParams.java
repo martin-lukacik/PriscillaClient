@@ -19,6 +19,11 @@ public class GetUserParams extends ApiTask {
     }
 
     protected User getUserParams() {
+
+        // Use the cached result
+        if (client.user != null)
+            return client.user;
+
         try {
             HttpConnection connection = new HttpConnection("/get-full-user-parameters", "GET", false);
 
@@ -29,7 +34,6 @@ public class GetUserParams extends ApiTask {
 
             JSONObject response = new JSONObject(connection.getResponse());
 
-            Client client = Client.getInstance();
             client.user = new User(response);
 
             connection.disconnect();
@@ -37,6 +41,6 @@ public class GetUserParams extends ApiTask {
             e.printStackTrace();
         }
 
-        return Client.getInstance().user; // TODO need return?
+        return client.user;
     }
 }

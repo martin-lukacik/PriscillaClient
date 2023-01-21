@@ -30,8 +30,6 @@ public class MainActivity extends ActivityBase {
         }
 
         swapFragment(new CoursesFragment());
-
-        //new GetUserParams(this).execute();
     }
 
     private void swapFragment(Fragment fragment) {
