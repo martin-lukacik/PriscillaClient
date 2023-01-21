@@ -32,6 +32,10 @@ public class RegistrationData {
 
     }
 
+    public boolean isEmpty() {
+        return (languages.isEmpty() && countries.isEmpty() && groups.isEmpty() && themes.isEmpty());
+    }
+
     public Pair<Integer, String[]> getCountrySelection() {
         Profile profile = Client.getInstance().profile;
         int selectedIndex = 0;

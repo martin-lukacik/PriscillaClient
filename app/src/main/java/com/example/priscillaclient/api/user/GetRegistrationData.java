@@ -17,7 +17,7 @@ public class GetRegistrationData extends ApiTask {
     @Override
     protected RegistrationData doInBackground(String... strings) {
 
-        if (client.registrationData != null) {
+        if (client.registrationData != null && !client.registrationData.isEmpty()) {
             return client.registrationData;
         }
 
