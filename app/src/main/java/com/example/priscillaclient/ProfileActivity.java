@@ -127,60 +127,24 @@ public class ProfileActivity extends ActivityBase implements HttpResponse {
         loadSelection(profileEditStudentType, items, profile.content_type_id - 1);
     }
 
-    private void loadProfileGroup(Profile profile, RegistrationData data) {
-        int selectedIndex = -1;
-        String[] items = new String[data.groups.size()];
-        for (int i = 0; i < data.groups.size(); ++i) {
-            items[i] = data.groups.get(i).group_name;
-
-            if (data.groups.get(i).group_name.equals(profile.groups)) {
-                selectedIndex = i;
-            }
-        }
-
-        loadSelection(profileEditGroup, items, selectedIndex);
+    private void loadProfileGroup(RegistrationData data) {
+        Pair<Integer, String[]> selection = data.getGroupSelection();
+        loadSelection(profileEditGroup, selection.y, selection.x);
     }
 
-    private void loadProfileCountry(Profile profile, RegistrationData data) {
-        int selectedIndex = -1;
-        String[] items = new String[data.countries.size()];
-        for (int i = 0; i < data.countries.size(); ++i) {
-            items[i] = data.countries.get(i).country_name;
-
-            if (data.countries.get(i).id == profile.country_id) {
-                selectedIndex = i;
-            }
-        }
-
-        loadSelection(profileEditCountry, items, selectedIndex);
+    private void loadProfileCountry(RegistrationData data) {
+        Pair<Integer, String[]> selection = data.getCountrySelection();
+        loadSelection(profileEditCountry, selection.y, selection.x);
     }
 
-    private void loadProfileLanguage(Profile profile, RegistrationData data) {
-        int selectedIndex = -1;
-        String[] items = new String[data.languages.size()];
-        for (int i = 0; i < data.languages.size(); ++i) {
-            items[i] = data.languages.get(i).name;
-
-            if (data.languages.get(i).id == profile.pref_lang_id) {
-                selectedIndex = i;
-            }
-        }
-
-        loadSelection(profileEditLanguage, items, selectedIndex);
+    private void loadProfileLanguage(RegistrationData data) {
+        Pair<Integer, String[]> selection = data.getLanguageSelection();
+        loadSelection(profileEditLanguage, selection.y, selection.x);
     }
 
-    private void loadProfileTheme(Profile profile, RegistrationData data) {
-        int selectedIndex = -1;
-        String[] items = new String[data.themes.size()];
-        for (int i = 0; i < data.themes.size(); ++i) {
-            items[i] = data.themes.get(i).theme_name;
-
-            if (data.themes.get(i).id == profile.theme_id) {
-                selectedIndex = i;
-            }
-        }
-
-        loadSelection(profileEditTheme, items, selectedIndex);
+    private void loadProfileTheme(RegistrationData data) {
+        Pair<Integer, String[]> selection = data.getThemeSelection();
+        loadSelection(profileEditTheme, selection.y, selection.x);
     }
 
     @Override
@@ -212,10 +176,10 @@ public class ProfileActivity extends ActivityBase implements HttpResponse {
             profileEditYear.updateDate(profile.yob, 0, 1);
 
             loadProfileStudentType(profile);
-            loadProfileGroup(profile, data);
-            loadProfileCountry(profile, data);
-            loadProfileLanguage(profile, data);
-            loadProfileTheme(profile, data);
+            loadProfileGroup(data);
+            loadProfileCountry(data);
+            loadProfileLanguage(data);
+            loadProfileTheme(data);
 
             return;
         }

@@ -6,7 +6,9 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
+import com.example.priscillaclient.LoginActivity;
 import com.example.priscillaclient.models.Client;
+import com.example.priscillaclient.views.LoadingDialog;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -24,12 +26,21 @@ public abstract class ApiTask extends AsyncTask<String, String, Object> {
 
     public String errorMessage = null;
 
+    LoadingDialog dialog;
+
     public ApiTask(HttpResponse context) {
         super();
         this.context = context;
+
+        Activity ctx = (context instanceof Activity ? (Activity) context : ((Fragment) context).getActivity());
+        dialog = new LoadingDialog(ctx, "Loading, please wait...");
+        dialog.show();
     }
 
     protected void onPostExecute(Object response) {
+
+        if (dialog != null)
+            dialog.dismiss();
 
         Activity activity = (context instanceof Activity ? (Activity) context : ((Fragment) context).getActivity());
         if (errorMessage != null) {
