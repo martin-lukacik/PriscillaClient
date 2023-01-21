@@ -116,16 +116,15 @@ public class TaskFragment extends FragmentBase {
 
         Client client = Client.getInstance();
 
+        int id = lessonId == -1 ? client.lessons.get(0).id : lessonId;
         if (response.equals(client.lessons)) {
-            int id = lessonId == -1 ? client.lessons.get(0).id : lessonId;
+            currentTask = 0;
             new GetTasks(this, id).execute();
-
             updateLessonList(client.lessons);
         } else if (response.equals(client.tasks)) {
-            currentTask = 0;
-            buttonTaskPrevious.setVisibility(View.INVISIBLE);
             updateTaskList(client.tasks);
         } else if (response instanceof TaskResult) {
+            new GetTasks(this, id).execute();
             showRatingDialog(((TaskResult) response));
         }
     }
@@ -195,6 +194,14 @@ public class TaskFragment extends FragmentBase {
 
         Task task = tasks.get(currentTask);
 
+        if (task.passed == 1) {
+            buttonTaskHelp.setText("PASSED");
+            buttonTaskHelp.setEnabled(false);
+        } else {
+            buttonTaskHelp.setText("Help");
+            buttonTaskHelp.setEnabled(true);
+        }
+
         String css = "<style>" + readFile(R.raw.task_style) + "</style>";
         String javascript = "<script>" + readFile(R.raw.task_script) + "</script>";
 
@@ -254,6 +261,8 @@ public class TaskFragment extends FragmentBase {
     }
 
     private void clearTaskLayout() {
+        ArrayList<Task> tasks = Client.getInstance().tasks;
+
         inputEditText.setText("");
         inputEditText.setVisibility(View.GONE);
         for (int i = taskLayout.getChildCount() - 1; i >= 0; --i) {
@@ -261,6 +270,18 @@ public class TaskFragment extends FragmentBase {
             if (view.getTag() != null) {
                 taskLayout.removeView(view);
             }
+        }
+
+        if (currentTask > 0) {
+            buttonTaskPrevious.setVisibility(View.VISIBLE);
+        } else {
+            buttonTaskPrevious.setVisibility(View.INVISIBLE);
+        }
+
+        if (currentTask + 1 >= tasks.size()) {
+            buttonTaskNext.setVisibility(View.INVISIBLE);
+        } else {
+            buttonTaskNext.setVisibility(View.VISIBLE);
         }
     }
 
@@ -324,14 +345,6 @@ public class TaskFragment extends FragmentBase {
             ++currentTask;
             updateTaskList(tasks);
         }
-
-        if (currentTask > 0) {
-            buttonTaskPrevious.setVisibility(View.VISIBLE);
-        }
-
-        if (currentTask + 1 >= tasks.size()) {
-            buttonTaskNext.setVisibility(View.INVISIBLE);
-        }
     }
 
     public void previousTask(View view) {
@@ -339,14 +352,6 @@ public class TaskFragment extends FragmentBase {
         if (currentTask - 1 >= 0) {
             --currentTask;
             updateTaskList(tasks);
-        }
-
-        if (currentTask == 0) {
-            buttonTaskPrevious.setVisibility(View.INVISIBLE);
-        }
-
-        if (currentTask + 1 < tasks.size()) {
-            buttonTaskNext.setVisibility(View.VISIBLE);
         }
     }
 }
