@@ -161,6 +161,9 @@ public class TaskFragment extends FragmentBase {
     }
 
     public void updateLessonList(ArrayList<Lesson> lessons) {
+        DrawerLayout drawer = findViewById(R.id.drawerLayout);
+        drawer.open();
+
         NavigationView navigationView = findViewById(R.id.navigationView);
         Menu menu = navigationView.getMenu();
         menu.clear();
@@ -176,8 +179,7 @@ public class TaskFragment extends FragmentBase {
             item.setOnMenuItemClickListener((e) -> {
                 currentLesson = item.getItemId();
                 lessonId = lesson.id;
-                updateLessonList(lessons);
-                DrawerLayout drawer = findViewById(R.id.drawerLayout);
+                new GetTasks(this, lessonId).execute();
                 drawer.closeDrawers();
                 return false;
             });
