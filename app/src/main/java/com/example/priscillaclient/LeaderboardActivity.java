@@ -3,34 +3,34 @@ package com.example.priscillaclient;
 import android.os.Bundle;
 import android.widget.ListView;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.example.priscillaclient.api.misc.GetLeaders;
 import com.example.priscillaclient.api.HttpResponse;
-import com.example.priscillaclient.models.LeaderboardItem;
+import com.example.priscillaclient.api.misc.GetLeaders;
+import com.example.priscillaclient.models.Client;
 import com.example.priscillaclient.views.adapters.LeaderboardAdapter;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.util.ArrayList;
+public class LeaderboardActivity extends ActivityBase implements HttpResponse {
 
-public class LeaderboardActivity extends AppCompatActivity implements HttpResponse {
+    LeaderboardAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_leaderboard);
 
+        BottomNavigationView navigationView = findViewById(R.id.bottom_navigation);
+        navigationView.setOnItemSelectedListener(this::onMenuItemSelected);
+        navigationView.getMenu().findItem(R.id.menu_leaderboard).setChecked(true);
+
         new GetLeaders(this).execute();
     }
 
-    LeaderboardAdapter adapter;
-
     @Override
     public void onUpdate(Object response) {
-        ArrayList<LeaderboardItem> leaders = (ArrayList<LeaderboardItem>) response;
-
-        adapter = new LeaderboardAdapter(this, leaders);
-
+        adapter = new LeaderboardAdapter(this, Client.getInstance().leaderboard);
         ListView lv = findViewById(R.id.leaderboardList);
-        lv.setAdapter(adapter);
+
+        if (lv != null)
+            lv.setAdapter(adapter);
     }
 }

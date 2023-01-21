@@ -28,6 +28,8 @@ public class Client {
     public ArrayList<Task> tasks = new ArrayList<>();
     public int lastLessonId = -1;
 
+    public ArrayList<LeaderboardItem> leaderboard = new ArrayList<>();
+
     public ArrayList<Language> languageList = null;
     public ArrayList<Category> categories = null;
     public ArrayList<Area> areas = null;

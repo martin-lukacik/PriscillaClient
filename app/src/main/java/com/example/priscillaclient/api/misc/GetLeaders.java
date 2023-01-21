@@ -1,79 +1,64 @@
 package com.example.priscillaclient.api.misc;
 
-import android.content.Context;
-import android.os.AsyncTask;
-import android.util.Log;
-
-import com.example.priscillaclient.HttpURLConnectionFactory;
-import com.example.priscillaclient.LeaderboardActivity;
+import com.example.priscillaclient.api.ApiTask;
+import com.example.priscillaclient.api.HttpConnection;
+import com.example.priscillaclient.api.HttpResponse;
 import com.example.priscillaclient.models.LeaderboardItem;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.DataOutputStream;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.util.ArrayList;
-import java.util.Scanner;
 
-public class GetLeaders extends AsyncTask<String, String, ArrayList<LeaderboardItem>> {
+public class GetLeaders extends ApiTask {
 
-    final Context context;
-    public GetLeaders(Context context) {
-        super();
-        this.context = context;
+    public GetLeaders(HttpResponse context) {
+        super(context);
     }
 
     @Override
     protected ArrayList<LeaderboardItem> doInBackground(String... strings) {
 
-        ArrayList<LeaderboardItem> leaders = new ArrayList<>();
+        if (!client.leaderboard.isEmpty()) {
+            return client.leaderboard;
+        }
 
         try {
-            HttpURLConnection connection = HttpURLConnectionFactory.getConnection("/get-leaders2", "POST", true);
+            HttpConnection connection = new HttpConnection("/get-leaders2", "POST", true);
 
-            JSONObject j = new JSONObject();
-            j.put("areas", "");
-            j.put("countries", "");
-            j.put("courses", "");
-            j.put("groups", "");
-            j.put("start", 0);
-            j.put("end", 100);
+            JSONObject json = getJSONObject();
 
-            DataOutputStream os = new DataOutputStream(connection.getOutputStream());
-            os.writeBytes(j.toString());
+            connection.sendRequest(json);
 
-            os.flush();
-            os.close();
-
-            int status = connection.getResponseCode();
-            String message = connection.getResponseMessage();
-
-            InputStream responseStream = connection.getInputStream();
-
-            String responseStr;
-            try (Scanner scanner = new Scanner(responseStream)) {
-                responseStr = scanner.useDelimiter("\\A").next();
+            if (connection.getErrorStream() != null) {
+                logError(connection.getErrorStream());
+                return client.leaderboard;
             }
 
-            Log.i("LEADERS", responseStr);
+            JSONArray response = new JSONObject(connection.getResponse()).getJSONArray("list");
 
-            JSONArray json = new JSONObject(responseStr).getJSONArray("list");
-
-            for (int i = 0; i < json.length(); ++i) {
-                leaders.add(new LeaderboardItem(json.getJSONObject(i)));
+            client.leaderboard.clear();
+            for (int i = 0; i < response.length(); ++i) {
+                client.leaderboard.add(new LeaderboardItem(response.getJSONObject(i)));
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return leaders;
+        return client.leaderboard;
     }
 
-    protected void onPostExecute(ArrayList<LeaderboardItem> leaders) {
-        ((LeaderboardActivity) context).onUpdate(leaders);
+    private JSONObject getJSONObject() throws JSONException {
+        JSONObject json = new JSONObject();
+        json.put("areas", "");
+        json.put("countries", "");
+        json.put("courses", "");
+        json.put("groups", "");
+        json.put("start", 0);
+        json.put("end", 100);
+        return json;
     }
 
 }
