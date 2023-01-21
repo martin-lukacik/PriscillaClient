@@ -37,7 +37,7 @@ public class GetUserParams extends ApiTask {
 
             connection.disconnect();
         } catch (Exception e) {
-            e.printStackTrace();
+            logError(e.getMessage());
         }
 
         return client.user;

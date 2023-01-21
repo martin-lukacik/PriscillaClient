@@ -1,7 +1,9 @@
 package com.example.priscillaclient.api;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.widget.Toast;
 

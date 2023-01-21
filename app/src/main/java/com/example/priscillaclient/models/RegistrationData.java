@@ -14,6 +14,8 @@ public class RegistrationData {
     public ArrayList<Group> groups = new ArrayList<>();
     public ArrayList<Theme> themes = new ArrayList<>();
 
+    public RegistrationData() { }
+
     public RegistrationData(JSONArray l, JSONArray c, JSONArray g, JSONArray t) throws JSONException {
 
         for (int i = 0; i < l.length(); ++i)

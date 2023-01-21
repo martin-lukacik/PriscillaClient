@@ -53,7 +53,7 @@ public class GetLeaders extends ApiTask {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logError(e.getMessage());
         }
 
         return client.leaderboard;

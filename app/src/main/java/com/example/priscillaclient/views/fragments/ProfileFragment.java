@@ -23,13 +23,6 @@ public class ProfileFragment extends FragmentBase {
 
     public ProfileFragment() { }
 
-    public static ProfileFragment newInstance(String param1, String param2) {
-        ProfileFragment fragment = new ProfileFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +31,10 @@ public class ProfileFragment extends FragmentBase {
     }
 
     public void logout(View view) {
+
+        if (getActivity() == null)
+            return;
+
         SharedPreferences settings = getActivity().getApplicationContext().getSharedPreferences("settings", 0);
         SharedPreferences.Editor editor = settings.edit();
         editor.putString("username", null);
@@ -59,6 +56,10 @@ public class ProfileFragment extends FragmentBase {
 
     @Override
     public void onUpdate(Object response) {
+        User user = Client.getInstance().user;
+
+        if (user == null)
+            return;
 
         TextView profileLogout = findViewById(R.id.profileLogoutButton);
         profileLogout.setOnClickListener(this::logout);
@@ -68,8 +69,6 @@ public class ProfileFragment extends FragmentBase {
 
         TextView usernameShort = findViewById(R.id.usernameShort);
         TextView usernameFull = findViewById(R.id.usernameFull);
-
-        User user = Client.getInstance().user;
 
         usernameShort.setText(user.name.charAt(0) + "" + user.surname.charAt(0));
         usernameFull.setText(user.name + " " + user.surname);

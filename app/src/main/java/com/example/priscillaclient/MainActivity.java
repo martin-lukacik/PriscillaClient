@@ -1,14 +1,11 @@
 package com.example.priscillaclient;
 
 import android.Manifest;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
 import com.example.priscillaclient.views.fragments.CoursesFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -27,6 +24,11 @@ public class MainActivity extends ActivityBase {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET) !=
                 PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET}, 1);
+        }
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_NETWORK_STATE) !=
+                PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_NETWORK_STATE}, 2);
         }
 
         swapFragment(new CoursesFragment());
