@@ -39,13 +39,4 @@ public class MainActivity extends ActivityBase {
         BottomNavigationView navigationView = findViewById(R.id.bottom_navigation);
         navigationView.getMenu().findItem(R.id.menu_dashboard).setChecked(true);
     }
-
-    private void swapFragment(Fragment fragment) {
-        FragmentManager manager = getSupportFragmentManager();
-
-        manager.beginTransaction()
-                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
-                .replace(R.id.fragmentContainerView, fragment)
-                .commit();
-    }
 }

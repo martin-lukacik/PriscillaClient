@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.priscillaclient.api.HttpResponse;
@@ -65,6 +66,15 @@ abstract class ActivityBase extends AppCompatActivity implements HttpResponse {
             setActionBarTitle(user.performance.xp + " XP | " + user.performance.coins + " ©");
 
         new GetUserParams(this).execute();
+    }
+
+    protected void swapFragment(Fragment fragment) {
+        FragmentManager manager = getSupportFragmentManager();
+
+        manager.beginTransaction()
+                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
+                .replace(R.id.fragmentContainerView, fragment)
+                .commit();
     }
 
     @Override
