@@ -176,7 +176,12 @@ public class TaskFragment extends FragmentBase {
             MenuItem item = menu.add(lesson.name);
 
             item.setOnMenuItemClickListener((e) -> {
-                currentLesson = item.getItemId();
+                for (int i = 0; i < menu.size(); ++i) {
+                    menu.getItem(i).setChecked(false);
+                }
+
+                e.setChecked(true);
+                currentLesson = e.getItemId();
                 lessonId = lesson.id;
                 new GetTasks(this, lessonId).execute();
                 drawer.closeDrawers();

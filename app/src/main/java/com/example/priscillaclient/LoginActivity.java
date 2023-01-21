@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.CheckBox;
@@ -27,15 +28,26 @@ public class LoginActivity extends AppCompatActivity implements HttpResponse {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        EditText inputUsername = findViewById(R.id.inputUsername);
+        inputUsername.setOnKeyListener((v, keyCode, event) -> {
+            if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                    (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                performLogin(null);
+                return true;
+            }
+            return false;
+        });
+        EditText inputPassword = findViewById(R.id.inputPassword);
+        inputPassword.setOnKeyListener((v, keyCode, event) -> {
+            if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                    (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                performLogin(null);
+                return true;
+            }
+            return false;
+        });
 
         SharedPreferences settings = getApplicationContext().getSharedPreferences("settings", 0);
-
-/*
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putString("username", null);
-        editor.putString("refresh_token", null);
-        editor.apply();*/
-
         String username = settings.getString("username", null);
         refresh_token = settings.getString("refresh_token", null);
         if (username != null && refresh_token != null) {
