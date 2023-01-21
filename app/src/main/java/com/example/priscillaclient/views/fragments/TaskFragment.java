@@ -42,7 +42,7 @@ public class TaskFragment extends FragmentBase {
 
     private int courseId;
     private int chapterId;
-    private int currentLesson = -1;
+    private int currentLesson = 0;
     private int lessonId = -1;
     private int currentTask = 0;
 
@@ -172,8 +172,13 @@ public class TaskFragment extends FragmentBase {
 
         navigationView.bringToFront();
 
+        boolean initialChecked = false;
         for (Lesson lesson : lessons) {
             MenuItem item = menu.add(lesson.name);
+
+            if (!initialChecked) {
+                item.setChecked(initialChecked = true);
+            }
 
             item.setOnMenuItemClickListener((e) -> {
                 for (int i = 0; i < menu.size(); ++i) {
@@ -181,7 +186,6 @@ public class TaskFragment extends FragmentBase {
                 }
 
                 e.setChecked(true);
-                currentLesson = e.getItemId();
                 lessonId = lesson.id;
                 new GetTasks(this, lessonId).execute();
                 drawer.closeDrawers();
