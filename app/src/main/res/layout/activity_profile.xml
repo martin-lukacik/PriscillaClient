@@ -15,6 +15,7 @@
         app:menu="@menu/menu_main" />
 
     <ScrollView
+        android:id="@+id/profileScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -173,19 +174,32 @@
                 android:layout_marginEnd="15dp"
                 android:orientation="horizontal">
                 <EditText
-                    android:layout_width="wrap_content"
+                    android:layout_weight="4"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:hint="Name"
                     android:id="@+id/profileEditName" />
                 <EditText
-                    android:layout_width="wrap_content"
+                    android:layout_weight="5"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:hint="Surname"
                     android:id="@+id/profileEditSurname" />
             </LinearLayout>
 
+            <!-- Nickname -->
+            <EditText
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Nickname"
+                android:id="@+id/profileEditNickname" />
+
             <!-- Group -->
             <TextView
+                android:layout_marginTop="10dp"
                 android:layout_marginStart="15dp"
                 android:layout_marginEnd="15dp"
                 android:layout_width="wrap_content"
@@ -279,6 +293,18 @@
                 android:layout_width="wrap_content"
                 android:layout_gravity="center"
                 android:layout_height="wrap_content" />
+
+            <TextView
+                android:padding="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Save changes"
+                android:textSize="20sp"
+                android:onClick="save"
+                android:textColor="#0000FF" />
 
             <TextView
                 android:padding="10dp"

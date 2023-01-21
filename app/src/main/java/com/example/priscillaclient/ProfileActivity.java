@@ -11,11 +11,13 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.priscillaclient.api.HttpResponse;
+import com.example.priscillaclient.api.user.ChangeProfile;
 import com.example.priscillaclient.api.user.GetProfileData;
 import com.example.priscillaclient.api.user.GetRegistrationData;
 import com.example.priscillaclient.api.user.GetUserParams;
@@ -31,6 +33,7 @@ public class ProfileActivity extends ActivityBase implements HttpResponse {
 
     EditText profileEditName;
     EditText profileEditSurname;
+    EditText profileEditNickname;
 
     Spinner profileEditGroup;
     Spinner profileEditStudentType;
@@ -40,6 +43,8 @@ public class ProfileActivity extends ActivityBase implements HttpResponse {
 
     DatePicker profileEditYear;
 
+    Client client = Client.getInstance();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,12 +52,59 @@ public class ProfileActivity extends ActivityBase implements HttpResponse {
 
         profileEditName = findViewById(R.id.profileEditName);
         profileEditSurname = findViewById(R.id.profileEditSurname);
+        profileEditNickname = findViewById(R.id.profileEditNickname);
         profileEditGroup = findViewById(R.id.profileEditGroup);
         profileEditStudentType = findViewById(R.id.profileEditStudentType);
         profileEditCountry = findViewById(R.id.profileEditCountry);
         profileEditLanguage = findViewById(R.id.profileEditLanguage);
         profileEditTheme = findViewById(R.id.profileEditTheme);
         profileEditYear = findViewById(R.id.profileEditYear);
+
+        profileEditGroup.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                adapterView.setTag(client.registrationData.groups.get(i).group_name);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) { }
+        });
+        profileEditStudentType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                adapterView.setTag(i + 1);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) { }
+        });
+        profileEditCountry.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                adapterView.setTag(client.registrationData.countries.get(i).id);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) { }
+        });
+        profileEditLanguage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                adapterView.setTag(client.registrationData.languages.get(i).id);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) { }
+        });
+        profileEditTheme.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                adapterView.setTag(client.registrationData.themes.get(i).id);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) { }
+        });
 
         new GetUserParams(this).execute();
 
@@ -64,17 +116,18 @@ public class ProfileActivity extends ActivityBase implements HttpResponse {
         new GetProfileData(this).execute();
     }
 
-    private void loadProfileStudentType() {
-        String[] items = new String[] { "university student", "teen student" };
+    private void loadSelection(Spinner spinner, String[] items, int selectedIndex) {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
-        profileEditStudentType.setAdapter(adapter);
-        profileEditStudentType.setSelection(0);
+        spinner.setAdapter(adapter);
+        spinner.setSelection(selectedIndex);
     }
 
-    private void loadProfileGroup() {
-        Client client = Client.getInstance();
-        Profile profile = client.profile;
-        RegistrationData data = client.registrationData;
+    private void loadProfileStudentType(Profile profile) {
+        String[] items = new String[] { "teen student", "university student" };
+        loadSelection(profileEditStudentType, items, profile.content_type_id - 1);
+    }
+
+    private void loadProfileGroup(Profile profile, RegistrationData data) {
         int selectedIndex = -1;
         String[] items = new String[data.groups.size()];
         for (int i = 0; i < data.groups.size(); ++i) {
@@ -84,15 +137,11 @@ public class ProfileActivity extends ActivityBase implements HttpResponse {
                 selectedIndex = i;
             }
         }
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
-        profileEditGroup.setAdapter(adapter);
-        profileEditGroup.setSelection(selectedIndex);
+
+        loadSelection(profileEditGroup, items, selectedIndex);
     }
 
-    private void loadProfileCountry() {
-        Client client = Client.getInstance();
-        Profile profile = client.profile;
-        RegistrationData data = client.registrationData;
+    private void loadProfileCountry(Profile profile, RegistrationData data) {
         int selectedIndex = -1;
         String[] items = new String[data.countries.size()];
         for (int i = 0; i < data.countries.size(); ++i) {
@@ -102,15 +151,11 @@ public class ProfileActivity extends ActivityBase implements HttpResponse {
                 selectedIndex = i;
             }
         }
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
-        profileEditCountry.setAdapter(adapter);
-        profileEditCountry.setSelection(selectedIndex);
+
+        loadSelection(profileEditCountry, items, selectedIndex);
     }
 
-    private void loadProfileLanguage() {
-        Client client = Client.getInstance();
-        Profile profile = client.profile;
-        RegistrationData data = client.registrationData;
+    private void loadProfileLanguage(Profile profile, RegistrationData data) {
         int selectedIndex = -1;
         String[] items = new String[data.languages.size()];
         for (int i = 0; i < data.languages.size(); ++i) {
@@ -120,15 +165,11 @@ public class ProfileActivity extends ActivityBase implements HttpResponse {
                 selectedIndex = i;
             }
         }
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
-        profileEditLanguage.setAdapter(adapter);
-        profileEditLanguage.setSelection(selectedIndex);
+
+        loadSelection(profileEditLanguage, items, selectedIndex);
     }
 
-    private void loadProfileTheme() {
-        Client client = Client.getInstance();
-        Profile profile = client.profile;
-        RegistrationData data = client.registrationData;
+    private void loadProfileTheme(Profile profile, RegistrationData data) {
         int selectedIndex = -1;
         String[] items = new String[data.themes.size()];
         for (int i = 0; i < data.themes.size(); ++i) {
@@ -138,15 +179,21 @@ public class ProfileActivity extends ActivityBase implements HttpResponse {
                 selectedIndex = i;
             }
         }
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
-        profileEditTheme.setAdapter(adapter);
-        profileEditTheme.setSelection(selectedIndex);
+
+        loadSelection(profileEditTheme, items, selectedIndex);
     }
 
     @Override
     public void onUpdate(Object response) {
 
-        Client client = Client.getInstance();
+        if (response == null) {
+
+            ScrollView scrollView = findViewById(R.id.profileScrollView);
+            scrollView.fullScroll(ScrollView.FOCUS_UP);
+            client.user = null;
+            new GetUserParams(this).execute();
+            return;
+        }
 
         if (response.equals(client.registrationData)) {
 
@@ -156,17 +203,19 @@ public class ProfileActivity extends ActivityBase implements HttpResponse {
         if (response.equals(client.profile)) {
 
             Profile profile = client.profile;
+            RegistrationData data = client.registrationData;
 
             profileEditName.setText(profile.name);
             profileEditSurname.setText(profile.surname);
+            profileEditNickname.setText(profile.nickname);
 
             profileEditYear.updateDate(profile.yob, 0, 1);
 
-            loadProfileGroup();
-            loadProfileStudentType();
-            loadProfileCountry();
-            loadProfileLanguage();
-            loadProfileTheme();
+            loadProfileStudentType(profile);
+            loadProfileGroup(profile, data);
+            loadProfileCountry(profile, data);
+            loadProfileLanguage(profile, data);
+            loadProfileTheme(profile, data);
 
             return;
         }
@@ -200,26 +249,6 @@ public class ProfileActivity extends ActivityBase implements HttpResponse {
         profileXP.setText(user.performance.xp + "");
         profileCoins.setText(user.performance.coins + "");
         profileEmail.setText(user.email);
-
-        Activity _this = this;
-        profileEditGroup.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-            boolean skip = true;
-
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
-                if (skip) {
-                    skip = false;
-                    return;
-                }
-
-                Toast.makeText(_this, client.registrationData.groups.get(i).group_name, Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) { }
-        });
     }
 
     public void logout(View view) {
@@ -231,5 +260,19 @@ public class ProfileActivity extends ActivityBase implements HttpResponse {
 
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
+    }
+
+    public void save(View view) {
+        String age = profileEditYear.getYear() + "";
+        String content_type_id = profileEditStudentType.getTag().toString();
+        String country = profileEditCountry.getTag().toString();
+        String group = profileEditGroup.getTag().toString();
+        String lang = profileEditLanguage.getTag().toString();
+        String name = profileEditName.getText().toString();
+        String nick = profileEditNickname.getText().toString();
+        String surname = profileEditSurname.getText().toString();
+        String theme_id = profileEditTheme.getTag().toString();
+
+        new ChangeProfile(this).execute(age, content_type_id, country, group, lang, name, nick, surname, theme_id);
     }
 }
