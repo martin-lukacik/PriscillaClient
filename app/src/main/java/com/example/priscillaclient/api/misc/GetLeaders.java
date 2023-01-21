@@ -1,9 +1,14 @@
 package com.example.priscillaclient.api.misc;
 
+import android.app.Activity;
+
+import androidx.fragment.app.Fragment;
+
 import com.example.priscillaclient.api.ApiTask;
 import com.example.priscillaclient.api.HttpConnection;
 import com.example.priscillaclient.api.HttpResponse;
 import com.example.priscillaclient.models.LeaderboardItem;
+import com.example.priscillaclient.views.LoadingDialog;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,6 +20,10 @@ public class GetLeaders extends ApiTask {
 
     public GetLeaders(HttpResponse context) {
         super(context);
+
+        Activity ctx = (context instanceof Activity ? (Activity) context : ((Fragment) context).getActivity());
+        dialog = new LoadingDialog(ctx, "Loading, please wait...");
+        dialog.show();
     }
 
     @Override

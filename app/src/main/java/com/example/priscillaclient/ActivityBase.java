@@ -1,13 +1,34 @@
 package com.example.priscillaclient;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 
 abstract class ActivityBase extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        setTitle("");
+        getSupportActionBar().setIcon(R.drawable.priscilla_logo_dark);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        /*getSupportActionBar().setBackgroundDrawable(new ColorDrawable(0xfff9f9f9));*/
+    }
+
+    @Override
+    public void onBackPressed(){
+        FragmentManager fm = getSupportFragmentManager();
+        if (fm.getBackStackEntryCount() > 0) {
+            fm.popBackStack();
+        } else {
+            super.onBackPressed();
+        }
+    }
 
     protected boolean onMenuItemSelected(MenuItem item) {
 

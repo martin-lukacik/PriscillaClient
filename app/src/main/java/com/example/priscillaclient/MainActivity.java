@@ -32,6 +32,14 @@ public class MainActivity extends ActivityBase {
         swapFragment(new CoursesFragment());
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        BottomNavigationView navigationView = findViewById(R.id.bottom_navigation);
+        navigationView.getMenu().findItem(R.id.menu_dashboard).setChecked(true);
+    }
+
     private void swapFragment(Fragment fragment) {
         FragmentManager manager = getSupportFragmentManager();
 
@@ -39,21 +47,5 @@ public class MainActivity extends ActivityBase {
                 .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
                 .replace(R.id.fragmentContainerView, fragment)
                 .commit();
-    }
-
-    @Override
-    public void onBackPressed(){
-        FragmentManager fm = getSupportFragmentManager();
-        if (fm.getBackStackEntryCount() > 0) {
-            fm.popBackStack();
-        } else {
-            // TODO toto je hack - ak sa vrati user do aplikacie, hodi ho na login (prvu aktivitu)
-            Intent i = new Intent(Intent.ACTION_MAIN);
-            i.addCategory(Intent.CATEGORY_HOME);
-            startActivity(i);
-
-            // TOTO nie je hack
-            //super.onBackPressed();
-        }
     }
 }

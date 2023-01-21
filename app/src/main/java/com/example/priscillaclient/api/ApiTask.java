@@ -26,15 +26,11 @@ public abstract class ApiTask extends AsyncTask<String, String, Object> {
 
     public String errorMessage = null;
 
-    LoadingDialog dialog;
+    protected LoadingDialog dialog;
 
     public ApiTask(HttpResponse context) {
         super();
         this.context = context;
-
-        Activity ctx = (context instanceof Activity ? (Activity) context : ((Fragment) context).getActivity());
-        dialog = new LoadingDialog(ctx, "Loading, please wait...");
-        dialog.show();
     }
 
     protected void onPostExecute(Object response) {

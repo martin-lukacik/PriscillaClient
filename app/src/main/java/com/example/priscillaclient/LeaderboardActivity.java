@@ -26,6 +26,14 @@ public class LeaderboardActivity extends ActivityBase implements HttpResponse {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+        BottomNavigationView navigationView = findViewById(R.id.bottom_navigation);
+        navigationView.getMenu().findItem(R.id.menu_leaderboard).setChecked(true);
+    }
+
+    @Override
     public void onUpdate(Object response) {
         adapter = new LeaderboardAdapter(this, Client.getInstance().leaderboard);
         ListView lv = findViewById(R.id.leaderboardList);
