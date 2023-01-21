@@ -18,7 +18,7 @@ import com.example.priscillaclient.api.user.GetUserParams;
 import com.example.priscillaclient.models.Client;
 import com.example.priscillaclient.models.User;
 
-abstract class ActivityBase extends AppCompatActivity implements HttpResponse {
+public abstract class ActivityBase extends AppCompatActivity implements HttpResponse {
 
     Client client = Client.getInstance();
 

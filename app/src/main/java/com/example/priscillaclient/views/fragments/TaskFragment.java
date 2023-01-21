@@ -20,10 +20,12 @@ import android.widget.TextView;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.example.priscillaclient.ActivityBase;
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.api.app.GetLessons;
 import com.example.priscillaclient.api.app.GetTasks;
 import com.example.priscillaclient.api.app.EvaluateTask;
+import com.example.priscillaclient.api.user.GetUserParams;
 import com.example.priscillaclient.models.Client;
 import com.example.priscillaclient.models.Lesson;
 import com.example.priscillaclient.models.Task;
@@ -122,10 +124,13 @@ public class TaskFragment extends FragmentBase {
             new GetTasks(this, id).execute();
             updateLessonList(client.lessons);
         } else if (response.equals(client.tasks)) {
-            currentTask = 0;
+            if (client.lastLessonId != id) {
+                currentTask = 0;
+            }
             updateTaskList(client.tasks);
         } else if (response instanceof TaskResult) {
             new GetTasks(this, id).execute();
+            new GetUserParams((ActivityBase) getActivity()).execute();
             showRatingDialog(((TaskResult) response));
         }
     }
