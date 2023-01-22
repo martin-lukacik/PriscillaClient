@@ -22,13 +22,11 @@ public class User {
         public int xp;
         public int coins;
         public int level;
-        // TODO badges
 
         public Performance(JSONObject json) throws JSONException {
             xp = json.getInt("xp");
             coins = json.getInt("coins");
             level = json.getInt("level");
-            // TODO badges
         }
     }
 

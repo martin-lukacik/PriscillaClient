@@ -56,6 +56,7 @@ public class TaskFragment extends FragmentBase {
     TextView taskCount;
     WebView webView;
     EditText inputEditText;
+    LinearLayout stars;
 
     JavascriptInterface javascriptInterface = new JavascriptInterface(getActivity());
 
@@ -90,6 +91,7 @@ public class TaskFragment extends FragmentBase {
     @SuppressLint("SetJavaScriptEnabled")
     public void createLayout() {
 
+        stars = findViewById(R.id.stars);
         taskLayout = findViewById(R.id.taskLayout);
         taskCount = findViewById(R.id.taskCount);
         inputEditText = findViewById(R.id.inputEditText);
@@ -124,9 +126,6 @@ public class TaskFragment extends FragmentBase {
             new GetTasks(this, id).execute();
             updateLessonList(client.lessons);
         } else if (response.equals(client.tasks)) {
-            if (client.lastLessonId != id) {
-                currentTask = 0;
-            }
             updateTaskList(client.tasks);
         } else if (response instanceof TaskResult) {
             new GetTasks(this, id).execute();
@@ -189,6 +188,7 @@ public class TaskFragment extends FragmentBase {
                     menu.getItem(i).setChecked(false);
                 }
 
+                currentTask = 0;
                 e.setChecked(true);
                 lessonId = lesson.id;
                 new GetTasks(this, lessonId).execute();
@@ -207,9 +207,26 @@ public class TaskFragment extends FragmentBase {
 
         Task task = tasks.get(currentTask);
 
+        stars.removeAllViews();
         if (task.passed == 1) {
             buttonTaskHelp.setText("PASSED");
             buttonTaskHelp.setEnabled(false);
+
+            if (task.max_score > 0) {
+                for (int i = 1; i <= 5; ++i) {
+                    ImageView star = new ImageView(getActivity());
+                    star.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
+
+                    int ratingAdjusted = (int) Math.ceil((task.score / (float) task.max_score) * 100 / 20f);
+                    if (ratingAdjusted >= i) {
+                        star.setBackgroundResource(R.drawable.ic_star_full);
+                    } else {
+                        star.setBackgroundResource(R.drawable.ic_star);
+                    }
+
+                    stars.addView(star);
+                }
+            }
         } else {
             buttonTaskHelp.setText("Help");
             buttonTaskHelp.setEnabled(true);
