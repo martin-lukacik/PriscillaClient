@@ -12,10 +12,6 @@ public class TaskResult {
 
     public ArrayList<Answer> answers = new ArrayList<>();
 
-    public TaskResult(int rating) {
-        this.rating = rating;
-    }
-
     public TaskResult(JSONObject json) throws JSONException {
         rating = json.getInt("rating");
 

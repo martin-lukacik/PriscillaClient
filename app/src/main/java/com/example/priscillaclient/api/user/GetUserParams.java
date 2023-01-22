@@ -19,7 +19,7 @@ public class GetUserParams extends ApiTask {
 
     protected User getUserParams() {
 
-        // Use the cached result
+        // Return from cache
         if (client.user != null)
             return client.user;
 

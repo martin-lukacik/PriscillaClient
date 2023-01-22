@@ -58,6 +58,6 @@ public class AreaCourseFragment extends FragmentBase {
             startActivity(intent);
         }
 
-        // TODO else if status null? or not opened, dialog to enroll, also set client.courses to null if enrolled
+        // TODO join course
     }
 }

@@ -1,15 +1,11 @@
 package com.example.priscillaclient.views.fragments;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ScrollView;
@@ -18,11 +14,9 @@ import android.widget.TextView;
 
 import com.example.priscillaclient.Pair;
 import com.example.priscillaclient.R;
-import com.example.priscillaclient.api.HttpResponse;
 import com.example.priscillaclient.api.user.ChangeProfile;
 import com.example.priscillaclient.api.user.GetProfileData;
 import com.example.priscillaclient.api.user.GetRegistrationData;
-import com.example.priscillaclient.api.user.GetUserParams;
 import com.example.priscillaclient.models.Client;
 import com.example.priscillaclient.models.Profile;
 import com.example.priscillaclient.models.RegistrationData;
@@ -46,13 +40,6 @@ public class SettingsFragment extends FragmentBase {
     TextView settingsSave;
 
     public SettingsFragment() { }
-
-    public static SettingsFragment newInstance(String param1, String param2) {
-        SettingsFragment fragment = new SettingsFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -151,8 +138,6 @@ public class SettingsFragment extends FragmentBase {
             scrollView.fullScroll(ScrollView.FOCUS_UP);
             client.user = null;
             swapFragment(new ProfileFragment());
-        } else if (response.equals(client.registrationData)) {
-            return;
         } else if (response.equals(client.profile)) {
             Profile profile = client.profile;
             RegistrationData data = client.registrationData;
@@ -168,8 +153,6 @@ public class SettingsFragment extends FragmentBase {
             loadProfileCountry(data);
             loadProfileLanguage(data);
             loadProfileTheme(data);
-
-            return;
         }
     }
 

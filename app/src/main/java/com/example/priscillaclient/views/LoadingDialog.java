@@ -12,9 +12,4 @@ public class LoadingDialog extends ProgressDialog {
         setIndeterminate(false);
         setCancelable(true);
     }
-
-    public LoadingDialog(Context context, String title, String message) {
-        this(context, message);
-        setTitle(title);
-    }
 }

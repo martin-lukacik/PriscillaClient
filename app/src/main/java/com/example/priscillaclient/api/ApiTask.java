@@ -1,10 +1,9 @@
 package com.example.priscillaclient.api;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
 import android.os.AsyncTask;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
@@ -38,8 +37,12 @@ public abstract class ApiTask extends AsyncTask<String, String, Object> {
 
     protected void onPostExecute(Object response) {
 
-        if (dialog != null)
+        if (dialog != null) {
+            Activity activity = (context instanceof Activity ? (Activity) context : ((Fragment) context).getActivity());
+            if (activity != null)
+                activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
             dialog.dismiss();
+        }
 
         Activity activity = (context instanceof Activity ? (Activity) context : ((Fragment) context).getActivity());
         if (errorMessage != null) {
@@ -51,6 +54,18 @@ public abstract class ApiTask extends AsyncTask<String, String, Object> {
         }
 
         context.onUpdate(response);
+    }
+
+    public void showProgressDialog() {
+        Activity activity = (context instanceof Activity ? (Activity) context : ((Fragment) context).getActivity());
+        if (activity != null)
+            activity.getWindow().setFlags(
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+            );
+
+        dialog = new LoadingDialog(activity, "Loading, please wait...");
+        dialog.show();
     }
 
     protected void logError(String message) {

@@ -24,7 +24,7 @@ public class GetChapters extends ApiTask {
     @Override
     protected ArrayList<Chapter> doInBackground(String... strings) {
 
-        // Use the cached result
+        // Return from cache
         if (client.lastCourseId == courseId) {
             if (!client.chapters.isEmpty())
                 return client.chapters;

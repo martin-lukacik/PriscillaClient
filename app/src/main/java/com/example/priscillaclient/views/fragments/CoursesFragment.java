@@ -2,20 +2,17 @@ package com.example.priscillaclient.views.fragments;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
-import com.example.priscillaclient.views.adapters.CourseListAdapter;
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.api.app.GetCourses;
 import com.example.priscillaclient.models.Client;
 import com.example.priscillaclient.models.Course;
+import com.example.priscillaclient.views.adapters.CourseListAdapter;
 
 import java.util.ArrayList;
 
@@ -56,6 +53,9 @@ public class CoursesFragment extends FragmentBase {
     @Override
     public void onUpdate(Object response) {
 
+        if (getActivity() == null)
+            return;
+
         courses = new ArrayList<>(Client.getInstance().courses);
 
         SharedPreferences settings = getActivity().getApplicationContext().getSharedPreferences(PREF_SET, 0);
@@ -70,6 +70,9 @@ public class CoursesFragment extends FragmentBase {
     }
 
     private boolean coursePinned(AdapterView<?> adapterView, View view, int i, long l) {
+
+        if (getActivity() == null)
+            return true;
 
         SharedPreferences settings = getActivity().getApplicationContext().getSharedPreferences(PREF_SET, 0);
         int pinnedCourseId = settings.getInt("pinnedCourseId", -1);
@@ -90,6 +93,10 @@ public class CoursesFragment extends FragmentBase {
     }
 
     private void togglePin(int courseId) {
+
+        if (getActivity() == null)
+            return;
+
         SharedPreferences settings = getActivity().getApplicationContext().getSharedPreferences(PREF_SET, 0);
         SharedPreferences.Editor editor = settings.edit();
         editor.putInt("pinnedCourseId", courseId);

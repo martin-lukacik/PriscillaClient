@@ -19,6 +19,7 @@ public class GetCategories extends ApiTask {
     @Override
     protected ArrayList<Category> doInBackground(String... strings) {
 
+        // Return from cache
         if (!client.categories.isEmpty())
             return client.categories;
 

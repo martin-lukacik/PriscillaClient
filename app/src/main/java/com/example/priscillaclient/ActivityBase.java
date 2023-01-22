@@ -1,5 +1,6 @@
 package com.example.priscillaclient;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -39,6 +40,7 @@ public abstract class ActivityBase extends AppCompatActivity implements HttpResp
         tv.setText(title);
     }
 
+    @SuppressLint("InflateParams")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,7 +58,7 @@ public abstract class ActivityBase extends AppCompatActivity implements HttpResp
         actionBar.setIcon(R.drawable.priscilla_logo_dark);
 
         LayoutInflater inflater = (LayoutInflater) this .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View v = inflater.inflate(R.layout.actionbar, null);
+         View v = inflater.inflate(R.layout.actionbar, null);
 
         actionBar.setCustomView(v);
 
@@ -90,7 +92,7 @@ public abstract class ActivityBase extends AppCompatActivity implements HttpResp
     protected boolean onMenuItemSelected(MenuItem item) {
 
         Intent intent = null;
-        if (item.getItemId() == R.id.menu_dashboard && !(this instanceof MainActivity))
+        if (item.getItemId() == R.id.menu_dashboard /*&& !(this instanceof MainActivity)*/)
             intent = new Intent(ActivityBase.this, MainActivity.class);
 
         if (item.getItemId() == R.id.menu_all_courses && !(this instanceof CategoryActivity))

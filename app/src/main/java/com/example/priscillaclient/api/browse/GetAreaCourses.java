@@ -22,6 +22,7 @@ public class GetAreaCourses extends ApiTask {
     @Override
     protected ArrayList<AreaCourse> doInBackground(String... strings) {
 
+        // Return from cache
         if (client.lastAreaId == areaId) {
             if (!client.areaCourses.isEmpty())
                 return client.areaCourses;

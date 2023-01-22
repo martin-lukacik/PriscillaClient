@@ -16,6 +16,10 @@ public class GetProfileData extends ApiTask {
     @Override
     protected Profile doInBackground(String... strings) {
 
+        // Return from cache
+        if (client.profile != null)
+            return client.profile;
+
         try {
             HttpConnection connection = new HttpConnection("/get-profile-data", "GET", false);
 

@@ -39,12 +39,9 @@ import java.util.ArrayList;
 
 public class TaskFragment extends FragmentBase {
 
-    private static final String ARG_COURSE_ID = "courseId";
     private static final String ARG_CHAPTER_ID = "chapterId";
 
-    private int courseId;
     private int chapterId;
-    private int currentLesson = 0;
     private int lessonId = -1;
     private int currentTask = 0;
 
@@ -62,10 +59,9 @@ public class TaskFragment extends FragmentBase {
 
     public TaskFragment() { }
 
-    public static TaskFragment newInstance(int courseId, int chapterId) {
+    public static TaskFragment newInstance(int chapterId) {
         TaskFragment fragment = new TaskFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_COURSE_ID, courseId);
         args.putInt(ARG_CHAPTER_ID, chapterId);
         fragment.setArguments(args);
         return fragment;
@@ -75,7 +71,6 @@ public class TaskFragment extends FragmentBase {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            courseId = getArguments().getInt(ARG_COURSE_ID);
             chapterId = getArguments().getInt(ARG_CHAPTER_ID);
         }
     }
@@ -106,9 +101,14 @@ public class TaskFragment extends FragmentBase {
         buttonTaskHelp = findViewById(R.id.buttonTaskHelp);
         buttonTaskSubmit = findViewById(R.id.buttonTaskSubmit);
 
+        buttonTaskHelp.setOnClickListener(this::getTaskHelp);
         buttonTaskNext.setOnClickListener(this::nextTask);
         buttonTaskPrevious.setOnClickListener(this::previousTask);
         buttonTaskSubmit.setOnClickListener(this::submit);
+    }
+
+    private void getTaskHelp(View view) {
+        // TODO implement
     }
 
     @Override

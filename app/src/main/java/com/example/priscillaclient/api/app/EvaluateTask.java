@@ -28,7 +28,7 @@ public class EvaluateTask extends ApiTask {
                 return null;
             }
 
-            // Invalidate user data to update XP and coins in profile
+            // Invalidate cache
             client.user = null;
 
             JSONObject response = new JSONObject(connection.getResponse());
@@ -43,7 +43,7 @@ public class EvaluateTask extends ApiTask {
     private JSONObject getJsonObject(String[] strings) throws JSONException {
         JSONObject json = new JSONObject();
         json.put("answer_list", strings[0]);
-        json.put("activity_type", "chapter"); // TODO ??
+        json.put("activity_type", "chapter"); // TODO hardcoded
         json.put("task_id", strings[1]);
         json.put("task_type_id", strings[2]);
         json.put("time_length", strings[3]);

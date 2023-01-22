@@ -1,18 +1,19 @@
 package com.example.priscillaclient.views.fragments;
 
 import android.os.Bundle;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
-import com.example.priscillaclient.views.adapters.ChapterListAdapter;
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.api.app.GetChapters;
-import com.example.priscillaclient.models.Client;
 import com.example.priscillaclient.models.Chapter;
+import com.example.priscillaclient.models.Client;
+import com.example.priscillaclient.views.adapters.ChapterListAdapter;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
@@ -52,7 +53,7 @@ public class ChaptersFragment extends FragmentBase {
     ArrayList<Chapter> chapters;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         if (chapters == null)
             new GetChapters(this, courseId).execute();
@@ -69,18 +70,6 @@ public class ChaptersFragment extends FragmentBase {
         chapters = Client.getInstance().chapters;
 
         GridView chaptersListView = findViewById(R.id.chapterListView);
-
-        String[] chaps = new String[chapters.size()];
-        for (int i = 0; i < chapters.size(); ++i) {
-            Chapter c = chapters.get(i);
-            String format = c.name;
-            if (c.tasks_finished + c.tasks_nonfinished > 0)
-                format += " Tasks: " + c.tasks_finished + " / " + (c.tasks_finished + c.tasks_nonfinished);
-            if (c.programs_finished + c.programs_nonfinished > 0)
-                format += " Programs: " + c.programs_finished + " / " + (c.programs_finished + c.programs_nonfinished);
-            chaps[i] = format;
-        }
-
         ChapterListAdapter adapter = new ChapterListAdapter(getActivity(), chapters);
         chaptersListView.setAdapter(adapter);
         chaptersListView.setOnItemClickListener(this::onItemClick);
@@ -88,6 +77,6 @@ public class ChaptersFragment extends FragmentBase {
 
     private void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         int chapterId = chapters.get(i).id;
-        swapFragment(TaskFragment.newInstance(courseId, chapterId));
+        swapFragment(TaskFragment.newInstance(chapterId));
     }
 }

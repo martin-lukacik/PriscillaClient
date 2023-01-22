@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
@@ -15,11 +14,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.priscillaclient.api.HttpResponse;
 import com.example.priscillaclient.api.user.GetToken;
 import com.example.priscillaclient.models.Client;
-import com.example.priscillaclient.views.LoadingDialog;
 
 public class LoginActivity extends AppCompatActivity implements HttpResponse {
-
-    LoadingDialog loadingDialog;
 
     String refresh_token;
 
@@ -54,7 +50,6 @@ public class LoginActivity extends AppCompatActivity implements HttpResponse {
             CheckBox rememberUser = findViewById(R.id.rememberUser);
             rememberUser.setChecked(true);
             ((EditText) findViewById(R.id.inputUsername)).setText(username);
-            showProgressDialog();
             apiCall = new GetToken(this);
             apiCall.execute(username, refresh_token, username, "refresh_token");
         }
@@ -66,21 +61,9 @@ public class LoginActivity extends AppCompatActivity implements HttpResponse {
         startActivity(intent);
     }
 
-    public void showProgressDialog() {
-        getWindow().setFlags(
-                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
-        );
-
-        loadingDialog = new LoadingDialog(LoginActivity.this, "Logging in...");
-        loadingDialog.show();
-    }
-
     public void performLogin(View view) {
         String username = ((EditText) findViewById(R.id.inputUsername)).getText().toString();
         String password = ((EditText) findViewById(R.id.inputPassword)).getText().toString();
-
-        showProgressDialog();
 
         apiCall = new GetToken(this);
         apiCall.execute(username, password, username, "password");
@@ -90,9 +73,6 @@ public class LoginActivity extends AppCompatActivity implements HttpResponse {
 
     @Override
     public void onUpdate(Object response) {
-
-        loadingDialog.dismiss();
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
         if (apiCall != null && apiCall.errorMessage != null) {
             return;

@@ -42,6 +42,9 @@ public class ChangeProfile extends ApiTask {
 
             connection.sendRequest(json);
 
+            // Invalidate cache
+            client.profile = null;
+
             if (connection.getErrorStream() != null) {
                 logError(connection.getErrorStream());
                 return null;

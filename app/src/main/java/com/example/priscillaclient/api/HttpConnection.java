@@ -9,7 +9,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.HttpURLConnection;
@@ -53,7 +52,7 @@ public class HttpConnection {
         InputStream responseStream = new BufferedInputStream(connection.getInputStream());
         BufferedReader responseStreamReader = new BufferedReader(new InputStreamReader(responseStream));
 
-        String line = "";
+        String line;
         while ((line = responseStreamReader.readLine()) != null) {
             stringBuilder.append(line);
         }
@@ -74,19 +73,11 @@ public class HttpConnection {
         connection.disconnect();
     }
 
-    public OutputStream getOutputStream() throws IOException {
-        return connection.getOutputStream();
-    }
-
     public InputStream getInputStream() throws IOException {
         return connection.getInputStream();
     }
 
     public int getResponseCode() throws IOException {
         return connection.getResponseCode();
-    }
-
-    public String getResponseMessage() throws IOException {
-        return connection.getResponseMessage();
     }
 }

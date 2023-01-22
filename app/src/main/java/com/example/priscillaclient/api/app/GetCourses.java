@@ -14,12 +14,14 @@ public class GetCourses extends ApiTask {
 
     public GetCourses(FragmentBase fragment) {
         super(fragment);
+
+        showProgressDialog();
     }
 
     @Override
     protected ArrayList<Course> doInBackground(String... strings) {
 
-        // Use the cached result
+        // Return from cache
         if (!client.courses.isEmpty())
             return client.courses;
 

@@ -3,7 +3,6 @@ package com.example.priscillaclient;
 import android.os.Bundle;
 
 import com.example.priscillaclient.api.HttpResponse;
-import com.example.priscillaclient.api.user.GetUserParams;
 import com.example.priscillaclient.views.fragments.ProfileFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
