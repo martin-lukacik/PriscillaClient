@@ -1,7 +1,5 @@
 package com.example.priscillaclient.models;
 
-import com.example.priscillaclient.Pair;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 

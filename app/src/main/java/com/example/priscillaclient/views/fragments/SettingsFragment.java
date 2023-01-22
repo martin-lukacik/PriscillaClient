@@ -12,7 +12,7 @@ import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.example.priscillaclient.Pair;
+import com.example.priscillaclient.models.Pair;
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.api.user.ChangeProfile;
 import com.example.priscillaclient.api.user.GetProfileData;

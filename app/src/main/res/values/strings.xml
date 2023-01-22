@@ -20,13 +20,9 @@
     <string name="register">Registrácia</string>
     <string name="my_courses">Moje kurzy</string>
     <string name="lessons">Lessons</string>
-    <string name="placeholder_2em">MM</string>
-    <string name="placeholder_user">Priscilla User</string>
     <string name="level">LEVEL</string>
-    <string name="placeholder_number">9999</string>
     <string name="coins">COINS</string>
     <string name="e_mail">E-MAIL</string>
-    <string name="placeholder_email">user@priscilla.eu</string>
     <string name="chapters">Kapitoly</string>
     <string name="dashboard">Dashboard</string>
     <string name="all_courses">All courses</string>

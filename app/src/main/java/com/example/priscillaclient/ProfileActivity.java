@@ -2,11 +2,10 @@ package com.example.priscillaclient;
 
 import android.os.Bundle;
 
-import com.example.priscillaclient.api.HttpResponse;
 import com.example.priscillaclient.views.fragments.ProfileFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class ProfileActivity extends ActivityBase implements HttpResponse {
+public class ProfileActivity extends ActivityBase {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,10 +25,5 @@ public class ProfileActivity extends ActivityBase implements HttpResponse {
 
         BottomNavigationView navigationView = findViewById(R.id.bottom_navigation);
         navigationView.getMenu().findItem(R.id.menu_profile).setChecked(true);
-    }
-
-    @Override
-    public void onUpdate(Object response) {
-        super.onUpdate(response);
     }
 }
