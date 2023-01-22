@@ -90,20 +90,22 @@ public abstract class ActivityBase extends AppCompatActivity implements HttpResp
     protected boolean onMenuItemSelected(MenuItem item) {
 
         Intent intent = null;
-        if (item.getItemId() == R.id.menu_dashboard)
+        if (item.getItemId() == R.id.menu_dashboard && !(this instanceof MainActivity))
             intent = new Intent(ActivityBase.this, MainActivity.class);
 
-        if (item.getItemId() == R.id.menu_all_courses)
+        if (item.getItemId() == R.id.menu_all_courses && !(this instanceof CategoryActivity))
             intent = new Intent(ActivityBase.this, CategoryActivity.class);
 
-        if (item.getItemId() == R.id.menu_leaderboard)
+        if (item.getItemId() == R.id.menu_leaderboard && !(this instanceof LeaderboardActivity))
             intent = new Intent(ActivityBase.this, LeaderboardActivity.class);
 
-        if (item.getItemId() == R.id.menu_profile)
+        if (item.getItemId() == R.id.menu_profile && !(this instanceof ProfileActivity))
             intent = new Intent(ActivityBase.this, ProfileActivity.class);
 
-        startActivity(intent);
-        overridePendingTransition(0, 0);
+        if (intent != null) {
+            startActivity(intent);
+            overridePendingTransition(0, 0);
+        }
         return true;
     }
 }
