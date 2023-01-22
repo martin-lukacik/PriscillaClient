@@ -28,7 +28,8 @@
             android:id="@+id/chapter_ic_contact_support"
             android:layout_width="32dp"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_contact_support" />
+            android:src="@drawable/ic_contact_support"
+            android:contentDescription="@string/task_icon" />
         <ProgressBar
             android:id="@+id/task_progress"
             android:layout_width="match_parent"
@@ -49,7 +50,8 @@
             android:id="@+id/chapter_ic_code"
             android:layout_width="32dp"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_code" />
+            android:src="@drawable/ic_code"
+            android:contentDescription="@string/code_icon" />
         <ProgressBar
             android:id="@+id/code_progress"
             android:layout_width="match_parent"

@@ -18,7 +18,7 @@
         android:background="@drawable/course_title_border"
         android:textColor="@color/white" />
 
-    <Space
+    <View
         android:layout_width="match_parent"
         android:layout_height="10dp" />
 
@@ -39,19 +39,22 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@drawable/ic_description" />
+            android:src="@drawable/ic_description"
+            android:contentDescription="@string/content_icon" />
         <ImageView
             android:id="@+id/ic_contact_support"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@drawable/ic_contact_support" />
+            android:src="@drawable/ic_contact_support"
+            android:contentDescription="@string/task_icon" />
         <ImageView
             android:id="@+id/ic_code"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@drawable/ic_code" />
+            android:src="@drawable/ic_code"
+            android:contentDescription="@string/code_icon" />
     </LinearLayout>
 
     <LinearLayout

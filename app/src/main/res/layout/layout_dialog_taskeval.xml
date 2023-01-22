@@ -18,7 +18,7 @@
             android:layout_gravity="center"
             android:textStyle="bold"
             android:gravity="center_vertical"
-            android:text="Rating" />
+            android:text="@string/rating" />
 
         <TextView
             android:layout_width="39dp"

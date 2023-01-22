@@ -38,4 +38,11 @@
     <string name="theme">Theme</string>
     <string name="save_changes">Save changes</string>
     <string name="log_out">Log out</string>
+    <string name="priscilla_logo">Priscilla logo</string>
+    <string name="help">Help</string>
+    <string name="answer">Answer...</string>
+    <string name="rating">Rating</string>
+    <string name="task_icon">Task icon</string>
+    <string name="code_icon">Code icon</string>
+    <string name="content_icon">Content icon</string>
 </resources>

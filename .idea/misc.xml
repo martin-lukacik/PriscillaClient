@@ -38,21 +38,27 @@
         <entry key="app/src/main/res/drawable/ic_star_full.xml" value="0.148" />
         <entry key="app/src/main/res/drawable/ic_submit.xml" value="0.148" />
         <entry key="app/src/main/res/drawable/round_outline.xml" value="0.135" />
+        <entry key="app/src/main/res/layout/actionbar.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_area.xml" value="0.12056737588652482" />
         <entry key="app/src/main/res/layout/activity_area_course.xml" value="0.12056737588652482" />
         <entry key="app/src/main/res/layout/activity_category.xml" value="0.12056737588652482" />
         <entry key="app/src/main/res/layout/activity_chapter.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_leaderboard.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_profile.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_task.xml" value="0.30489659951933734" />
         <entry key="app/src/main/res/layout/fragment_area_course.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_areas.xml" value="0.10081053698074975" />
         <entry key="app/src/main/res/layout/fragment_categories.xml" value="0.10081053698074975" />
+        <entry key="app/src/main/res/layout/fragment_leaderboard.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.12056737588652482" />
-        <entry key="app/src/main/res/layout/fragment_task.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_task.xml" value="0.1" />
         <entry key="app/src/main/res/layout/layout_dialog_taskeval.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/listview_chapter.xml" value="0.12056737588652482" />
+        <entry key="app/src/main/res/layout/listview_chapter.xml" value="0.1" />
         <entry key="app/src/main/res/layout/listview_course.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/listview_leaderboard.xml" value="0.1" />
         <entry key="app/src/main/res/menu/menu_language.xml" value="0.14166666666666666" />
         <entry key="app/src/main/res/menu/menu_main.xml" value="0.20462962962962963" />
         <entry key="app/src/main/res/xml/prefs.xml" value="0.1" />
