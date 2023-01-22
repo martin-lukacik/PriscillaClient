@@ -285,6 +285,17 @@ public class TaskFragment extends FragmentBase {
                 content += html;
 
                 break;
+            case TASK_ORDER:
+                ArrayList<String> codes = task.codes;
+
+                content += "<hr><style>pre{display:inline-block;vertical-align:middle}</style>";
+                content += "<div class=\"codes\">";
+                for (int i = 0; i < codes.size(); ++i) {
+                    content += "<span><button onclick=\"up(this)\" class=\"arrow-up\">&uarr;</button><button onclick=\"down(this)\" class=\"arrow-down\">&darr;</button><span class=\"code\">" + codes.get(i) + "</span><br></span>";
+                }
+                content += "</div>";
+
+                break;
         }
 
         webView.loadData(css + javascript + content, "text/html; charset=utf-8", "UTF-8");
@@ -324,6 +335,7 @@ public class TaskFragment extends FragmentBase {
 
             switch (task.type) {
 
+                case TASK_ORDER:
                 case TASK_FILL:
                 case TASK_DRAG:
                     new EvaluateTask(this).execute(javascriptInterface.data, task.task_id + "", task.task_type_id + "", "10");

@@ -8,6 +8,6 @@ public enum TaskType {
     TASK_MULTI,         // 4
     TASK_FILL,          // 5
     TASK_DRAG,          // 6
-    UNKNOWN,            // 7
+    TASK_ORDER,         // 7
     TASK_CODE,          // 8
 }

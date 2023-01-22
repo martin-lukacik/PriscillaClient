@@ -18,11 +18,6 @@ import com.example.priscillaclient.models.Client;
 
 import java.util.ArrayList;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link AreasFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class AreasFragment extends FragmentBase {
 
     int categoryId = -1;

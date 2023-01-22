@@ -29,6 +29,7 @@ public class Task {
     String help;
     public ArrayList<String> answers = null;
     public ArrayList<String> fakes = null;
+    public ArrayList<String> codes = null;
 
     public TaskType type;
     static TaskType[] taskTypes = TaskType.values();
@@ -77,6 +78,14 @@ public class Task {
                 JSONArray jFakes = j.getJSONArray("fakes");
                 for (int i = 0; i < jFakes.length(); ++i) {
                     fakes.add(jFakes.optString(i));
+                }
+            }
+
+            if (j.has("codes")) {
+                codes = new ArrayList<>();
+                JSONArray jCodes = j.getJSONArray("codes");
+                for (int i = 0; i < jCodes.length(); ++i) {
+                    codes.add(jCodes.optString(i));
                 }
             }
         } catch (Exception ignore) { }
