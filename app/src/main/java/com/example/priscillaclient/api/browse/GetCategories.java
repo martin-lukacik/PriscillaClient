@@ -1,68 +1,47 @@
 package com.example.priscillaclient.api.browse;
 
-import android.content.Context;
-import android.os.AsyncTask;
-
-import com.example.priscillaclient.CategoryActivity;
-import com.example.priscillaclient.HttpURLConnectionFactory;
-import com.example.priscillaclient.models.Client;
+import com.example.priscillaclient.api.ApiTask;
+import com.example.priscillaclient.api.HttpConnection;
+import com.example.priscillaclient.api.HttpResponse;
 import com.example.priscillaclient.models.Category;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.util.ArrayList;
-import java.util.Scanner;
 
-public class GetCategories extends AsyncTask<String, String, ArrayList<Category>> {
+public class GetCategories extends ApiTask {
 
-    final Context context;
-
-    public GetCategories(Context context) {
-        super();
-        this.context = context;
+    public GetCategories(HttpResponse context) {
+        super(context);
     }
 
     @Override
     protected ArrayList<Category> doInBackground(String... strings) {
 
+        if (!client.categories.isEmpty())
+            return client.categories;
+
         try {
-            HttpURLConnection connection = HttpURLConnectionFactory.getConnection("/get-categories2", "GET", false);
+            HttpConnection connection = new HttpConnection("/get-categories2", "GET", false);
 
-            int status = connection.getResponseCode();
-            String message = connection.getResponseMessage();
-
-            InputStream responseStream = connection.getInputStream();
-
-            String responseStr = "";
-            try (Scanner scanner = new Scanner(responseStream)) {
-                responseStr = scanner.useDelimiter("\\A").next();
+            if (connection.getErrorStream() != null) {
+                logError(connection.getErrorStream());
+                return client.categories;
             }
 
+            JSONArray json = new JSONObject(connection.getResponse()).getJSONArray("list");
 
-            JSONArray json = new JSONObject(responseStr).getJSONArray("list");
-
-            Client client = Client.getInstance();
-
-            client.categories = new ArrayList<>();
-
+            client.categories.clear();
             for (int i = 0; i < json.length(); ++i) {
                 Category c = new Category(json.getJSONObject(i));
                 client.categories.add(c);
             }
 
-            return client.categories;
         } catch (Exception e) {
-            e.printStackTrace();
+            logError(e.getMessage());
         }
 
-        return null;
-    }
-
-    @Override
-    protected void onPostExecute(ArrayList<Category> categories) {
-        ((CategoryActivity) context).onUpdate(categories);
+        return client.categories;
     }
 }

@@ -18,12 +18,6 @@
             android:name=".LeaderboardActivity"
             android:exported="false" />
         <activity
-            android:name=".AreaCourseActivity"
-            android:exported="false" />
-        <activity
-            android:name=".AreaActivity"
-            android:exported="false" />
-        <activity
             android:name=".CategoryActivity"
             android:exported="false" />
         <activity

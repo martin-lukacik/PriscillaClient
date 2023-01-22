@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.example.priscillaclient.views.fragments.ChaptersFragment;
 import com.example.priscillaclient.views.fragments.CoursesFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -25,13 +26,14 @@ public class MainActivity extends ActivityBase {
                 PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET}, 1);
         }
-/*
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_NETWORK_STATE) !=
-                PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_NETWORK_STATE}, 2);
-        }*/
 
-        swapFragment(new CoursesFragment());
+        int courseId = getIntent().getIntExtra("course_id", -1);
+
+        if (courseId != -1) {
+            swapFragment(ChaptersFragment.newInstance(courseId));
+        } else {
+            swapFragment(new CoursesFragment());
+        }
     }
 
     @Override

@@ -1,70 +1,53 @@
 package com.example.priscillaclient.api.browse;
 
-import android.content.Context;
-import android.os.AsyncTask;
-
-import com.example.priscillaclient.AreaActivity;
-import com.example.priscillaclient.HttpURLConnectionFactory;
-import com.example.priscillaclient.models.Client;
+import com.example.priscillaclient.api.ApiTask;
+import com.example.priscillaclient.api.HttpConnection;
+import com.example.priscillaclient.api.HttpResponse;
 import com.example.priscillaclient.models.Area;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.util.ArrayList;
-import java.util.Scanner;
 
-public class GetAreas extends AsyncTask<String, String, ArrayList<Area>> {
+public class GetAreas extends ApiTask {
 
-    final Context context;
     final int categoryId;
 
-    public GetAreas(Context context, int categoryId) {
-        super();
-        this.context = context;
+    public GetAreas(HttpResponse context, int categoryId) {
+        super(context);
         this.categoryId = categoryId;
     }
 
     @Override
     protected ArrayList<Area> doInBackground(String... strings) {
 
+        if (client.lastCategoryId == categoryId) {
+            if (!client.areas.isEmpty())
+                return client.areas;
+        }
+        client.lastCategoryId = categoryId;
+
         try {
-            HttpURLConnection connection = HttpURLConnectionFactory.getConnection("/get-areas/" + categoryId, "GET", false);
+            HttpConnection connection = new HttpConnection("/get-areas/" + categoryId, "GET", false);
 
-            int status = connection.getResponseCode();
-            String message = connection.getResponseMessage();
-
-            InputStream responseStream = connection.getInputStream();
-
-            String responseStr;
-            try (Scanner scanner = new Scanner(responseStream)) {
-                responseStr = scanner.useDelimiter("\\A").next();
+            if (connection.getErrorStream() != null) {
+                logError(connection.getErrorStream());
+                return client.areas;
             }
 
+            JSONArray json = new JSONObject(connection.getResponse()).getJSONArray("areas");
 
-            JSONArray json = new JSONObject(responseStr).getJSONArray("areas");
-
-            Client client = Client.getInstance();
-
-            client.areas = new ArrayList<>();
-
+            client.areas.clear();
             for (int i = 0; i < json.length(); ++i) {
                 Area a = new Area(json.getJSONObject(i));
                 client.areas.add(a);
             }
 
-            return client.areas;
         } catch (Exception e) {
-            e.printStackTrace();
+            logError(e.getMessage());
         }
 
-        return null;
-    }
-
-    @Override
-    protected void onPostExecute(ArrayList<Area> areas) {
-        ((AreaActivity) context).onUpdate(areas);
+        return client.areas;
     }
 }
