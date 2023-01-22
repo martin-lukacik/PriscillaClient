@@ -80,7 +80,6 @@ public class LoginActivity extends AppCompatActivity implements HttpResponse {
 
         String username = ((EditText) findViewById(R.id.inputUsername)).getText().toString();
 
-        // TODO check if actually logged in (wrong password etc.)
         SharedPreferences settings = getApplicationContext().getSharedPreferences("settings", 0);
         SharedPreferences.Editor editor = settings.edit();
         CheckBox rememberUser = findViewById(R.id.rememberUser);
