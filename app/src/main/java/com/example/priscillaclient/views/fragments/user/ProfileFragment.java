@@ -1,4 +1,4 @@
-package com.example.priscillaclient.views.fragments;
+package com.example.priscillaclient.views.fragments.user;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,6 +16,7 @@ import com.example.priscillaclient.R;
 import com.example.priscillaclient.api.user.GetUserParams;
 import com.example.priscillaclient.models.Client;
 import com.example.priscillaclient.models.User;
+import com.example.priscillaclient.views.fragments.FragmentBase;
 
 import java.util.Random;
 

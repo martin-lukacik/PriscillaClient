@@ -3,15 +3,15 @@ package com.example.priscillaclient;
 import android.os.Bundle;
 
 import com.example.priscillaclient.api.HttpResponse;
-import com.example.priscillaclient.views.fragments.CategoriesFragment;
+import com.example.priscillaclient.views.fragments.browse.CategoriesFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class CategoryActivity extends ActivityBase implements HttpResponse {
+public class BrowseActivity extends ActivityBase implements HttpResponse {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_category);
+        setContentView(R.layout.activity_browse);
 
         BottomNavigationView navigationView = findViewById(R.id.bottom_navigation);
         navigationView.setOnItemSelectedListener(this::onMenuItemSelected);

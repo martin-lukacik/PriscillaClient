@@ -1,4 +1,4 @@
-package com.example.priscillaclient.views.fragments;
+package com.example.priscillaclient.views.fragments.app;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,6 +12,7 @@ import com.example.priscillaclient.api.app.GetChapters;
 import com.example.priscillaclient.models.Chapter;
 import com.example.priscillaclient.models.Client;
 import com.example.priscillaclient.views.adapters.ChapterListAdapter;
+import com.example.priscillaclient.views.fragments.FragmentBase;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -39,6 +40,7 @@ public class ChaptersFragment extends FragmentBase {
         if (getArguments() != null) {
             courseId = getArguments().getInt(ARG_COURSE_ID);
         }
+        new GetChapters(this, courseId).execute();
     }
 
     @Override
@@ -53,10 +55,6 @@ public class ChaptersFragment extends FragmentBase {
 
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        if (chapters == null)
-            new GetChapters(this, courseId).execute();
-
         return inflater.inflate(R.layout.fragment_chapter, container, false);
     }
 

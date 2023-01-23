@@ -1,4 +1,4 @@
-package com.example.priscillaclient.views.fragments;
+package com.example.priscillaclient.views.fragments.app;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
@@ -31,6 +31,7 @@ import com.example.priscillaclient.models.Lesson;
 import com.example.priscillaclient.models.Task;
 import com.example.priscillaclient.models.TaskResult;
 import com.example.priscillaclient.views.JavascriptInterface;
+import com.example.priscillaclient.views.fragments.FragmentBase;
 import com.google.android.material.navigation.NavigationView;
 
 import org.json.JSONArray;
@@ -73,13 +74,12 @@ public class TaskFragment extends FragmentBase {
         if (getArguments() != null) {
             chapterId = getArguments().getInt(ARG_CHAPTER_ID);
         }
+
+        new GetLessons(this, chapterId).execute();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        new GetLessons(this, chapterId).execute();
-
         return inflater.inflate(R.layout.fragment_task, container, false);
     }
 

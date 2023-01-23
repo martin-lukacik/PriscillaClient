@@ -7,8 +7,8 @@ import android.os.Bundle;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.example.priscillaclient.views.fragments.ChaptersFragment;
-import com.example.priscillaclient.views.fragments.CoursesFragment;
+import com.example.priscillaclient.views.fragments.app.ChaptersFragment;
+import com.example.priscillaclient.views.fragments.app.CoursesFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends ActivityBase {

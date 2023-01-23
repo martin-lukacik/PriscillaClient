@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".views.fragments.AreaCourseFragment">
+    tools:context=".views.fragments.browse.AreaCourseFragment">
 
     <ListView
         android:layout_width="match_parent"

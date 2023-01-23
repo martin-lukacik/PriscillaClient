@@ -1,4 +1,4 @@
-package com.example.priscillaclient.views.fragments;
+package com.example.priscillaclient.views.fragments.browse;
 
 import android.os.Bundle;
 
@@ -13,7 +13,7 @@ import com.example.priscillaclient.R;
 import com.example.priscillaclient.api.browse.GetCategories;
 import com.example.priscillaclient.models.Category;
 import com.example.priscillaclient.models.Client;
-import com.example.priscillaclient.models.User;
+import com.example.priscillaclient.views.fragments.FragmentBase;
 
 import java.util.ArrayList;
 
@@ -24,12 +24,12 @@ public class CategoriesFragment extends FragmentBase {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        new GetCategories(this).execute();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        new GetCategories(this).execute();
         return inflater.inflate(R.layout.fragment_categories, container, false);
     }
 

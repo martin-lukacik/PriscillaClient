@@ -18,6 +18,9 @@ import com.example.priscillaclient.api.HttpResponse;
 import com.example.priscillaclient.api.user.GetUserParams;
 import com.example.priscillaclient.models.Client;
 import com.example.priscillaclient.models.User;
+import com.example.priscillaclient.views.fragments.browse.CategoriesFragment;
+import com.example.priscillaclient.views.fragments.app.CoursesFragment;
+import com.example.priscillaclient.views.fragments.user.ProfileFragment;
 
 public abstract class ActivityBase extends AppCompatActivity implements HttpResponse {
 
@@ -92,17 +95,21 @@ public abstract class ActivityBase extends AppCompatActivity implements HttpResp
     protected boolean onMenuItemSelected(MenuItem item) {
 
         Intent intent = null;
-        if (item.getItemId() == R.id.menu_dashboard /*&& !(this instanceof MainActivity)*/)
+        if (item.getItemId() == R.id.menu_dashboard) {
+            if (this instanceof MainActivity)
+                swapFragment(new CoursesFragment());
             intent = new Intent(ActivityBase.this, MainActivity.class);
-
-        if (item.getItemId() == R.id.menu_all_courses && !(this instanceof CategoryActivity))
-            intent = new Intent(ActivityBase.this, CategoryActivity.class);
-
-        if (item.getItemId() == R.id.menu_leaderboard && !(this instanceof LeaderboardActivity))
+        } else if (item.getItemId() == R.id.menu_all_courses) {
+            if (this instanceof BrowseActivity)
+                swapFragment(new CategoriesFragment());
+            intent = new Intent(ActivityBase.this, BrowseActivity.class);
+        } else if (item.getItemId() == R.id.menu_leaderboard) {
             intent = new Intent(ActivityBase.this, LeaderboardActivity.class);
-
-        if (item.getItemId() == R.id.menu_profile && !(this instanceof ProfileActivity))
+        } else if (item.getItemId() == R.id.menu_profile) {
+            if (this instanceof ProfileActivity)
+                swapFragment(new ProfileFragment());
             intent = new Intent(ActivityBase.this, ProfileActivity.class);
+        }
 
         if (intent != null) {
             startActivity(intent);

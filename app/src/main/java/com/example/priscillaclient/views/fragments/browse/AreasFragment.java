@@ -1,4 +1,4 @@
-package com.example.priscillaclient.views.fragments;
+package com.example.priscillaclient.views.fragments.browse;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,8 +11,8 @@ import android.widget.ListView;
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.api.browse.GetAreas;
 import com.example.priscillaclient.models.Area;
-import com.example.priscillaclient.models.Category;
 import com.example.priscillaclient.models.Client;
+import com.example.priscillaclient.views.fragments.FragmentBase;
 
 import java.util.ArrayList;
 
@@ -30,11 +30,11 @@ public class AreasFragment extends FragmentBase {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        new GetAreas(this, categoryId).execute();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        new GetAreas(this, categoryId).execute();
         return inflater.inflate(R.layout.fragment_areas, container, false);
     }
 

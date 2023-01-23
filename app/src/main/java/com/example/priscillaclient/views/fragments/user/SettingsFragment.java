@@ -1,4 +1,4 @@
-package com.example.priscillaclient.views.fragments;
+package com.example.priscillaclient.views.fragments.user;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -20,7 +20,8 @@ import com.example.priscillaclient.api.user.GetRegistrationData;
 import com.example.priscillaclient.models.Client;
 import com.example.priscillaclient.models.Profile;
 import com.example.priscillaclient.models.RegistrationData;
-import com.example.priscillaclient.models.User;
+import com.example.priscillaclient.views.fragments.FragmentBase;
+import com.example.priscillaclient.views.fragments.user.ProfileFragment;
 
 public class SettingsFragment extends FragmentBase {
 

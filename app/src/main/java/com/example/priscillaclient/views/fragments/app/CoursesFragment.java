@@ -1,4 +1,4 @@
-package com.example.priscillaclient.views.fragments;
+package com.example.priscillaclient.views.fragments.app;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -13,6 +13,7 @@ import com.example.priscillaclient.api.app.GetCourses;
 import com.example.priscillaclient.models.Client;
 import com.example.priscillaclient.models.Course;
 import com.example.priscillaclient.views.adapters.CourseListAdapter;
+import com.example.priscillaclient.views.fragments.FragmentBase;
 
 import java.util.ArrayList;
 
@@ -23,13 +24,12 @@ public class CoursesFragment extends FragmentBase {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        new GetCourses(this).execute();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        new GetCourses(this).execute();
-
         return inflater.inflate(R.layout.fragment_courses, container, false);
     }
 

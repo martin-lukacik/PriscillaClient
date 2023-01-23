@@ -2,7 +2,7 @@ package com.example.priscillaclient;
 
 import android.os.Bundle;
 
-import com.example.priscillaclient.views.fragments.ProfileFragment;
+import com.example.priscillaclient.views.fragments.user.ProfileFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class ProfileActivity extends ActivityBase {
