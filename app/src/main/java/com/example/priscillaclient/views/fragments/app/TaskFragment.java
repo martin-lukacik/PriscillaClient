@@ -31,6 +31,7 @@ import com.example.priscillaclient.models.Client;
 import com.example.priscillaclient.models.Lesson;
 import com.example.priscillaclient.models.Task;
 import com.example.priscillaclient.models.TaskResult;
+import com.example.priscillaclient.models.TaskType;
 import com.example.priscillaclient.views.JavascriptInterface;
 import com.example.priscillaclient.views.fragments.FragmentBase;
 import com.google.android.material.navigation.NavigationView;
@@ -232,10 +233,10 @@ public class TaskFragment extends FragmentBase {
             buttonTaskHelp.setVisibility(View.VISIBLE);
         }
 
-        if ((task.max_score != 0 && task.passed == 0) || task.passed == 1) {
-            buttonTaskSubmit.setVisibility(View.GONE);
-        } else {
+        if ((task.type == TaskType.TASK_READ && task.passed == 0) || (task.type != TaskType.TASK_READ)) {
             buttonTaskSubmit.setVisibility(View.VISIBLE);
+        } else {
+            buttonTaskSubmit.setVisibility(View.GONE);
         }
 
         if (task.passed == 1) {
@@ -246,7 +247,6 @@ public class TaskFragment extends FragmentBase {
                 for (int i = 1; i <= 5; ++i) {
                     ImageView star = new ImageView(getActivity());
                     star.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
-
                     int ratingAdjusted = (int) Math.ceil((task.score / (float) task.max_score) * 100 / 20f);
                     if (ratingAdjusted >= i) {
                         star.setBackgroundResource(R.drawable.ic_star_full);
