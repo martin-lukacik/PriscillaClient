@@ -19,6 +19,8 @@ public class Client {
     public RegistrationData registrationData = new RegistrationData();
     public Profile profile = null;
 
+    public int lastUserCourseId = -1;
+
     public final ArrayList<Course> courses = new ArrayList<>();
     public final ArrayList<Chapter> chapters = new ArrayList<>();
     public int lastCourseId = -1;

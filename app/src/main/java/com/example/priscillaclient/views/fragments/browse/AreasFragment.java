@@ -52,9 +52,6 @@ public class AreasFragment extends FragmentBase {
     @Override
     public void onUpdate(Object response) {
 
-        if (!isVisible())
-            return;
-
         ArrayList<Area> areas = Client.getInstance().areas;
         ArrayAdapter<Area> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, areas);
         ListView areaListView = findViewById(R.id.areaListView);

@@ -14,10 +14,6 @@ import com.example.priscillaclient.views.LoadingDialog;
 
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
 public abstract class ApiTask extends AsyncTask<String, String, Object> {
 
     public static final String baseUrl = "https://app.priscilla.fitped.eu";
@@ -35,7 +31,7 @@ public abstract class ApiTask extends AsyncTask<String, String, Object> {
     public ApiTask(HttpResponse context) {
         super();
         this.context = context;
-        showProgressDialog(true);
+        showProgressDialog(false);
     }
 
     protected void onPostExecute(Object response) {
@@ -50,7 +46,7 @@ public abstract class ApiTask extends AsyncTask<String, String, Object> {
             } catch (Exception ignore) { }
         }
 
-        Activity activity = (context instanceof Activity ? (Activity) context : ((Fragment) context).getActivity());
+        Activity activity = (context instanceof Activity ? (Activity) context : (Activity) ((Fragment) context).getActivity());
         if (errorMessage != null) {
             if (errorMessage.equals("Unauthorized.") && activity != null) {
                 activity.startActivity(new Intent(activity, LoginActivity.class));
@@ -59,8 +55,9 @@ public abstract class ApiTask extends AsyncTask<String, String, Object> {
             }
         }
 
-        if (activity == null || activity.isDestroyed()) {
-            return;
+        if (context instanceof Fragment) {
+            if (!((Fragment) context).isVisible())
+                return;
         }
 
         context.onUpdate(response);

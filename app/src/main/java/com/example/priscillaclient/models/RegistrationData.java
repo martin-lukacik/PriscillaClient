@@ -14,7 +14,9 @@ public class RegistrationData {
 
     public RegistrationData() { }
 
-    public RegistrationData(JSONArray l, JSONArray c, JSONArray g, JSONArray t) throws JSONException {
+    public void set(JSONArray l, JSONArray c, JSONArray g, JSONArray t) throws JSONException {
+
+        clear();
 
         for (int i = 0; i < l.length(); ++i)
             languages.add(new Language(l.optJSONObject(i)));
@@ -28,6 +30,13 @@ public class RegistrationData {
         for (int i = 0; i < t.length(); ++i)
             themes.add(new Theme(t.optJSONObject(i)));
 
+    }
+
+    public void clear() {
+        languages.clear();
+        countries.clear();
+        groups.clear();
+        themes.clear();
     }
 
     public boolean isEmpty() {

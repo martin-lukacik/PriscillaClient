@@ -75,9 +75,6 @@ public class ProfileFragment extends FragmentBase {
     @Override
     public void onUpdate(Object response) {
 
-        if (!isVisible())
-            return;
-
         Client client = Client.getInstance();
         User user = client.user;
 

@@ -25,6 +25,7 @@ import com.example.priscillaclient.R;
 import com.example.priscillaclient.api.app.GetLessons;
 import com.example.priscillaclient.api.app.GetTasks;
 import com.example.priscillaclient.api.app.EvaluateTask;
+import com.example.priscillaclient.api.app.SetPassedTask;
 import com.example.priscillaclient.api.user.GetUserParams;
 import com.example.priscillaclient.models.Client;
 import com.example.priscillaclient.models.Lesson;
@@ -142,10 +143,13 @@ public class TaskFragment extends FragmentBase {
             updateLessonList(client.lessons);
         } else if (response.equals(client.tasks)) {
             updateTaskList(client.tasks);
-        } else if (response instanceof TaskResult) {
+        } else if (response instanceof TaskResult || response instanceof String) {
             new GetTasks(this, id).execute();
-            new GetUserParams((ActivityBase) getActivity()).execute();
-            showRatingDialog(((TaskResult) response));
+
+            if (response instanceof TaskResult) {
+                showRatingDialog(((TaskResult) response));
+                new GetUserParams((ActivityBase) getActivity()).execute();
+            }
         }
     }
 
@@ -221,6 +225,18 @@ public class TaskFragment extends FragmentBase {
         Task task = tasks.get(currentTask);
 
         stars.removeAllViews();
+        if (task.max_score == 0 && task.passed != 1) {
+            buttonTaskHelp.setVisibility(View.GONE);
+        } else {
+            buttonTaskHelp.setVisibility(View.VISIBLE);
+        }
+
+        if (task.max_score != 0 || task.passed == 1) {
+            buttonTaskSubmit.setVisibility(View.GONE);
+        } else {
+            buttonTaskSubmit.setVisibility(View.VISIBLE);
+        }
+
         if (task.passed == 1) {
             buttonTaskHelp.setText("PASSED");
             buttonTaskHelp.setEnabled(false);
@@ -251,6 +267,7 @@ public class TaskFragment extends FragmentBase {
         String content = task.content;
 
         switch (task.type) {
+
             case TASK_CHOICE:
                 if (task.answers != null) {
                     RadioGroup radioGroup = new RadioGroup(getActivity());
@@ -354,6 +371,10 @@ public class TaskFragment extends FragmentBase {
                     new EvaluateTask(this).execute(javascriptInterface.data, task.task_id + "", task.task_type_id + "", "10");
                     break;
 
+
+                case TASK_READ:
+                    new SetPassedTask(this, task.task_id).execute();
+                    break;
                 case TASK_CHOICE:
                     int index = -1;
                     for (int i = taskLayout.getChildCount() - 1; i >= 0; --i) {

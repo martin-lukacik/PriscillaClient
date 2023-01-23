@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.priscillaclient.MainActivity;
 import com.example.priscillaclient.R;
@@ -54,9 +55,6 @@ public class AreaCourseFragment extends FragmentBase {
 
     @Override
     public void onUpdate(Object response) {
-
-        if (!isVisible())
-            return;
 
         ArrayList<AreaCourse> areaCourses = Client.getInstance().areaCourses;
         ArrayAdapter<AreaCourse> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, areaCourses);

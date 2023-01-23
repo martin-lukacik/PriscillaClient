@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.api.browse.GetCategories;
@@ -44,9 +45,6 @@ public class CategoriesFragment extends FragmentBase {
 
     @Override
     public void onUpdate(Object response) {
-
-        if (!isVisible())
-            return;
 
         ArrayList<Category> categories = Client.getInstance().categories;
         ArrayAdapter<Category> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, categories);

@@ -34,7 +34,9 @@ public class GetTasks extends ApiTask {
                 return client.tasks;
             }
 
-            JSONArray json = new JSONObject(connection.getResponse()).getJSONArray("task_list");
+            JSONObject j = new JSONObject(connection.getResponse());
+            client.lastUserCourseId = j.getInt("user_course_id");
+            JSONArray json = j.getJSONArray("task_list");
 
             client.tasks.clear();
             for (int i = 0; i < json.length(); ++i) {

@@ -18,7 +18,7 @@ public class GetRegistrationData extends ApiTask {
     protected RegistrationData doInBackground(String... strings) {
 
         // Return from cache
-        if (client.registrationData != null && !client.registrationData.isEmpty()) {
+        if (!client.registrationData.isEmpty()) {
             return client.registrationData;
         }
 
@@ -37,7 +37,7 @@ public class GetRegistrationData extends ApiTask {
             JSONArray groups = json.getJSONArray("groups");
             JSONArray themes = json.getJSONArray("themes");
 
-            client.registrationData = new RegistrationData(languages, countries, groups, themes);
+            client.registrationData.set(languages, countries, groups, themes);
 
             connection.disconnect();
 

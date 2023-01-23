@@ -42,13 +42,13 @@ public class ChangeProfile extends ApiTask {
 
             connection.sendRequest(json);
 
-            // Invalidate cache
-            client.profile = null;
-
             if (connection.getErrorStream() != null) {
                 logError(connection.getErrorMessage());
                 return null;
             }
+
+            // Invalidate cache
+            client.profile = null;
 
         } catch (Exception e) {
             logError(e.getMessage());

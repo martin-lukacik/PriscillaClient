@@ -61,9 +61,6 @@ public class ChaptersFragment extends FragmentBase {
     @Override
     public void onUpdate(Object response) {
 
-        if (response == null || getActivity() == null)
-            return;
-
         chapters = Client.getInstance().chapters;
 
         GridView chaptersListView = findViewById(R.id.chapterListView);

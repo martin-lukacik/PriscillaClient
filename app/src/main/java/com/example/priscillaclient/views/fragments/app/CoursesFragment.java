@@ -51,9 +51,6 @@ public class CoursesFragment extends FragmentBase {
     @Override
     public void onUpdate(Object response) {
 
-        if (!isVisible())
-            return;
-
         courses = new ArrayList<>(Client.getInstance().courses);
 
         SharedPreferences settings = getActivity().getApplicationContext().getSharedPreferences(PREF_SET, 0);
