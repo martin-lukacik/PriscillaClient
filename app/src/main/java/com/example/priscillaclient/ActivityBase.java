@@ -18,14 +18,26 @@ import com.example.priscillaclient.api.HttpResponse;
 import com.example.priscillaclient.api.user.GetUserParams;
 import com.example.priscillaclient.models.Client;
 import com.example.priscillaclient.models.User;
+import com.example.priscillaclient.views.fragments.app.ChaptersFragment;
+import com.example.priscillaclient.views.fragments.app.TaskFragment;
+import com.example.priscillaclient.views.fragments.browse.AreaCourseFragment;
+import com.example.priscillaclient.views.fragments.browse.AreasFragment;
 import com.example.priscillaclient.views.fragments.browse.CategoriesFragment;
 import com.example.priscillaclient.views.fragments.app.CoursesFragment;
 import com.example.priscillaclient.views.fragments.misc.LeaderboardFragment;
 import com.example.priscillaclient.views.fragments.user.ProfileFragment;
+import com.example.priscillaclient.views.fragments.user.SettingsFragment;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.List;
 
 public abstract class ActivityBase extends AppCompatActivity implements HttpResponse {
 
     Client client = Client.getInstance();
+
+    ChaptersFragment chaptersFragment;
+    CoursesFragment coursesFragment;
+
 
     @Override
     public void onUpdate(Object response) {
@@ -74,49 +86,71 @@ public abstract class ActivityBase extends AppCompatActivity implements HttpResp
         new GetUserParams(this).execute();
     }
 
-    protected void swapFragment(Fragment fragment) {
+    boolean firstFragment = true;
+    public void swapFragment(Fragment fragment) {
         FragmentManager manager = getSupportFragmentManager();
 
-        manager.beginTransaction()
+        if (firstFragment)
+            manager.beginTransaction()
                 .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
                 .replace(R.id.fragmentContainerView, fragment)
                 .commit();
+        else
+            manager.beginTransaction()
+                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
+                .replace(R.id.fragmentContainerView, fragment)
+                .addToBackStack(null)
+                .commit();
+
+        firstFragment = false;
+
+        higlightMenuFromFragment(fragment);
     }
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
+        super.onBackPressed();
+
+
         FragmentManager fm = getSupportFragmentManager();
-        if (fm.getBackStackEntryCount() > 0) {
-            fm.popBackStack();
-        } else {
-            super.onBackPressed();
+        Fragment fragment = fm.findFragmentById(R.id.fragmentContainerView);
+
+        higlightMenuFromFragment(fragment);
+    }
+
+    boolean highlightingMenu = false;
+    protected void higlightMenuFromFragment(Fragment fragment) {
+        highlightingMenu = true;
+        BottomNavigationView bottomNavigation = findViewById(R.id.bottom_navigation);
+        if (fragment instanceof ChaptersFragment
+                || fragment instanceof CoursesFragment
+                || fragment instanceof TaskFragment) {
+            bottomNavigation.setSelectedItemId(R.id.menu_dashboard);
+        } else if (fragment instanceof AreaCourseFragment
+                || fragment instanceof AreasFragment
+                || fragment instanceof CategoriesFragment) {
+            bottomNavigation.setSelectedItemId(R.id.menu_all_courses);
+        } else if (fragment instanceof LeaderboardFragment) {
+            bottomNavigation.setSelectedItemId(R.id.menu_leaderboard);
+        } else if (fragment instanceof ProfileFragment
+                || fragment instanceof SettingsFragment) {
+            bottomNavigation.setSelectedItemId(R.id.menu_profile);
         }
+        highlightingMenu = false;
     }
 
     protected boolean onMenuItemSelected(MenuItem item) {
+        if (highlightingMenu)
+            return true;
 
-        Intent intent = null;
         if (item.getItemId() == R.id.menu_dashboard) {
-            if (this instanceof MainActivity)
-                swapFragment(new CoursesFragment());
-            intent = new Intent(this, MainActivity.class);
+            swapFragment(new CoursesFragment());
         } else if (item.getItemId() == R.id.menu_all_courses) {
-            if (this instanceof BrowseActivity)
-                swapFragment(new CategoriesFragment());
-            intent = new Intent(this, BrowseActivity.class);
+            swapFragment(new CategoriesFragment());
         } else if (item.getItemId() == R.id.menu_leaderboard) {
-            if (this instanceof LeaderboardActivity)
-                swapFragment(new LeaderboardFragment());
-            intent = new Intent(this, LeaderboardActivity.class);
+            swapFragment(new LeaderboardFragment());
         } else if (item.getItemId() == R.id.menu_profile) {
-            if (this instanceof ProfileActivity)
-                swapFragment(new ProfileFragment());
-            intent = new Intent(this, ProfileActivity.class);
-        }
-
-        if (intent != null) {
-            startActivity(intent);
-            overridePendingTransition(0, 0);
+            swapFragment(new ProfileFragment());
         }
         return true;
     }

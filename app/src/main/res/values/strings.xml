@@ -10,7 +10,7 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="u_registrovat"><u>Registracia</u></string>
-    <string name="position">Position</string>
+    <string name="hashtag_sign">#</string>
     <string name="nickname">Nickname</string>
     <string name="xp">XP</string>
     <string name="username_or_email">Používateľské meno alebo e-mail</string>

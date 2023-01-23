@@ -15,29 +15,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PriscillaClient">
         <activity
-            android:name=".LeaderboardActivity"
-            android:configChanges="orientation|screenSize"
-            android:launchMode="singleInstance"
-            android:exported="false" />
-        <activity
-            android:name=".BrowseActivity"
-            android:configChanges="orientation|screenSize"
-            android:launchMode="singleInstance"
-            android:exported="false" />
-        <activity
-            android:name=".ProfileActivity"
-            android:configChanges="orientation|screenSize"
-            android:launchMode="singleInstance"
-            android:exported="false" />
-        <activity
             android:name=".MainActivity"
             android:configChanges="orientation|screenSize"
-            android:launchMode="singleInstance"
             android:exported="true" />
         <activity
             android:name=".LoginActivity"
             android:configChanges="orientation|screenSize"
-            android:launchMode="singleInstance"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

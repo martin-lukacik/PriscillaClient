@@ -65,9 +65,7 @@ public class AreaCourseFragment extends FragmentBase {
     private void courseSelected(AdapterView<?> adapterView, View view, int i, long l) {
         AreaCourse course = Client.getInstance().areaCourses.get(i);
         if (course.status == AreaCourse.CourseStatus.OPENED) {
-            Intent intent = new Intent(getActivity(), MainActivity.class);
-            intent.putExtra("course_id", course.id);
-            startActivity(intent);
+            swapFragment(ChaptersFragment.newInstance(course.id));
         }
 
         // TODO join course

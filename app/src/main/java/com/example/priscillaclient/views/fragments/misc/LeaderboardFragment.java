@@ -8,9 +8,13 @@ import android.widget.ListView;
 
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.api.misc.GetLeaders;
+import com.example.priscillaclient.models.Category;
 import com.example.priscillaclient.models.Client;
+import com.example.priscillaclient.models.LeaderboardItem;
 import com.example.priscillaclient.views.adapters.LeaderboardAdapter;
 import com.example.priscillaclient.views.fragments.FragmentBase;
+
+import java.util.ArrayList;
 
 public class LeaderboardFragment extends FragmentBase {
 
@@ -28,6 +32,15 @@ public class LeaderboardFragment extends FragmentBase {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_leaderboard, container, false);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        ArrayList<LeaderboardItem> leaders = Client.getInstance().leaderboard;
+        if (!leaders.isEmpty())
+            onUpdate(leaders);
     }
 
     @Override

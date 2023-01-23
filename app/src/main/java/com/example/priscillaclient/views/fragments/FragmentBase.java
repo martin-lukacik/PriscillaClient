@@ -6,6 +6,7 @@ import android.view.View;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.example.priscillaclient.ActivityBase;
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.api.HttpResponse;
 
@@ -17,12 +18,7 @@ public abstract class FragmentBase extends Fragment implements HttpResponse {
         if (getActivity() == null)
             return;
 
-        FragmentManager manager = getActivity().getSupportFragmentManager();
-        manager.beginTransaction()
-                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
-                .replace(R.id.fragmentContainerView, fragment)
-                .addToBackStack(null)
-                .commit();
+        ((ActivityBase) getActivity()).swapFragment(fragment);
     }
 
     public <T extends View> T findViewById(int id) {

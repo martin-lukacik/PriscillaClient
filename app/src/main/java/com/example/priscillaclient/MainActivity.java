@@ -10,6 +10,13 @@ import androidx.core.content.ContextCompat;
 
 import com.example.priscillaclient.views.fragments.app.ChaptersFragment;
 import com.example.priscillaclient.views.fragments.app.CoursesFragment;
+import com.example.priscillaclient.views.fragments.app.TaskFragment;
+import com.example.priscillaclient.views.fragments.browse.AreaCourseFragment;
+import com.example.priscillaclient.views.fragments.browse.AreasFragment;
+import com.example.priscillaclient.views.fragments.browse.CategoriesFragment;
+import com.example.priscillaclient.views.fragments.misc.LeaderboardFragment;
+import com.example.priscillaclient.views.fragments.user.ProfileFragment;
+import com.example.priscillaclient.views.fragments.user.SettingsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends ActivityBase {
