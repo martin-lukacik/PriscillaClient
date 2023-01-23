@@ -24,7 +24,7 @@ public class GetProfileData extends ApiTask {
             HttpConnection connection = new HttpConnection("/get-profile-data", "GET", false);
 
             if (connection.getErrorStream() != null) {
-                logError(connection.getErrorStream());
+                logError(connection.getErrorMessage());
                 return client.profile;
             }
 

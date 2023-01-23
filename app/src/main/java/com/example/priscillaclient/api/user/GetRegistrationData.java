@@ -26,7 +26,7 @@ public class GetRegistrationData extends ApiTask {
             HttpConnection connection = new HttpConnection("/get-registration-data", "GET", false);
 
             if (connection.getErrorStream() != null) {
-                logError(connection.getErrorStream());
+                logError(connection.getErrorMessage());
                 return client.registrationData;
             }
 

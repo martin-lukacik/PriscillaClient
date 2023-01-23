@@ -30,7 +30,7 @@ public class GetTasks extends ApiTask {
             HttpConnection connection = new HttpConnection("/get-active-tasks2/" + courseId + "/" + chapterId + "/" + lessonId, "GET", false);
 
             if (connection.getErrorStream() != null) {
-                logError(connection.getErrorStream());
+                logError(connection.getErrorMessage());
                 return client.tasks;
             }
 

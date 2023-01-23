@@ -27,7 +27,7 @@ public class GetUserParams extends ApiTask {
             HttpConnection connection = new HttpConnection("/get-full-user-parameters", "GET", false);
 
             if (connection.getErrorStream() != null) {
-                logError(connection.getErrorStream());
+                logError(connection.getErrorMessage());
                 return client.user;
             }
 

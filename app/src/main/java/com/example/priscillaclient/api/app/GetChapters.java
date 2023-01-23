@@ -37,7 +37,7 @@ public class GetChapters extends ApiTask {
 
             int status = connection.getResponseCode();
             if (status >= 400 && status < 600) {
-                logError(connection.getErrorStream());
+                logError(connection.getErrorMessage());
                 return client.chapters;
             }
 

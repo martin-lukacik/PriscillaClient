@@ -25,7 +25,7 @@ public class GetLessons extends ApiTask {
             HttpConnection connection = new HttpConnection("/get-active-lessons2/" + chapterId, "GET", false);
 
             if (connection.getErrorStream() != null) {
-                logError(connection.getErrorStream());
+                logError(connection.getErrorMessage());
                 return client.lessons;
             }
 

@@ -70,6 +70,17 @@ public class HttpConnection {
         return connection.getErrorStream();
     }
 
+    public String getErrorMessage() throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(getErrorStream()));
+        String line;
+        StringBuilder stringBuilder = new StringBuilder();
+        while ((line = br.readLine()) != null) {
+            stringBuilder.append(line);
+        }
+        br.close();
+        return stringBuilder.toString();
+    }
+
     public void disconnect() {
         connection.disconnect();
     }

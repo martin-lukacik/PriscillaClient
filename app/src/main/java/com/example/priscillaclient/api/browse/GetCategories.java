@@ -27,7 +27,7 @@ public class GetCategories extends ApiTask {
             HttpConnection connection = new HttpConnection("/get-categories2", "GET", false);
 
             if (connection.getErrorStream() != null) {
-                logError(connection.getErrorStream());
+                logError(connection.getErrorMessage());
                 return client.categories;
             }
 

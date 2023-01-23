@@ -46,7 +46,7 @@ public class ChangeProfile extends ApiTask {
             client.profile = null;
 
             if (connection.getErrorStream() != null) {
-                logError(connection.getErrorStream());
+                logError(connection.getErrorMessage());
                 return null;
             }
 

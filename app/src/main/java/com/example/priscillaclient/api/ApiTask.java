@@ -12,6 +12,8 @@ import com.example.priscillaclient.LoginActivity;
 import com.example.priscillaclient.models.Client;
 import com.example.priscillaclient.views.LoadingDialog;
 
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -63,9 +65,15 @@ public abstract class ApiTask extends AsyncTask<String, String, Object> {
         context.onUpdate(response);
     }
 
+
     public void showProgressDialog() {
+        showProgressDialog(false);
+    }
+
+    public void showProgressDialog(boolean dismissable) {
         Activity activity = (context instanceof Activity ? (Activity) context : ((Fragment) context).getActivity());
-        if (activity != null)
+
+        if (!dismissable && activity != null)
             activity.getWindow().setFlags(
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
@@ -76,23 +84,11 @@ public abstract class ApiTask extends AsyncTask<String, String, Object> {
     }
 
     protected void logError(String message) {
-        errorMessage = message;
-    }
-
-    protected void logError(InputStream is) {
         try {
-            BufferedReader br = new BufferedReader(new InputStreamReader(is));
-            String line;
-            StringBuilder stringBuilder = new StringBuilder();
-            while ((line = br.readLine()) != null) {
-                stringBuilder.append(line);
-            }
-            br.close();
-            is.close();
-
-            errorMessage = stringBuilder.toString();
-        } catch (Exception ignore) {
-
+            JSONObject response = new JSONObject(message);
+            errorMessage = response.getString("message");
+        } catch (Exception e) {
+            errorMessage = message;
         }
     }
 }

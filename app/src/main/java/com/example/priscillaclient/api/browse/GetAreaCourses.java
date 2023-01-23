@@ -33,7 +33,7 @@ public class GetAreaCourses extends ApiTask {
             HttpConnection connection = new HttpConnection("/area-all-courses/" + areaId, "GET", false);
 
             if (connection.getErrorStream() != null) {
-                logError(connection.getErrorStream());
+                logError(connection.getErrorMessage());
                 return client.areaCourses;
             }
 
