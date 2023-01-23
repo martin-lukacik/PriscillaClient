@@ -21,8 +21,8 @@ import java.util.ArrayList;
 
 public class CoursesFragment extends FragmentBase {
 
-    CourseListAdapter adapter;
     ArrayList<Course> courses;
+    CourseListAdapter adapter;
 
     final String PREF_SET = "settings";
 
@@ -44,14 +44,16 @@ public class CoursesFragment extends FragmentBase {
     public void onResume() {
         super.onResume();
 
-        if (courses != null)
-            onUpdate(courses);
+        if (!client.courses.isEmpty())
+            onUpdate(client.courses);
+        else
+            new GetCourses(this).execute();
     }
 
     @Override
     public void onUpdate(Object response) {
 
-        courses = new ArrayList<>(Client.getInstance().courses);
+        courses = new ArrayList<>(client.courses);
 
         SharedPreferences settings = getActivity().getApplicationContext().getSharedPreferences(PREF_SET, 0);
         int pinnedCourseId = settings.getInt("pinnedCourseId", -1);

@@ -146,6 +146,11 @@ public class TaskFragment extends FragmentBase {
         } else if (response.equals(client.tasks)) {
             updateTaskList(client.tasks);
         } else if (response instanceof TaskResult || response instanceof String) {
+
+            shouldResetLayout = false;
+            client.courses.clear();
+            client.chapters.clear();
+
             new GetTasks(this, id).execute();
 
             if (response instanceof TaskResult) {
@@ -219,8 +224,16 @@ public class TaskFragment extends FragmentBase {
         navigationView.invalidate();
     }
 
+    boolean shouldResetLayout = true;
     public void updateTaskList(ArrayList<Task> tasks) {
+
+        if (!shouldResetLayout) {
+            shouldResetLayout = true;
+            return;
+        }
+
         clearTaskLayout();
+        shouldResetLayout = true;
 
         taskCount.setText((currentTask + 1) + " / " + tasks.size());
 
@@ -372,10 +385,10 @@ public class TaskFragment extends FragmentBase {
                     new EvaluateTask(this).execute(javascriptInterface.data, task.task_id + "", task.task_type_id + "", "10");
                     break;
 
-
                 case TASK_READ:
                     new SetPassedTask(this, task.task_id).execute();
                     break;
+
                 case TASK_CHOICE:
                     int index = -1;
                     for (int i = taskLayout.getChildCount() - 1; i >= 0; --i) {
@@ -392,7 +405,8 @@ public class TaskFragment extends FragmentBase {
                         }
                     }
 
-                    new EvaluateTask(this).execute("[\"" + task.answers.get(index) + "\"]", task.task_id + "", task.task_type_id + "", "10");
+                    String answer = (index == -1 ? "" : task.answers.get(index));
+                    new EvaluateTask(this).execute("[\"" + answer + "\"]", task.task_id + "", task.task_type_id + "", "10");
                     break;
 
                 case TASK_INPUT:

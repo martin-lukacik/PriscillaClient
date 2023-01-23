@@ -11,6 +11,7 @@ public class GetUserParams extends ApiTask {
 
     public GetUserParams(HttpResponse context) {
         super(context);
+        dialog.dismiss();
     }
 
     protected User doInBackground(String... strings) {

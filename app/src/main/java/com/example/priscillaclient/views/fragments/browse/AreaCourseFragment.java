@@ -1,6 +1,10 @@
 package com.example.priscillaclient.views.fragments.browse;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import android.view.LayoutInflater;
@@ -11,6 +15,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.core.app.DialogCompat;
+
 import com.example.priscillaclient.MainActivity;
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.api.browse.GetAreaCourses;
@@ -19,6 +25,7 @@ import com.example.priscillaclient.models.AreaCourse;
 import com.example.priscillaclient.models.Client;
 import com.example.priscillaclient.views.fragments.FragmentBase;
 import com.example.priscillaclient.views.fragments.app.ChaptersFragment;
+import com.google.android.material.textview.MaterialTextView;
 
 import java.util.ArrayList;
 
@@ -55,9 +62,16 @@ public class AreaCourseFragment extends FragmentBase {
 
     @Override
     public void onUpdate(Object response) {
-
         ArrayList<AreaCourse> areaCourses = Client.getInstance().areaCourses;
-        ArrayAdapter<AreaCourse> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, areaCourses);
+        ArrayAdapter<AreaCourse> adapter = new ArrayAdapter<AreaCourse>(getActivity(), android.R.layout.simple_list_item_1, areaCourses) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent){
+                View view = super.getView(position, convertView, parent);
+                if (client.areaCourses.get(position).status == AreaCourse.CourseStatus.OPENED)
+                    ((MaterialTextView) view).setTextColor(Color.parseColor("#00FF00"));
+                return view;
+            }
+        };
         ListView areaCourseList = findViewById(R.id.areaCourseList);
         areaCourseList.setAdapter(adapter);
         areaCourseList.setOnItemClickListener(this::courseSelected);
@@ -69,6 +83,22 @@ public class AreaCourseFragment extends FragmentBase {
             swapFragment(ChaptersFragment.newInstance(course.id));
         }
 
-        // TODO join course
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(course.title);
+        builder.setMessage("Join course " + course.title + " ?");
+        builder.setPositiveButton("JOIN", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // TODO join course
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+            }
+        });
+
+        Dialog d = builder.create();
+        d.show();
     }
 }

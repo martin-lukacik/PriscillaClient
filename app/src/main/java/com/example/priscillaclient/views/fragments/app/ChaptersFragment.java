@@ -47,11 +47,12 @@ public class ChaptersFragment extends FragmentBase {
     public void onResume() {
         super.onResume();
 
-        if (chapters != null)
+        ArrayList<Chapter> chapters = client.chapters;
+        if (!chapters.isEmpty())
             onUpdate(chapters);
+        else
+            new GetChapters(this, courseId).execute();
     }
-
-    ArrayList<Chapter> chapters;
 
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -61,7 +62,7 @@ public class ChaptersFragment extends FragmentBase {
     @Override
     public void onUpdate(Object response) {
 
-        chapters = Client.getInstance().chapters;
+        ArrayList<Chapter> chapters = client.chapters;
 
         GridView chaptersListView = findViewById(R.id.chapterListView);
         ChapterListAdapter adapter = new ChapterListAdapter(getActivity(), chapters);
@@ -70,7 +71,7 @@ public class ChaptersFragment extends FragmentBase {
     }
 
     private void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        int chapterId = chapters.get(i).id;
+        int chapterId = client.chapters.get(i).id;
         swapFragment(TaskFragment.newInstance(chapterId));
     }
 }

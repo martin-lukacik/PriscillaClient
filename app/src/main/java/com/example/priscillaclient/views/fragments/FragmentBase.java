@@ -7,10 +7,13 @@ import androidx.fragment.app.Fragment;
 
 import com.example.priscillaclient.ActivityBase;
 import com.example.priscillaclient.api.HttpResponse;
+import com.example.priscillaclient.models.Client;
 
 import java.io.InputStream;
 
 public abstract class FragmentBase extends Fragment implements HttpResponse {
+
+    protected final static Client client = Client.getInstance();
 
     public void swapFragment(Fragment fragment) {
         if (getActivity() == null)

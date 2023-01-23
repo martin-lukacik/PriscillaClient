@@ -2,7 +2,7 @@ package com.example.priscillaclient.api.app;
 
 import com.example.priscillaclient.api.ApiTask;
 import com.example.priscillaclient.api.HttpConnection;
-import com.example.priscillaclient.views.fragments.FragmentBase;
+import com.example.priscillaclient.api.HttpResponse;
 import com.example.priscillaclient.models.Task;
 
 import org.json.JSONArray;
@@ -16,8 +16,10 @@ public class GetTasks extends ApiTask {
     int chapterId;
     int lessonId;
 
-    public GetTasks(FragmentBase fragment, int lessonId) {
-        super(fragment);
+    public GetTasks(HttpResponse context, int lessonId) {
+        super(context);
+
+        dialog.dismiss();
         this.courseId = client.lastCourseId;
         this.chapterId = client.lastChapterId;
         this.lessonId = lessonId;
