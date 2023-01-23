@@ -35,6 +35,7 @@ import com.example.priscillaclient.views.JavascriptInterface;
 import com.example.priscillaclient.views.fragments.FragmentBase;
 import com.google.android.material.navigation.NavigationView;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 
 import java.util.ArrayList;
@@ -69,7 +70,6 @@ public class TaskFragment extends FragmentBase {
         return fragment;
     }
 
-    @SuppressLint("SetJavaScriptEnabled")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,8 +80,9 @@ public class TaskFragment extends FragmentBase {
         new GetLessons(this, chapterId).execute();
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NotNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         webView = findViewById(R.id.webView);
@@ -231,7 +232,7 @@ public class TaskFragment extends FragmentBase {
             buttonTaskHelp.setVisibility(View.VISIBLE);
         }
 
-        if (task.max_score != 0 || task.passed == 1) {
+        if ((task.max_score != 0 && task.passed == 0) || task.passed == 1) {
             buttonTaskSubmit.setVisibility(View.GONE);
         } else {
             buttonTaskSubmit.setVisibility(View.VISIBLE);
@@ -359,7 +360,7 @@ public class TaskFragment extends FragmentBase {
     public void submit(View view) {
         ArrayList<Task> tasks = Client.getInstance().tasks;
 
-        if (tasks != null) {
+        if (!tasks.isEmpty()) {
             Task task = tasks.get(currentTask);
             ArrayList<String> postedAnswers = new ArrayList<>();
 
