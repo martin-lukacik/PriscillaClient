@@ -41,7 +41,10 @@ public abstract class ApiTask extends AsyncTask<String, String, Object> {
             Activity activity = (context instanceof Activity ? (Activity) context : ((Fragment) context).getActivity());
             if (activity != null)
                 activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            dialog.dismiss();
+
+            try {
+                dialog.dismiss();
+            } catch (Exception ignore) { }
         }
 
         Activity activity = (context instanceof Activity ? (Activity) context : ((Fragment) context).getActivity());
@@ -51,6 +54,10 @@ public abstract class ApiTask extends AsyncTask<String, String, Object> {
             } else {
                 Toast.makeText(activity, errorMessage, Toast.LENGTH_LONG).show();
             }
+        }
+
+        if (activity == null || activity.isDestroyed()) {
+            return;
         }
 
         context.onUpdate(response);

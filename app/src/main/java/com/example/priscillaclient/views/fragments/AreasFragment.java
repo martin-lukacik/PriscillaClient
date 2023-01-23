@@ -11,6 +11,7 @@ import android.widget.ListView;
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.api.browse.GetAreas;
 import com.example.priscillaclient.models.Area;
+import com.example.priscillaclient.models.Category;
 import com.example.priscillaclient.models.Client;
 
 import java.util.ArrayList;
@@ -35,6 +36,15 @@ public class AreasFragment extends FragmentBase {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_areas, container, false);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        ArrayList<Area> areas = Client.getInstance().areas;
+        if (!areas.isEmpty())
+            onUpdate(areas);
     }
 
     @Override

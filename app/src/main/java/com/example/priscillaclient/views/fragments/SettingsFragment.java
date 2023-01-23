@@ -20,6 +20,7 @@ import com.example.priscillaclient.api.user.GetRegistrationData;
 import com.example.priscillaclient.models.Client;
 import com.example.priscillaclient.models.Profile;
 import com.example.priscillaclient.models.RegistrationData;
+import com.example.priscillaclient.models.User;
 
 public class SettingsFragment extends FragmentBase {
 
@@ -66,6 +67,18 @@ public class SettingsFragment extends FragmentBase {
         String theme_id = profileEditTheme.getTag().toString();
 
         new ChangeProfile(this).execute(age, content_type_id, country, group, lang, name, nick, surname, theme_id);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        Profile profile = Client.getInstance().profile;
+        RegistrationData data = Client.getInstance().registrationData;
+        if (profile != null && !data.isEmpty()) {
+            onUpdate(data);
+            onUpdate(profile);
+        }
     }
 
     @Override

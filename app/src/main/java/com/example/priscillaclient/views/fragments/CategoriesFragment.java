@@ -13,6 +13,7 @@ import com.example.priscillaclient.R;
 import com.example.priscillaclient.api.browse.GetCategories;
 import com.example.priscillaclient.models.Category;
 import com.example.priscillaclient.models.Client;
+import com.example.priscillaclient.models.User;
 
 import java.util.ArrayList;
 
@@ -30,6 +31,15 @@ public class CategoriesFragment extends FragmentBase {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_categories, container, false);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        ArrayList<Category> categories = Client.getInstance().categories;
+        if (!categories.isEmpty())
+            onUpdate(categories);
     }
 
     @Override

@@ -10,6 +10,6 @@ public class LoadingDialog extends ProgressDialog {
 
         setMessage(message);
         setIndeterminate(false);
-        setCancelable(true);
+        setCancelable(false);
     }
 }

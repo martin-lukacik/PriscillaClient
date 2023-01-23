@@ -13,6 +13,7 @@ import android.widget.ListView;
 import com.example.priscillaclient.MainActivity;
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.api.browse.GetAreaCourses;
+import com.example.priscillaclient.models.Area;
 import com.example.priscillaclient.models.AreaCourse;
 import com.example.priscillaclient.models.Client;
 
@@ -38,6 +39,15 @@ public class AreaCourseFragment extends FragmentBase {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_area_course, container, false);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        ArrayList<AreaCourse> areaCourses = Client.getInstance().areaCourses;
+        if (!areaCourses.isEmpty())
+            onUpdate(areaCourses);
     }
 
     @Override

@@ -55,8 +55,18 @@ public class ProfileFragment extends FragmentBase {
     }
 
     @Override
-    public void onUpdate(Object response) {
+    public void onResume() {
+        super.onResume();
+
         User user = Client.getInstance().user;
+        if (user != null)
+            onUpdate(user);
+    }
+
+    @Override
+    public void onUpdate(Object response) {
+        Client client = Client.getInstance();
+        User user = client.user;
 
         if (user == null)
             return;
@@ -70,7 +80,20 @@ public class ProfileFragment extends FragmentBase {
         TextView usernameShort = findViewById(R.id.usernameShort);
         TextView usernameFull = findViewById(R.id.usernameFull);
 
-        usernameShort.setText(user.name.charAt(0) + "" + user.surname.charAt(0));
+        char firstName = 0;
+        char lastName = 0;
+
+        if (!user.name.isEmpty())
+            firstName = user.name.charAt(0);
+        if (!user.surname.isEmpty())
+            lastName = user.surname.charAt(0);
+        if (firstName == 0 && lastName == 0) {
+            if (client.profile != null && !client.profile.nickname.isEmpty()) {
+                firstName = client.profile.nickname.charAt(0);
+            }
+        }
+
+        usernameShort.setText(firstName + "" + lastName);
         usernameFull.setText(user.name + " " + user.surname);
 
         Random rand = new Random();

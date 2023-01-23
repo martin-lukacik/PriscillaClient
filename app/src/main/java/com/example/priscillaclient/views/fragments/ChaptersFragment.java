@@ -47,7 +47,6 @@ public class ChaptersFragment extends FragmentBase {
 
         if (chapters != null)
             onUpdate(chapters);
-
     }
 
     ArrayList<Chapter> chapters;
