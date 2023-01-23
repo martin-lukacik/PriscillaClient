@@ -29,6 +29,7 @@ import com.example.priscillaclient.views.fragments.user.ProfileFragment;
 import com.example.priscillaclient.views.fragments.user.SettingsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class ActivityBase extends AppCompatActivity implements HttpResponse {
@@ -110,7 +111,6 @@ public abstract class ActivityBase extends AppCompatActivity implements HttpResp
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-
 
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.fragmentContainerView);

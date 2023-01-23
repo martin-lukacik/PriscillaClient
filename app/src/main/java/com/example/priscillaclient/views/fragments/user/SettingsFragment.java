@@ -52,6 +52,70 @@ public class SettingsFragment extends FragmentBase {
     }
 
     @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        profileEditName = findViewById(R.id.profileEditName);
+        profileEditSurname = findViewById(R.id.profileEditSurname);
+        profileEditNickname = findViewById(R.id.profileEditNickname);
+        profileEditGroup = findViewById(R.id.profileEditGroup);
+        profileEditStudentType = findViewById(R.id.profileEditStudentType);
+        profileEditCountry = findViewById(R.id.profileEditCountry);
+        profileEditLanguage = findViewById(R.id.profileEditLanguage);
+        profileEditTheme = findViewById(R.id.profileEditTheme);
+        profileEditYear = findViewById(R.id.profileEditYear);
+
+        settingsSave = findViewById(R.id.settingsSaveButton);
+        settingsSave.setOnClickListener(this::save);
+
+        profileEditGroup.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                adapterView.setTag(client.registrationData.groups.get(i).group_name);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) { }
+        });
+        profileEditStudentType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                adapterView.setTag(i + 1);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) { }
+        });
+        profileEditCountry.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                adapterView.setTag(client.registrationData.countries.get(i).id);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) { }
+        });
+        profileEditLanguage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                adapterView.setTag(client.registrationData.languages.get(i).id);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) { }
+        });
+        profileEditTheme.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                adapterView.setTag(client.registrationData.themes.get(i).id);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) { }
+        });
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_settings, container, false);
     }
@@ -74,78 +138,15 @@ public class SettingsFragment extends FragmentBase {
     public void onResume() {
         super.onResume();
 
-        Profile profile = Client.getInstance().profile;
-        RegistrationData data = Client.getInstance().registrationData;
+        Profile profile = client.profile;
+        RegistrationData data = client.registrationData;
         if (profile != null && !data.isEmpty()) {
-            onUpdate(data);
             onUpdate(profile);
         }
     }
 
     @Override
     public void onUpdate(Object response) {
-
-        if (profileEditName == null) {
-
-            profileEditName = findViewById(R.id.profileEditName);
-            profileEditSurname = findViewById(R.id.profileEditSurname);
-            profileEditNickname = findViewById(R.id.profileEditNickname);
-            profileEditGroup = findViewById(R.id.profileEditGroup);
-            profileEditStudentType = findViewById(R.id.profileEditStudentType);
-            profileEditCountry = findViewById(R.id.profileEditCountry);
-            profileEditLanguage = findViewById(R.id.profileEditLanguage);
-            profileEditTheme = findViewById(R.id.profileEditTheme);
-            profileEditYear = findViewById(R.id.profileEditYear);
-
-            settingsSave = findViewById(R.id.settingsSaveButton);
-            settingsSave.setOnClickListener(this::save);
-
-            profileEditGroup.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                    adapterView.setTag(client.registrationData.groups.get(i).group_name);
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> adapterView) { }
-            });
-            profileEditStudentType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                    adapterView.setTag(i + 1);
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> adapterView) { }
-            });
-            profileEditCountry.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                    adapterView.setTag(client.registrationData.countries.get(i).id);
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> adapterView) { }
-            });
-            profileEditLanguage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                    adapterView.setTag(client.registrationData.languages.get(i).id);
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> adapterView) { }
-            });
-            profileEditTheme.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                    adapterView.setTag(client.registrationData.themes.get(i).id);
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> adapterView) { }
-            });
-        }
 
         if (response == null) {
             ScrollView scrollView = findViewById(R.id.settingsScrollView);

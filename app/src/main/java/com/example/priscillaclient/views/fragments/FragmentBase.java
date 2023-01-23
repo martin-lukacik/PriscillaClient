@@ -4,10 +4,8 @@ import android.content.res.Resources;
 import android.view.View;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
 import com.example.priscillaclient.ActivityBase;
-import com.example.priscillaclient.R;
 import com.example.priscillaclient.api.HttpResponse;
 
 import java.io.InputStream;

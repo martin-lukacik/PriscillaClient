@@ -24,9 +24,17 @@ public class ProfileFragment extends FragmentBase {
 
     public ProfileFragment() { }
 
+    int color = 0;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Random rand = new Random();
+        int r = rand.nextInt(255);
+        int g = rand.nextInt(255);
+        int b = rand.nextInt(255);
+        color = Color.argb(255, r, g, b);
 
         new GetUserParams(this).execute();
     }
@@ -96,12 +104,6 @@ public class ProfileFragment extends FragmentBase {
 
         usernameShort.setText(firstName + "" + lastName);
         usernameFull.setText(user.name + " " + user.surname);
-
-        Random rand = new Random();
-        int r = rand.nextInt(255);
-        int g = rand.nextInt(255);
-        int b = rand.nextInt(255);
-        int color = Color.argb(255, r, g, b);
 
         GradientDrawable drawable = (GradientDrawable) usernameShort.getBackground();
         drawable.mutate();

@@ -68,6 +68,7 @@ public class TaskFragment extends FragmentBase {
         return fragment;
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,27 +80,23 @@ public class TaskFragment extends FragmentBase {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_task, container, false);
-    }
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-    @SuppressLint("SetJavaScriptEnabled")
-    public void createLayout() {
-
+        webView = findViewById(R.id.webView);
         stars = findViewById(R.id.stars);
         taskLayout = findViewById(R.id.taskLayout);
         taskCount = findViewById(R.id.taskCount);
         inputEditText = findViewById(R.id.inputEditText);
-        inputEditText.setVisibility(View.GONE);
-
-        webView = findViewById(R.id.webView);
-        webView.getSettings().setJavaScriptEnabled(true);
-        webView.addJavascriptInterface(javascriptInterface, "Android");
-
         buttonTaskNext = findViewById(R.id.buttonTaskNext);
         buttonTaskPrevious = findViewById(R.id.buttonTaskPrevious);
         buttonTaskHelp = findViewById(R.id.buttonTaskHelp);
         buttonTaskSubmit = findViewById(R.id.buttonTaskSubmit);
+
+        inputEditText.setVisibility(View.GONE);
+
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.addJavascriptInterface(javascriptInterface, "Android");
 
         buttonTaskHelp.setOnClickListener(this::getTaskHelp);
         buttonTaskNext.setOnClickListener(this::nextTask);
@@ -107,16 +104,32 @@ public class TaskFragment extends FragmentBase {
         buttonTaskSubmit.setOnClickListener(this::submit);
     }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_task, container, false);
+    }
+
     private void getTaskHelp(View view) {
         // TODO implement
     }
 
     @Override
-    public void onUpdate(Object response) {
+    public void onResume() {
+        super.onResume();
 
-        if (taskLayout == null) {
-            createLayout();
+        ArrayList<Lesson> lessons = Client.getInstance().lessons;
+        if (!lessons.isEmpty()) {
+            updateLessonList(lessons);
         }
+
+        ArrayList<Task> tasks = Client.getInstance().tasks;
+        if (!tasks.isEmpty()) {
+            updateTaskList(tasks);
+        }
+    }
+
+    @Override
+    public void onUpdate(Object response) {
 
         Client client = Client.getInstance();
 
@@ -124,6 +137,8 @@ public class TaskFragment extends FragmentBase {
         if (response.equals(client.lessons)) {
             currentTask = 0;
             new GetTasks(this, id).execute();
+            DrawerLayout drawer = findViewById(R.id.drawerLayout);
+            drawer.open();
             updateLessonList(client.lessons);
         } else if (response.equals(client.tasks)) {
             updateTaskList(client.tasks);
@@ -163,9 +178,6 @@ public class TaskFragment extends FragmentBase {
     }
 
     public void updateLessonList(ArrayList<Lesson> lessons) {
-        DrawerLayout drawer = findViewById(R.id.drawerLayout);
-        drawer.open();
-
         NavigationView navigationView = findViewById(R.id.navigationView);
         Menu menu = navigationView.getMenu();
         menu.clear();
@@ -175,6 +187,7 @@ public class TaskFragment extends FragmentBase {
 
         navigationView.bringToFront();
 
+        DrawerLayout drawer = findViewById(R.id.drawerLayout);
         boolean initialChecked = false;
         for (Lesson lesson : lessons) {
             MenuItem item = menu.add(lesson.name);
