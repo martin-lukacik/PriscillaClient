@@ -19,22 +19,21 @@ public class Client {
     public RegistrationData registrationData = new RegistrationData();
     public Profile profile = null;
 
-    public ArrayList<Course> courses = new ArrayList<>();
-    public ArrayList<Chapter> chapters = new ArrayList<>();
+    public final ArrayList<Course> courses = new ArrayList<>();
+    public final ArrayList<Chapter> chapters = new ArrayList<>();
     public int lastCourseId = -1;
-    public ArrayList<Lesson> lessons = new ArrayList<>();
+    public final ArrayList<Lesson> lessons = new ArrayList<>();
     public int lastChapterId = -1;
-    public ArrayList<Task> tasks = new ArrayList<>();
+    public final ArrayList<Task> tasks = new ArrayList<>();
     public int lastLessonId = -1;
 
-    public ArrayList<Category> categories = new ArrayList<>();
-    public ArrayList<Area> areas = new ArrayList<>();
+    public final ArrayList<Category> categories = new ArrayList<>();
+    public final ArrayList<Area> areas = new ArrayList<>();
     public int lastCategoryId = -1;
-    public ArrayList<AreaCourse> areaCourses = new ArrayList<>();
+    public final ArrayList<AreaCourse> areaCourses = new ArrayList<>();
     public int lastAreaId = -1;
 
-    public ArrayList<LeaderboardItem> leaderboard = new ArrayList<>();
-
+    public final ArrayList<LeaderboardItem> leaderboard = new ArrayList<>();
 
     private static Client instance = null;
 

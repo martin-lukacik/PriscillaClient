@@ -8,9 +8,9 @@ import java.util.ArrayList;
 
 public class TaskResult {
 
-    public int rating;
+    public final int rating;
 
-    public ArrayList<Answer> answers = new ArrayList<>();
+    public final ArrayList<Answer> answers = new ArrayList<>();
 
     public TaskResult(JSONObject json) throws JSONException {
         rating = json.getInt("rating");

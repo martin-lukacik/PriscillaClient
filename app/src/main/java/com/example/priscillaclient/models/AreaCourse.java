@@ -6,21 +6,21 @@ import org.json.JSONObject;
 
 public class AreaCourse {
 
-    public int id;
-    String title;
-    int course_order;
-    String description;
-    String course_status; // opt
+    public final int id;
+    public final String title;
+    public final int course_order;
+    public final String description;
+    public final String course_status; // opt
 
-    int task_finished;
-    int program_finished;
+    public final int task_finished;
+    public final int program_finished;
 
-    int content_all;
-    int task_all;
-    int program_all;
+    public final int content_all;
+    public final int task_all;
+    public final int program_all;
 
-    String start_date; // opt
-    String finish_date; // opt
+    public final String start_date; // opt
+    public final String finish_date; // opt
 
     public enum CourseStatus {
         NONE,

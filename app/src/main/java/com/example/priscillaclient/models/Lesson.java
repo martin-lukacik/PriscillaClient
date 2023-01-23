@@ -5,16 +5,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Lesson {
-    int order;
-    public int id;
+    public final int order;
+    public final int id;
 
-    public String name;
+    public final String name;
 
-    public int tasks_finished;
-    public int tasks_nonfinished;
+    public final int tasks_finished;
+    public final int tasks_nonfinished;
 
-    public int programs_finished;
-    public int programs_nonfinished;
+    public final int programs_finished;
+    public final int programs_nonfinished;
 
     public Lesson(JSONObject json) throws JSONException {
         order = json.getInt("lesson_order");

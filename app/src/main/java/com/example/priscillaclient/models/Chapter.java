@@ -6,16 +6,16 @@ import org.json.JSONObject;
 
 public class Chapter {
 
-    int order;
-    public int id;
-    public String name;
-    public String icon;
+    public final int order;
+    public final int id;
+    public final String name;
+    public final String icon;
 
-    public int tasks_finished;
-    public int tasks_nonfinished;
+    public final int tasks_finished;
+    public final int tasks_nonfinished;
 
-    public int programs_finished;
-    public int programs_nonfinished;
+    public final int programs_finished;
+    public final int programs_nonfinished;
 
     public Chapter(JSONObject json) throws JSONException {
         order = json.getInt("chapter_order");

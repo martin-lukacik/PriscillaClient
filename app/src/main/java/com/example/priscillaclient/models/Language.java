@@ -4,9 +4,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Language {
-    public int id;
-    public String name;
-    public String shortcut;
+    public final int id;
+    public final String name;
+    public final String shortcut;
 
     public Language(JSONObject json) throws JSONException {
         id = json.getInt("id");

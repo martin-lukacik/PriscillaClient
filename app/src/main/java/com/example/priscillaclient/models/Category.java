@@ -6,12 +6,12 @@ import org.json.JSONObject;
 
 public class Category {
 
-    String title;
-    public int category_id;
-    int sort_order;
-    String color;
+    public final String title;
+    public final int category_id;
+    public final int sort_order;
+    public final String color;
 
-    Pair areas, courses, chapters, lessons, codes;
+    public final Pair areas, courses, chapters, lessons, codes;
 
     public static class Pair {
         public final String text;

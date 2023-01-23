@@ -4,12 +4,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class LeaderboardItem {
-    public int id;
-    public String nickname;
-    public String groups;
-    public int xp;
-    public int level_id;
-    public String country;
+    public final int id;
+    public final String nickname;
+    public final String groups;
+    public final int xp;
+    public final int level_id;
+    public final String country;
 
     public LeaderboardItem(JSONObject json) throws JSONException {
         id = json.getInt("id");

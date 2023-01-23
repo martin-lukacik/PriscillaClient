@@ -5,20 +5,20 @@ import org.json.JSONObject;
 
 public class Profile {
 
-    public String name;
-    public String surname;
-    public String nickname;
-    public String groups;
-    public int yob;
-    public int xp;
-    public int level_id;
-    public int id;
-    public String email;
-    public int pref_lang_id;
-    public int content_type_id;
-    public int country_id;
-    public int role_id;
-    public int theme_id;
+    public final String name;
+    public final String surname;
+    public final String nickname;
+    public final String groups;
+    public final int yob;
+    public final int xp;
+    public final int level_id;
+    public final int id;
+    public final String email;
+    public final int pref_lang_id;
+    public final int content_type_id;
+    public final int country_id;
+    public final int role_id;
+    public final int theme_id;
 
     public Profile(JSONObject json) throws JSONException {
         name = json.getString("name");

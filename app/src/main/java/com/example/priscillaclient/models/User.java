@@ -4,31 +4,19 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class User {
-    int user_id;
-    int lang_id;
-    int country_id;
-    int role_id;
-    int content_type_id;
+    public final int user_id;
+    public final int lang_id;
+    public final int country_id;
+    public final int role_id;
+    public final int content_type_id;
 
-    int theme_id;
-    String theme_value;
-    public String name;
-    public String surname;
-    public String email;
+    public final int theme_id;
+    public final String theme_value;
+    public final String name;
+    public final String surname;
+    public final String email;
 
-    public Performance performance;
-
-    public static class Performance {
-        public int xp;
-        public int coins;
-        public int level;
-
-        public Performance(JSONObject json) throws JSONException {
-            xp = json.getInt("xp");
-            coins = json.getInt("coins");
-            level = json.getInt("level");
-        }
-    }
+    public final Performance performance;
 
     public User(JSONObject json) throws JSONException {
         user_id = json.getInt("user_id");

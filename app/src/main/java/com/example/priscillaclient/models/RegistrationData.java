@@ -7,10 +7,10 @@ import java.util.ArrayList;
 
 public class RegistrationData {
 
-    public ArrayList<Language> languages = new ArrayList<>();
-    public ArrayList<Country> countries = new ArrayList<>();
-    public ArrayList<Group> groups = new ArrayList<>();
-    public ArrayList<Theme> themes = new ArrayList<>();
+    public final ArrayList<Language> languages = new ArrayList<>();
+    public final ArrayList<Country> countries = new ArrayList<>();
+    public final ArrayList<Group> groups = new ArrayList<>();
+    public final ArrayList<Theme> themes = new ArrayList<>();
 
     public RegistrationData() { }
 

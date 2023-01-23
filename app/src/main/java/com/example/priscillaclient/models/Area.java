@@ -5,14 +5,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Area {
-    public int id;
-    String area_name;
-    String area_color;
-    String area_icon;
+    public final int id;
+    public final String area_name;
+    public final String area_color;
+    public final String area_icon;
 
-    int category_id;
-    int area_order;
-    int number_of_courses;
+    public final int category_id;
+    public final int area_order;
+    public final int number_of_courses;
 
     public Area(JSONObject json) throws JSONException {
         id = json.getInt("id");

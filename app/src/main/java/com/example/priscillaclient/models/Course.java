@@ -8,26 +8,26 @@ public class Course {
 
     public boolean isPinned = false;
 
-    public int course_id;
-    public String name;
-    public String description;
-    public String area_color;
+    public final int course_id;
+    public final String name;
+    public final String description;
+    public final String area_color;
 
-    public int passed;
-    public int all;
-    public int content_count;
-    public int content_passed;
-    public int task_count;
-    public int task_passed;
-    public int program_count;
-    public int program_passed;
-    public int score;
-    public int max_score;
-    public int score_task;
-    public int score_task_max;
-    public int score_program;
-    public int score_program_max;
-    public int progress;
+    public final int passed;
+    public final int all;
+    public final int content_count;
+    public final int content_passed;
+    public final int task_count;
+    public final int task_passed;
+    public final int program_count;
+    public final int program_passed;
+    public final int score;
+    public final int max_score;
+    public final int score_task;
+    public final int score_task_max;
+    public final int score_program;
+    public final int score_program_max;
+    public final int progress;
 
     public Course(JSONObject json) throws JSONException {
         course_id = json.getInt("course_id");

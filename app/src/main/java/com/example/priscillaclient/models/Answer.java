@@ -3,13 +3,14 @@ package com.example.priscillaclient.models;
 import org.json.JSONObject;
 
 public class Answer {
-    public String answer;
-    public String feedback;
-    public int rating;
+    public final String answer;
+    public final String feedback;
+    public final int rating;
 
     public Answer(JSONObject json) {
-        if (json == null)
-            return;
+        if (json == null) {
+            json = new JSONObject();
+        }
         answer = json.optString("answer");
         feedback = json.optString("feedback");
         rating = json.optInt("rating");
