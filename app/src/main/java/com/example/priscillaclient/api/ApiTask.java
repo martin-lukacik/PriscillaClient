@@ -35,6 +35,7 @@ public abstract class ApiTask extends AsyncTask<String, String, Object> {
     public ApiTask(HttpResponse context) {
         super();
         this.context = context;
+        showProgressDialog(true);
     }
 
     protected void onPostExecute(Object response) {
@@ -63,11 +64,6 @@ public abstract class ApiTask extends AsyncTask<String, String, Object> {
         }
 
         context.onUpdate(response);
-    }
-
-
-    public void showProgressDialog() {
-        showProgressDialog(false);
     }
 
     public void showProgressDialog(boolean dismissable) {

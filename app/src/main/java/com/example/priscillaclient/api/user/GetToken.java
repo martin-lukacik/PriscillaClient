@@ -12,8 +12,6 @@ public class GetToken extends ApiTask {
 
     public GetToken(HttpResponse context) {
         super(context);
-
-        showProgressDialog();
     }
 
     protected Client doInBackground(String... strings) {

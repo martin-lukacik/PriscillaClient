@@ -51,7 +51,7 @@ public class CoursesFragment extends FragmentBase {
     @Override
     public void onUpdate(Object response) {
 
-        if (getActivity() == null)
+        if (!isVisible())
             return;
 
         courses = new ArrayList<>(Client.getInstance().courses);
