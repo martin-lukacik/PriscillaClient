@@ -1,6 +1,7 @@
 package com.example.priscillaclient;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
@@ -33,6 +34,17 @@ public class MainActivity extends ActivityBase {
             swapFragment(ChaptersFragment.newInstance(courseId));
         } else {
             swapFragment(new CoursesFragment());
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        int courseId = intent.getIntExtra("course_id", -1);
+
+        if (courseId != -1) {
+            swapFragment(ChaptersFragment.newInstance(courseId));
         }
     }
 

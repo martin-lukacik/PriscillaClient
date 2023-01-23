@@ -7,11 +7,10 @@ import com.example.priscillaclient.api.HttpResponse;
 import com.example.priscillaclient.api.misc.GetLeaders;
 import com.example.priscillaclient.models.Client;
 import com.example.priscillaclient.views.adapters.LeaderboardAdapter;
+import com.example.priscillaclient.views.fragments.misc.LeaderboardFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class LeaderboardActivity extends ActivityBase implements HttpResponse {
-
-    LeaderboardAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,7 +21,7 @@ public class LeaderboardActivity extends ActivityBase implements HttpResponse {
         navigationView.setOnItemSelectedListener(this::onMenuItemSelected);
         navigationView.getMenu().findItem(R.id.menu_leaderboard).setChecked(true);
 
-        new GetLeaders(this).execute();
+        swapFragment(new LeaderboardFragment());
     }
 
     @Override
@@ -31,15 +30,5 @@ public class LeaderboardActivity extends ActivityBase implements HttpResponse {
 
         BottomNavigationView navigationView = findViewById(R.id.bottom_navigation);
         navigationView.getMenu().findItem(R.id.menu_leaderboard).setChecked(true);
-    }
-
-    @Override
-    public void onUpdate(Object response) {
-        super.onUpdate(response);
-        adapter = new LeaderboardAdapter(this, Client.getInstance().leaderboard);
-        ListView lv = findViewById(R.id.leaderboardList);
-
-        if (lv != null)
-            lv.setAdapter(adapter);
     }
 }

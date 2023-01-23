@@ -16,7 +16,7 @@ public class GetLeaders extends ApiTask {
     public GetLeaders(HttpResponse context) {
         super(context);
 
-        showProgressDialog();
+        //showProgressDialog();
     }
 
     @Override

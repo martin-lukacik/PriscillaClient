@@ -15,7 +15,7 @@ public class GetCourses extends ApiTask {
     public GetCourses(FragmentBase fragment) {
         super(fragment);
 
-        showProgressDialog();
+        //showProgressDialog();
     }
 
     @Override

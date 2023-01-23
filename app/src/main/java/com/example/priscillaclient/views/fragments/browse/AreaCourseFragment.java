@@ -17,6 +17,7 @@ import com.example.priscillaclient.models.Area;
 import com.example.priscillaclient.models.AreaCourse;
 import com.example.priscillaclient.models.Client;
 import com.example.priscillaclient.views.fragments.FragmentBase;
+import com.example.priscillaclient.views.fragments.app.ChaptersFragment;
 
 import java.util.ArrayList;
 
@@ -34,11 +35,11 @@ public class AreaCourseFragment extends FragmentBase {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        new GetAreaCourses(this, areaId).execute();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        new GetAreaCourses(this, areaId).execute();
         return inflater.inflate(R.layout.fragment_area_course, container, false);
     }
 

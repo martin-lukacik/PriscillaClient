@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
+import androidx.fragment.app.FragmentManager;
+
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.api.app.GetCourses;
 import com.example.priscillaclient.models.Client;
@@ -18,6 +20,11 @@ import com.example.priscillaclient.views.fragments.FragmentBase;
 import java.util.ArrayList;
 
 public class CoursesFragment extends FragmentBase {
+
+    CourseListAdapter adapter;
+    ArrayList<Course> courses;
+
+    final String PREF_SET = "settings";
 
     public CoursesFragment() { }
 
@@ -33,21 +40,12 @@ public class CoursesFragment extends FragmentBase {
         return inflater.inflate(R.layout.fragment_courses, container, false);
     }
 
-    CourseListAdapter adapter;
-    ArrayList<Course> courses;
+    @Override
+    public void onResume() {
+        super.onResume();
 
-    final String PREF_SET = "settings";
-
-    void pinCourse(int courseId) {
-        for (int i = 0; i < courses.size(); ++i) {
-            courses.get(i).isPinned = false;
-
-            if (courseId == courses.get(i).course_id) {
-                courses.get(i).isPinned = true;
-                Course c = courses.remove(i);
-                courses.add(0, c);
-            }
-        }
+        if (courses != null)
+            onUpdate(courses);
     }
 
     @Override
@@ -67,6 +65,18 @@ public class CoursesFragment extends FragmentBase {
         courseListView.setAdapter(adapter);
         courseListView.setOnItemClickListener(this::courseSelected);
         courseListView.setOnItemLongClickListener(this::coursePinned);
+    }
+
+    void pinCourse(int courseId) {
+        for (int i = 0; i < courses.size(); ++i) {
+            courses.get(i).isPinned = false;
+
+            if (courseId == courses.get(i).course_id) {
+                courses.get(i).isPinned = true;
+                Course c = courses.remove(i);
+                courses.add(0, c);
+            }
+        }
     }
 
     private boolean coursePinned(AdapterView<?> adapterView, View view, int i, long l) {

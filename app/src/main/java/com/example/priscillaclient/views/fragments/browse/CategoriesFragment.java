@@ -24,12 +24,12 @@ public class CategoriesFragment extends FragmentBase {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        new GetCategories(this).execute();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        new GetCategories(this).execute();
         return inflater.inflate(R.layout.fragment_categories, container, false);
     }
 

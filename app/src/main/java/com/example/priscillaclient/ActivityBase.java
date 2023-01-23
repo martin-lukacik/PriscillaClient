@@ -20,6 +20,7 @@ import com.example.priscillaclient.models.Client;
 import com.example.priscillaclient.models.User;
 import com.example.priscillaclient.views.fragments.browse.CategoriesFragment;
 import com.example.priscillaclient.views.fragments.app.CoursesFragment;
+import com.example.priscillaclient.views.fragments.misc.LeaderboardFragment;
 import com.example.priscillaclient.views.fragments.user.ProfileFragment;
 
 public abstract class ActivityBase extends AppCompatActivity implements HttpResponse {
@@ -98,17 +99,19 @@ public abstract class ActivityBase extends AppCompatActivity implements HttpResp
         if (item.getItemId() == R.id.menu_dashboard) {
             if (this instanceof MainActivity)
                 swapFragment(new CoursesFragment());
-            intent = new Intent(ActivityBase.this, MainActivity.class);
+            intent = new Intent(this, MainActivity.class);
         } else if (item.getItemId() == R.id.menu_all_courses) {
             if (this instanceof BrowseActivity)
                 swapFragment(new CategoriesFragment());
-            intent = new Intent(ActivityBase.this, BrowseActivity.class);
+            intent = new Intent(this, BrowseActivity.class);
         } else if (item.getItemId() == R.id.menu_leaderboard) {
-            intent = new Intent(ActivityBase.this, LeaderboardActivity.class);
+            if (this instanceof LeaderboardActivity)
+                swapFragment(new LeaderboardFragment());
+            intent = new Intent(this, LeaderboardActivity.class);
         } else if (item.getItemId() == R.id.menu_profile) {
             if (this instanceof ProfileActivity)
                 swapFragment(new ProfileFragment());
-            intent = new Intent(ActivityBase.this, ProfileActivity.class);
+            intent = new Intent(this, ProfileActivity.class);
         }
 
         if (intent != null) {
@@ -116,5 +119,22 @@ public abstract class ActivityBase extends AppCompatActivity implements HttpResp
             overridePendingTransition(0, 0);
         }
         return true;
+    }
+
+    private boolean active = false;
+    private final boolean isActive() {
+        return active;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        active = true;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        active = false;
     }
 }

@@ -8,6 +8,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import androidx.lifecycle.Lifecycle;
+
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.api.browse.GetAreas;
 import com.example.priscillaclient.models.Area;
@@ -30,11 +32,11 @@ public class AreasFragment extends FragmentBase {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        new GetAreas(this, categoryId).execute();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        new GetAreas(this, categoryId).execute();
         return inflater.inflate(R.layout.fragment_areas, container, false);
     }
 
@@ -49,6 +51,7 @@ public class AreasFragment extends FragmentBase {
 
     @Override
     public void onUpdate(Object response) {
+
         ArrayList<Area> areas = Client.getInstance().areas;
         ArrayAdapter<Area> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, areas);
         ListView areaListView = findViewById(R.id.areaListView);

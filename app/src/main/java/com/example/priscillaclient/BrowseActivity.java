@@ -27,9 +27,4 @@ public class BrowseActivity extends ActivityBase implements HttpResponse {
         BottomNavigationView navigationView = findViewById(R.id.bottom_navigation);
         navigationView.getMenu().findItem(R.id.menu_all_courses).setChecked(true);
     }
-
-    @Override
-    public void onUpdate(Object response) {
-        super.onUpdate(response);
-    }
 }

@@ -48,6 +48,11 @@ public class HttpConnection {
     }
 
     public String getResponse() throws IOException {
+        int status = connection.getResponseCode();
+        if (status >= 400 && status < 600) {
+            return connection.getResponseMessage();
+        }
+
         StringBuilder stringBuilder = new StringBuilder();
         InputStream responseStream = new BufferedInputStream(connection.getInputStream());
         BufferedReader responseStreamReader = new BufferedReader(new InputStreamReader(responseStream));
@@ -62,11 +67,7 @@ public class HttpConnection {
     }
 
     public InputStream getErrorStream() throws IOException {
-        int status = connection.getResponseCode();
-        if (status >= 400 && status < 600) {
-            return connection.getErrorStream();
-        }
-        return null;
+        return connection.getErrorStream();
     }
 
     public void disconnect() {
