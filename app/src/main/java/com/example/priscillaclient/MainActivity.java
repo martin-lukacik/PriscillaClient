@@ -33,6 +33,8 @@ import com.example.priscillaclient.views.fragments.user.ProfileFragment;
 import com.example.priscillaclient.views.fragments.user.SettingsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.util.Objects;
+
 public class MainActivity extends AppCompatActivity implements HttpResponse {
 
     Client client = Client.getInstance();
@@ -101,46 +103,48 @@ public class MainActivity extends AppCompatActivity implements HttpResponse {
         tv.setText(title);
     }
 
-    public static boolean isFragmentInBackstack(final FragmentManager fragmentManager, final String fragmentTagName) {
+    public static int isFragmentInBackstack(final FragmentManager fragmentManager, final String fragmentTagName) {
         for (int entry = 0; entry < fragmentManager.getBackStackEntryCount(); entry++) {
             if (fragmentTagName.equals(fragmentManager.getBackStackEntryAt(entry).getName())) {
-                return true;
+                return entry;
             }
         }
-        return false;
+        return -1;
     }
 
-    boolean firstFragment = true;
     public void navigate(Fragment fragment) {
 
         String tag = fragment.getClass().getSimpleName();
 
         FragmentManager fm = getSupportFragmentManager();
 
-        if (isFragmentInBackstack(fm, tag) && !tag.equals("CoursesFragment")) {
-            fm.popBackStackImmediate(tag, 0);
-            return;
-        }
+        int result = isFragmentInBackstack(fm, tag);
 
         FragmentTransaction transaction = fm.beginTransaction();
+        transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out);
 
-        transaction
-                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
-                .replace(R.id.fragmentContainerView, fragment);
-
-        if (!firstFragment)
-                transaction.addToBackStack(tag);
+        if (result != -1) {
+            transaction
+                .replace(R.id.fragmentContainerView, Objects.requireNonNull(fm.findFragmentByTag(tag)), tag);
+        } else {
+            transaction
+                .replace(R.id.fragmentContainerView, fragment, tag)
+                .addToBackStack(tag);
+        }
 
         transaction.commit();
-
-        firstFragment = false;
     }
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
 
+
+        super.onBackPressed();
         FragmentManager fm = getSupportFragmentManager();
+        if (fm.getBackStackEntryCount() == 0) {
+            super.onBackPressed();
+        }
+
         Fragment fragment = fm.findFragmentById(R.id.fragmentContainerView);
 
         highlightMenuFromFragment(fragment);
