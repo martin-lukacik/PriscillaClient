@@ -22,6 +22,8 @@ import com.example.priscillaclient.models.Profile;
 import com.example.priscillaclient.models.RegistrationData;
 import com.example.priscillaclient.views.fragments.FragmentBase;
 
+import org.jetbrains.annotations.NotNull;
+
 public class SettingsFragment extends FragmentBase {
 
     Client client = Client.getInstance();
@@ -45,6 +47,7 @@ public class SettingsFragment extends FragmentBase {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        layoutId = R.layout.fragment_settings;
 
         new GetRegistrationData(this).execute();
         new GetProfileData(this).execute();
@@ -114,11 +117,6 @@ public class SettingsFragment extends FragmentBase {
         });
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_settings, container, false);
-    }
-
     public void save(View view) {
         String age = profileEditYear.getYear() + "";
         String content_type_id = profileEditStudentType.getTag().toString();
@@ -131,17 +129,6 @@ public class SettingsFragment extends FragmentBase {
         String theme_id = profileEditTheme.getTag().toString();
 
         new ChangeProfile(this).execute(age, content_type_id, country, group, lang, name, nick, surname, theme_id);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        Profile profile = client.profile;
-        RegistrationData data = client.registrationData;
-        if (profile != null && !data.isEmpty()) {
-            onUpdate(profile);
-        }
     }
 
     @Override

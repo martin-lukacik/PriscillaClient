@@ -21,6 +21,8 @@ import com.example.priscillaclient.views.fragments.FragmentBase;
 import com.example.priscillaclient.views.fragments.app.ChaptersFragment;
 import com.google.android.material.textview.MaterialTextView;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 
 public class AreaCourseFragment extends FragmentBase {
@@ -36,22 +38,9 @@ public class AreaCourseFragment extends FragmentBase {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        layoutId = R.layout.fragment_area_course;
 
         new GetAreaCourses(this, areaId).execute();
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_area_course, container, false);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        ArrayList<AreaCourse> areaCourses = Client.getInstance().areaCourses;
-        if (!areaCourses.isEmpty())
-            onUpdate(areaCourses);
     }
 
     @Override

@@ -1,9 +1,7 @@
 package com.example.priscillaclient.views.fragments.app;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
@@ -12,8 +10,6 @@ import com.example.priscillaclient.api.app.GetChapters;
 import com.example.priscillaclient.models.Chapter;
 import com.example.priscillaclient.views.adapters.ChapterListAdapter;
 import com.example.priscillaclient.views.fragments.FragmentBase;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
@@ -36,26 +32,13 @@ public class ChaptersFragment extends FragmentBase {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        layoutId = R.layout.fragment_chapter;
+
         if (getArguments() != null) {
             courseId = getArguments().getInt(ARG_COURSE_ID);
         }
+
         new GetChapters(this, courseId).execute();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        ArrayList<Chapter> chapters = client.chapters;
-        if (!chapters.isEmpty())
-            onUpdate(chapters);
-        else
-            new GetChapters(this, courseId).execute();
-    }
-
-    @Override
-    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_chapter, container, false);
     }
 
     @Override

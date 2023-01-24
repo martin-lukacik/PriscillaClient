@@ -2,9 +2,7 @@ package com.example.priscillaclient.views.fragments.app;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
@@ -29,23 +27,9 @@ public class CoursesFragment extends FragmentBase {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        layoutId = R.layout.fragment_courses;
 
         new GetCourses(this).execute();
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_courses, container, false);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        if (!client.courses.isEmpty())
-            onUpdate(client.courses);
-        else
-            new GetCourses(this).execute();
     }
 
     @Override
@@ -58,6 +42,7 @@ public class CoursesFragment extends FragmentBase {
         pinCourse(pinnedCourseId);
 
         adapter = new CourseListAdapter(getActivity(), courses);
+
         GridView courseListView = getActivity().findViewById(R.id.courseListView);
         courseListView.setAdapter(adapter);
         courseListView.setOnItemClickListener(this::courseSelected);

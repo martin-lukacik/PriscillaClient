@@ -20,11 +20,11 @@ import android.widget.TextView;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import com.example.priscillaclient.ActivityBase;
+import com.example.priscillaclient.MainActivity;
 import com.example.priscillaclient.R;
+import com.example.priscillaclient.api.app.EvaluateTask;
 import com.example.priscillaclient.api.app.GetLessons;
 import com.example.priscillaclient.api.app.GetTasks;
-import com.example.priscillaclient.api.app.EvaluateTask;
 import com.example.priscillaclient.api.app.SetPassedTask;
 import com.example.priscillaclient.api.user.GetUserParams;
 import com.example.priscillaclient.models.Client;
@@ -74,6 +74,8 @@ public class TaskFragment extends FragmentBase {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        layoutId = R.layout.fragment_task;
+
         if (getArguments() != null) {
             chapterId = getArguments().getInt(ARG_CHAPTER_ID);
         }
@@ -107,15 +109,10 @@ public class TaskFragment extends FragmentBase {
         buttonTaskSubmit.setOnClickListener(this::submit);
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_task, container, false);
-    }
-
     private void getTaskHelp(View view) {
         // TODO implement
     }
-
+/*
     @Override
     public void onResume() {
         super.onResume();
@@ -129,7 +126,7 @@ public class TaskFragment extends FragmentBase {
         if (!tasks.isEmpty()) {
             updateTaskList(tasks);
         }
-    }
+    }*/
 
     @Override
     public void onUpdate(Object response) {
@@ -155,7 +152,7 @@ public class TaskFragment extends FragmentBase {
 
             if (response instanceof TaskResult) {
                 showRatingDialog(((TaskResult) response));
-                new GetUserParams((ActivityBase) getActivity()).execute();
+                new GetUserParams((MainActivity) getActivity()).execute();
             }
         }
     }

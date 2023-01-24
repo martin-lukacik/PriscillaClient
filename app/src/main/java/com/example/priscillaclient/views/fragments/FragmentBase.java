@@ -1,17 +1,26 @@
 package com.example.priscillaclient.views.fragments;
 
 import android.content.res.Resources;
+import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 
 import com.example.priscillaclient.MainActivity;
+import com.example.priscillaclient.R;
 import com.example.priscillaclient.api.HttpResponse;
 import com.example.priscillaclient.models.Client;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.InputStream;
 
 public abstract class FragmentBase extends Fragment implements HttpResponse {
+
+    protected int layoutId = 0;
+    private View layout;
 
     protected final static Client client = Client.getInstance();
 
@@ -20,6 +29,12 @@ public abstract class FragmentBase extends Fragment implements HttpResponse {
             return;
 
         ((MainActivity) getActivity()).navigate(fragment);
+    }
+    @Override
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedState) {
+        if (layout == null)
+            layout = inflater.inflate(layoutId, container, false);
+        return layout;
     }
 
     public <T extends View> T findViewById(int id) {

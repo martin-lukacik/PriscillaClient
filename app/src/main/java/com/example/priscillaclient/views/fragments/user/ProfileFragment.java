@@ -5,10 +5,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.priscillaclient.LoginActivity;
@@ -29,6 +26,7 @@ public class ProfileFragment extends FragmentBase {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        layoutId = R.layout.fragment_profile;
 
         Random rand = new Random();
         int r = rand.nextInt(255);
@@ -56,20 +54,6 @@ public class ProfileFragment extends FragmentBase {
 
     public void showProfileSettings(View view) {
         navigate(new SettingsFragment());
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_profile, container, false);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        User user = Client.getInstance().user;
-        if (user != null)
-            onUpdate(user);
     }
 
     @Override

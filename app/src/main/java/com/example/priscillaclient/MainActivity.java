@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements HttpResponse {
 
         firstFragment = false;
 
-        higlightMenuFromFragment(fragment);
+        highlightMenuFromFragment(fragment);
     }
 
     @Override
@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements HttpResponse {
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.fragmentContainerView);
 
-        higlightMenuFromFragment(fragment);
+        highlightMenuFromFragment(fragment);
     }
 
     private int getMenuItemFromFragment(Fragment fragment) {
@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements HttpResponse {
     }
 
     boolean highlightingMenu = false;
-    protected void higlightMenuFromFragment(Fragment fragment) {
+    protected void highlightMenuFromFragment(Fragment fragment) {
         BottomNavigationView bottomNavigation = findViewById(R.id.bottom_navigation);
         highlightingMenu = true;
         bottomNavigation.setSelectedItemId(getMenuItemFromFragment(fragment));
