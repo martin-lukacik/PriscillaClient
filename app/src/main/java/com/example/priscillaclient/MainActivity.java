@@ -17,6 +17,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.priscillaclient.api.HttpResponse;
 import com.example.priscillaclient.api.user.GetUserParams;
@@ -100,25 +101,39 @@ public class MainActivity extends AppCompatActivity implements HttpResponse {
         tv.setText(title);
     }
 
+    public static boolean isFragmentInBackstack(final FragmentManager fragmentManager, final String fragmentTagName) {
+        for (int entry = 0; entry < fragmentManager.getBackStackEntryCount(); entry++) {
+            if (fragmentTagName.equals(fragmentManager.getBackStackEntryAt(entry).getName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     boolean firstFragment = true;
     public void navigate(Fragment fragment) {
-        FragmentManager manager = getSupportFragmentManager();
 
-        if (firstFragment)
-            manager.beginTransaction()
-                    .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
-                    .replace(R.id.fragmentContainerView, fragment)
-                    .commit();
-        else
-            manager.beginTransaction()
-                    .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
-                    .replace(R.id.fragmentContainerView, fragment)
-                    .addToBackStack(null)
-                    .commit();
+        String tag = fragment.getClass().getSimpleName();
+
+        FragmentManager fm = getSupportFragmentManager();
+
+        if (isFragmentInBackstack(fm, tag) && !tag.equals("CoursesFragment")) {
+            fm.popBackStackImmediate(tag, 0);
+            return;
+        }
+
+        FragmentTransaction transaction = fm.beginTransaction();
+
+        transaction
+                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
+                .replace(R.id.fragmentContainerView, fragment);
+
+        if (!firstFragment)
+                transaction.addToBackStack(tag);
+
+        transaction.commit();
 
         firstFragment = false;
-
-        highlightMenuFromFragment(fragment);
     }
 
     @Override
