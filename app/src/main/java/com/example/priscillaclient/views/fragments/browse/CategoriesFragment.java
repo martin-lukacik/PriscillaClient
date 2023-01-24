@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.api.browse.GetCategories;
@@ -55,6 +54,6 @@ public class CategoriesFragment extends FragmentBase {
 
     private void categorySelected(AdapterView<?> adapterView, View view, int i, long l) {
         int categoryId = Client.getInstance().categories.get(i).category_id;
-        swapFragment(new AreasFragment(categoryId));
+        navigate(new AreasFragment(categoryId));
     }
 }

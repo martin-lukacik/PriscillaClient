@@ -10,7 +10,6 @@ import android.widget.GridView;
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.api.app.GetChapters;
 import com.example.priscillaclient.models.Chapter;
-import com.example.priscillaclient.models.Client;
 import com.example.priscillaclient.views.adapters.ChapterListAdapter;
 import com.example.priscillaclient.views.fragments.FragmentBase;
 
@@ -72,6 +71,6 @@ public class ChaptersFragment extends FragmentBase {
 
     private void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         int chapterId = client.chapters.get(i).id;
-        swapFragment(TaskFragment.newInstance(chapterId));
+        navigate(TaskFragment.newInstance(chapterId));
     }
 }

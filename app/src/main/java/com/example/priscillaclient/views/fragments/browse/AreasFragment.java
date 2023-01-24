@@ -8,8 +8,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import androidx.lifecycle.Lifecycle;
-
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.api.browse.GetAreas;
 import com.example.priscillaclient.models.Area;
@@ -62,6 +60,6 @@ public class AreasFragment extends FragmentBase {
     private void areaSelected(AdapterView<?> adapterView, View view, int i, long l) {
         Area area = Client.getInstance().areas.get(i);
 
-        swapFragment(new AreaCourseFragment(area.id));
+        navigate(new AreaCourseFragment(area.id));
     }
 }

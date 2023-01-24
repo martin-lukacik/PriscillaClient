@@ -5,7 +5,7 @@ import android.view.View;
 
 import androidx.fragment.app.Fragment;
 
-import com.example.priscillaclient.ActivityBase;
+import com.example.priscillaclient.MainActivity;
 import com.example.priscillaclient.api.HttpResponse;
 import com.example.priscillaclient.models.Client;
 
@@ -15,11 +15,11 @@ public abstract class FragmentBase extends Fragment implements HttpResponse {
 
     protected final static Client client = Client.getInstance();
 
-    public void swapFragment(Fragment fragment) {
+    public void navigate(Fragment fragment) {
         if (getActivity() == null)
             return;
 
-        ((ActivityBase) getActivity()).swapFragment(fragment);
+        ((MainActivity) getActivity()).navigate(fragment);
     }
 
     public <T extends View> T findViewById(int id) {

@@ -3,7 +3,6 @@ package com.example.priscillaclient.views.fragments.browse;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -13,14 +12,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
-import androidx.core.app.DialogCompat;
-
-import com.example.priscillaclient.MainActivity;
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.api.browse.GetAreaCourses;
-import com.example.priscillaclient.models.Area;
 import com.example.priscillaclient.models.AreaCourse;
 import com.example.priscillaclient.models.Client;
 import com.example.priscillaclient.views.fragments.FragmentBase;
@@ -80,7 +74,7 @@ public class AreaCourseFragment extends FragmentBase {
     private void courseSelected(AdapterView<?> adapterView, View view, int i, long l) {
         AreaCourse course = Client.getInstance().areaCourses.get(i);
         if (course.status == AreaCourse.CourseStatus.OPENED) {
-            swapFragment(ChaptersFragment.newInstance(course.id));
+            navigate(ChaptersFragment.newInstance(course.id));
         }
 
 

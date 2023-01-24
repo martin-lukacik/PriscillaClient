@@ -55,7 +55,7 @@ public class ProfileFragment extends FragmentBase {
     }
 
     public void showProfileSettings(View view) {
-        swapFragment(new SettingsFragment());
+        navigate(new SettingsFragment());
     }
 
     @Override

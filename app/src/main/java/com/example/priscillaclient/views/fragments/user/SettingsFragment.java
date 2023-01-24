@@ -21,7 +21,6 @@ import com.example.priscillaclient.models.Client;
 import com.example.priscillaclient.models.Profile;
 import com.example.priscillaclient.models.RegistrationData;
 import com.example.priscillaclient.views.fragments.FragmentBase;
-import com.example.priscillaclient.views.fragments.user.ProfileFragment;
 
 public class SettingsFragment extends FragmentBase {
 
@@ -152,7 +151,7 @@ public class SettingsFragment extends FragmentBase {
             ScrollView scrollView = findViewById(R.id.settingsScrollView);
             scrollView.fullScroll(ScrollView.FOCUS_UP);
             client.user = null;
-            swapFragment(new ProfileFragment());
+            navigate(new ProfileFragment());
         } else if (response.equals(client.profile)) {
             Profile profile = client.profile;
             RegistrationData data = client.registrationData;
