@@ -115,6 +115,7 @@ public class TaskFragment extends FragmentBase {
         // TODO implement
     }
 
+    boolean refreshTask = false;
     @Override
     public void onUpdate(Object response) {
 
@@ -128,10 +129,14 @@ public class TaskFragment extends FragmentBase {
             drawer.open();
             updateLessonList(client.lessons);
         } else if (response.equals(client.tasks)) {
-            for (int i = 0; i < client.tasks.size(); ++i) {
-                if (client.tasks.get(i).passed == 1) {
-                    currentTask = i;
+            if (refreshTask) {
+                for (int i = 0; i < client.tasks.size(); ++i) {
+                    if (client.tasks.get(i).passed == 1) {
+                        currentTask = i;
+                        break;
+                    }
                 }
+                refreshTask = false;
             }
             updateTaskList(client.tasks);
         } else if (response instanceof TaskResult || response instanceof String) {
@@ -141,6 +146,8 @@ public class TaskFragment extends FragmentBase {
             client.chapters.clear();
 
             new GetTasks(this, id).execute();
+
+            refreshTask = true;
 
             if (response instanceof TaskResult) {
                 showRatingDialog(((TaskResult) response));
