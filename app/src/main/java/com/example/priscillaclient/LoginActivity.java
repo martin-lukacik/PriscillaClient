@@ -50,8 +50,7 @@ public class LoginActivity extends AppCompatActivity implements HttpResponse {
             CheckBox rememberUser = findViewById(R.id.rememberUser);
             rememberUser.setChecked(true);
             ((EditText) findViewById(R.id.inputUsername)).setText(username);
-            apiCall = new GetToken(this);
-            apiCall.execute(username, refresh_token, username, "refresh_token");
+            new GetToken(this).execute(username, refresh_token, username, "refresh_token");
         }
     }
 
@@ -65,18 +64,11 @@ public class LoginActivity extends AppCompatActivity implements HttpResponse {
         String username = ((EditText) findViewById(R.id.inputUsername)).getText().toString();
         String password = ((EditText) findViewById(R.id.inputPassword)).getText().toString();
 
-        apiCall = new GetToken(this);
-        apiCall.execute(username, password, username, "password");
+        new GetToken(this).execute(username, password, username, "password");
     }
-
-    GetToken apiCall;
 
     @Override
     public void onUpdate(Object response) {
-
-        if (apiCall != null && apiCall.errorMessage != null) {
-            return;
-        }
 
         String username = ((EditText) findViewById(R.id.inputUsername)).getText().toString();
 
