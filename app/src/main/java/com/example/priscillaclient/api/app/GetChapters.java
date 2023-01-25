@@ -1,7 +1,8 @@
 package com.example.priscillaclient.api.app;
 
-import com.example.priscillaclient.api.ApiTask;
+import com.example.priscillaclient.api.ApiTaskLegacy;
 import com.example.priscillaclient.api.HttpConnection;
+import com.example.priscillaclient.api.HttpResponse;
 import com.example.priscillaclient.views.fragments.FragmentBase;
 import com.example.priscillaclient.models.Chapter;
 
@@ -12,11 +13,11 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class GetChapters extends ApiTask {
+public class GetChapters extends ApiTaskLegacy {
 
     final int courseId;
 
-    public GetChapters(FragmentBase fragment, int courseId) {
+    public GetChapters(HttpResponse fragment, int courseId) {
         super(fragment);
         this.courseId = courseId;
     }

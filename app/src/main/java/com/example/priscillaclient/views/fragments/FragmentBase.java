@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
@@ -17,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.InputStream;
 
-public abstract class FragmentBase extends Fragment implements HttpResponse {
+public abstract class FragmentBase extends Fragment {
 
     protected int layoutId = 0;
     private View layout;
@@ -59,5 +60,9 @@ public abstract class FragmentBase extends Fragment implements HttpResponse {
         } catch (Exception e) {
             return e.getMessage();
         }
+    }
+
+    public void showError(String error) {
+        Toast.makeText(getActivity(), error, Toast.LENGTH_LONG).show();
     }
 }

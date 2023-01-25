@@ -22,7 +22,7 @@ public class HttpConnection {
     static Client client = Client.getInstance();
 
     public HttpConnection(String endpoint, String method, boolean doOutput) throws Exception {
-        URL url = new URL(ApiTask.baseUrl + endpoint);
+        URL url = new URL(ApiTaskLegacy.baseUrl + endpoint);
 
         connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod(method);

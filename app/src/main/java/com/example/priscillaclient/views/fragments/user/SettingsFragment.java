@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatDelegate;
 
+import com.example.priscillaclient.api.HttpResponse;
 import com.example.priscillaclient.models.Pair;
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.api.user.ChangeProfile;
@@ -26,7 +27,7 @@ import com.example.priscillaclient.views.fragments.FragmentBase;
 
 import org.jetbrains.annotations.NotNull;
 
-public class SettingsFragment extends FragmentBase {
+public class SettingsFragment extends FragmentBase implements HttpResponse<Object> {
 
     Client client = Client.getInstance();
 

@@ -1,13 +1,12 @@
 package com.example.priscillaclient.api.user;
 
-import com.example.priscillaclient.api.ApiTask;
+import com.example.priscillaclient.api.ApiTaskLegacy;
 import com.example.priscillaclient.api.HttpConnection;
 import com.example.priscillaclient.api.HttpResponse;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
-public class ChangeProfile extends ApiTask {
+public class ChangeProfile extends ApiTaskLegacy {
 
     public ChangeProfile(HttpResponse context) {
         super(context);

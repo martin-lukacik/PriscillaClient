@@ -23,6 +23,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.priscillaclient.MainActivity;
 import com.example.priscillaclient.R;
+import com.example.priscillaclient.api.HttpResponse;
 import com.example.priscillaclient.api.app.EvaluateTask;
 import com.example.priscillaclient.api.app.GetLessons;
 import com.example.priscillaclient.api.app.GetTasks;
@@ -42,7 +43,7 @@ import org.json.JSONArray;
 
 import java.util.ArrayList;
 
-public class TaskFragment extends FragmentBase {
+public class TaskFragment extends FragmentBase implements HttpResponse<Object> {
 
     private static final String ARG_CHAPTER_ID = "chapterId";
 

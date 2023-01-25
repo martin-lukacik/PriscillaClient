@@ -1,6 +1,6 @@
 package com.example.priscillaclient.api.user;
 
-import com.example.priscillaclient.api.ApiTask;
+import com.example.priscillaclient.api.ApiTaskLegacy;
 import com.example.priscillaclient.api.HttpConnection;
 import com.example.priscillaclient.api.HttpResponse;
 import com.example.priscillaclient.models.RegistrationData;
@@ -8,7 +8,7 @@ import com.example.priscillaclient.models.RegistrationData;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class GetRegistrationData extends ApiTask {
+public class GetRegistrationData extends ApiTaskLegacy {
 
     public GetRegistrationData(HttpResponse context) {
         super(context);

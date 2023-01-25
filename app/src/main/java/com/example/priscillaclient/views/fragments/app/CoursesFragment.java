@@ -1,15 +1,20 @@
 package com.example.priscillaclient.views.fragments.app;
 
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
+import androidx.lifecycle.ViewModelProviders;
+
 import com.example.priscillaclient.R;
-import com.example.priscillaclient.api.app.GetCourses;
+import com.example.priscillaclient.api.GetCourseList;
 import com.example.priscillaclient.models.Client;
 import com.example.priscillaclient.models.Course;
+import com.example.priscillaclient.models.viewmodel.CoursesViewModel;
+import com.example.priscillaclient.models.viewmodel.ViewModelBase;
 import com.example.priscillaclient.views.adapters.CourseListAdapter;
 import com.example.priscillaclient.views.fragments.FragmentBase;
 
@@ -29,24 +34,17 @@ public class CoursesFragment extends FragmentBase {
         super.onCreate(savedInstanceState);
         layoutId = R.layout.fragment_courses;
 
-        new GetCourses(this).execute();
-    }
+        CoursesViewModel viewModel = ViewModelProviders.of(this).get(CoursesViewModel.class);
+        viewModel.getData().observe(this, (data) -> {
+            if (viewModel.hasError())
+                showError(viewModel.getError());
+            else
+                onUpdate(data);
+        });
 
-    @Override
-    public void onUpdate(Object response) {
-
-        courses = new ArrayList<>(client.courses);
-
-        SharedPreferences settings = getActivity().getApplicationContext().getSharedPreferences(PREF_SET, 0);
-        int pinnedCourseId = settings.getInt("pinnedCourseId", -1);
-        pinCourse(pinnedCourseId);
-
-        adapter = new CourseListAdapter(getActivity(), courses);
-
-        GridView courseListView = getActivity().findViewById(R.id.courseListView);
-        courseListView.setAdapter(adapter);
-        courseListView.setOnItemClickListener(this::courseSelected);
-        courseListView.setOnItemLongClickListener(this::coursePinned);
+        if (viewModel.getData().getValue().isEmpty()) {
+            viewModel.fetchData();
+        }
     }
 
     void pinCourse(int courseId) {
@@ -98,8 +96,25 @@ public class CoursesFragment extends FragmentBase {
 
     private void courseSelected(AdapterView<?> adapterView, View view, int i, long l){
         int courseId = courses.get(i).course_id;
+        int courseColor = Color.parseColor(courses.get(i).area_color);
         Bundle args = new Bundle();
         args.putInt("courseId", courseId);
+        args.putInt("courseColor", courseColor);
         navigate(R.id.chaptersFragment, args);
+    }
+
+    public void onUpdate(ArrayList<Course> response) {
+        courses = new ArrayList<>(response);
+
+        SharedPreferences settings = getActivity().getApplicationContext().getSharedPreferences(PREF_SET, 0);
+        int pinnedCourseId = settings.getInt("pinnedCourseId", -1);
+        pinCourse(pinnedCourseId);
+
+        adapter = new CourseListAdapter(getActivity(), courses);
+
+        GridView courseListView = getActivity().findViewById(R.id.courseListView);
+        courseListView.setAdapter(adapter);
+        courseListView.setOnItemClickListener(this::courseSelected);
+        courseListView.setOnItemLongClickListener(this::coursePinned);
     }
 }

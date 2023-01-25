@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.priscillaclient.R;
+import com.example.priscillaclient.api.HttpResponse;
 import com.example.priscillaclient.api.browse.GetAreaCourses;
 import com.example.priscillaclient.models.AreaCourse;
 import com.example.priscillaclient.models.Client;
@@ -25,7 +26,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
-public class AreaCourseFragment extends FragmentBase {
+public class AreaCourseFragment extends FragmentBase implements HttpResponse<Object> {
 
     int areaId = -1;
 

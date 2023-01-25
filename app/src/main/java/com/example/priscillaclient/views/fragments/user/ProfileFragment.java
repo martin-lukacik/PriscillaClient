@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.example.priscillaclient.LoginActivity;
 import com.example.priscillaclient.R;
+import com.example.priscillaclient.api.HttpResponse;
 import com.example.priscillaclient.api.user.GetUserParams;
 import com.example.priscillaclient.models.Client;
 import com.example.priscillaclient.models.User;
@@ -17,7 +18,7 @@ import com.example.priscillaclient.views.fragments.FragmentBase;
 
 import java.util.Random;
 
-public class ProfileFragment extends FragmentBase {
+public class ProfileFragment extends FragmentBase implements HttpResponse<Object> {
 
     public ProfileFragment() { }
 

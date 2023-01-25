@@ -1,9 +1,8 @@
 package com.example.priscillaclient.api.app;
 
-import com.example.priscillaclient.api.ApiTask;
+import com.example.priscillaclient.api.ApiTaskLegacy;
 import com.example.priscillaclient.api.HttpConnection;
 import com.example.priscillaclient.api.HttpResponse;
-import com.example.priscillaclient.views.fragments.FragmentBase;
 import com.example.priscillaclient.models.Course;
 
 import org.json.JSONArray;
@@ -11,7 +10,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class GetCourses extends ApiTask {
+public class GetCourses extends ApiTaskLegacy {
 
     public GetCourses(HttpResponse context) {
         super(context);

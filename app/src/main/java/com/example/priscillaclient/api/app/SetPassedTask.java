@@ -1,12 +1,12 @@
 package com.example.priscillaclient.api.app;
 
-import com.example.priscillaclient.api.ApiTask;
+import com.example.priscillaclient.api.ApiTaskLegacy;
 import com.example.priscillaclient.api.HttpConnection;
 import com.example.priscillaclient.api.HttpResponse;
 
 import org.json.JSONObject;
 
-public class SetPassedTask extends ApiTask {
+public class SetPassedTask extends ApiTaskLegacy {
 
     int taskId;
 

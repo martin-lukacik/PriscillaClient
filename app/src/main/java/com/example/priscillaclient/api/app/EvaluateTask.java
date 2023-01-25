@@ -1,16 +1,17 @@
 package com.example.priscillaclient.api.app;
 
-import com.example.priscillaclient.api.ApiTask;
+import com.example.priscillaclient.api.ApiTaskLegacy;
 import com.example.priscillaclient.api.HttpConnection;
+import com.example.priscillaclient.api.HttpResponse;
 import com.example.priscillaclient.views.fragments.FragmentBase;
 import com.example.priscillaclient.models.TaskResult;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class EvaluateTask extends ApiTask {
+public class EvaluateTask extends ApiTaskLegacy {
 
-    public EvaluateTask(FragmentBase fragment) {
+    public EvaluateTask(HttpResponse fragment) {
         super(fragment);
     }
 

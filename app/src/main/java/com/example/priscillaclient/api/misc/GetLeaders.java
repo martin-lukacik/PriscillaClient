@@ -1,6 +1,6 @@
 package com.example.priscillaclient.api.misc;
 
-import com.example.priscillaclient.api.ApiTask;
+import com.example.priscillaclient.api.ApiTaskLegacy;
 import com.example.priscillaclient.api.HttpConnection;
 import com.example.priscillaclient.api.HttpResponse;
 import com.example.priscillaclient.models.LeaderboardItem;
@@ -11,7 +11,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class GetLeaders extends ApiTask {
+public class GetLeaders extends ApiTaskLegacy {
 
     public GetLeaders(HttpResponse context) {
         super(context);

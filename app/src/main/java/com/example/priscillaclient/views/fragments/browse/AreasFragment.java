@@ -7,6 +7,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.priscillaclient.R;
+import com.example.priscillaclient.api.HttpResponse;
 import com.example.priscillaclient.api.browse.GetAreas;
 import com.example.priscillaclient.models.Area;
 import com.example.priscillaclient.models.Client;
@@ -14,7 +15,7 @@ import com.example.priscillaclient.views.fragments.FragmentBase;
 
 import java.util.ArrayList;
 
-public class AreasFragment extends FragmentBase {
+public class AreasFragment extends FragmentBase implements HttpResponse<Object> {
 
     int categoryId = -1;
 

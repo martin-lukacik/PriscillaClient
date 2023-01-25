@@ -1,6 +1,6 @@
 package com.example.priscillaclient.api.user;
 
-import com.example.priscillaclient.api.ApiTask;
+import com.example.priscillaclient.api.ApiTaskLegacy;
 import com.example.priscillaclient.models.Client;
 import com.example.priscillaclient.api.HttpConnection;
 import com.example.priscillaclient.api.HttpResponse;
@@ -8,7 +8,7 @@ import com.example.priscillaclient.api.HttpResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class GetToken extends ApiTask {
+public class GetToken extends ApiTaskLegacy {
 
     public GetToken(HttpResponse context) {
         super(context);

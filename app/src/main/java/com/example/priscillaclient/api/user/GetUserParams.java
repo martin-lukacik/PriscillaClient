@@ -1,13 +1,13 @@
 package com.example.priscillaclient.api.user;
 
-import com.example.priscillaclient.api.ApiTask;
+import com.example.priscillaclient.api.ApiTaskLegacy;
 import com.example.priscillaclient.api.HttpConnection;
 import com.example.priscillaclient.api.HttpResponse;
 import com.example.priscillaclient.models.User;
 
 import org.json.JSONObject;
 
-public class GetUserParams extends ApiTask {
+public class GetUserParams extends ApiTaskLegacy {
 
     public GetUserParams(HttpResponse context) {
         super(context);

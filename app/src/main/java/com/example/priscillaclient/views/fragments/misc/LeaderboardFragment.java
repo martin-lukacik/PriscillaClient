@@ -4,12 +4,13 @@ import android.os.Bundle;
 import android.widget.ListView;
 
 import com.example.priscillaclient.R;
+import com.example.priscillaclient.api.HttpResponse;
 import com.example.priscillaclient.api.misc.GetLeaders;
 import com.example.priscillaclient.models.Client;
 import com.example.priscillaclient.views.adapters.LeaderboardAdapter;
 import com.example.priscillaclient.views.fragments.FragmentBase;
 
-public class LeaderboardFragment extends FragmentBase {
+public class LeaderboardFragment extends FragmentBase implements HttpResponse<Object> {
 
     LeaderboardAdapter adapter;
 

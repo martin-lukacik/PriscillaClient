@@ -16,9 +16,7 @@ import android.widget.TextView;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.example.priscillaclient.R;
-import com.example.priscillaclient.models.Client;
 import com.example.priscillaclient.models.Chapter;
-import com.example.priscillaclient.models.Course;
 
 import java.util.ArrayList;
 
@@ -26,10 +24,13 @@ public class ChapterListAdapter extends ArrayAdapter<Chapter> {
     private final Activity context;
     private final ArrayList<Chapter> chapters;
 
-    public ChapterListAdapter(Activity context, ArrayList<Chapter> chapters) {
+    private final int color;
+
+    public ChapterListAdapter(Activity context, ArrayList<Chapter> chapters, int color) {
         super(context, R.layout.listview_chapter, chapters);
         this.context = context;
         this.chapters = chapters;
+        this.color = color;
     }
 
     static class ViewHolder{
@@ -69,15 +70,6 @@ public class ChapterListAdapter extends ArrayAdapter<Chapter> {
 
         progress = (int) ((chapters.get(i).programs_finished / ((double) chapters.get(i).programs_finished + chapters.get(i).programs_nonfinished)) * 100);
         holder.codeProgress.setProgress(progress);
-
-        int color = 0;
-        Client client = Client.getInstance();
-        for (Course c : client.courses) {
-            if (c.course_id == client.lastCourseId) {
-                color = Color.parseColor(c.area_color);
-                break;
-            }
-        }
 
         holder.codeIcon.setColorFilter(color);
         holder.contactIcon.setColorFilter(color);

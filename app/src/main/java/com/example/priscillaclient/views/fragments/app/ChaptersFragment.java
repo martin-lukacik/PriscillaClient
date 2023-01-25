@@ -5,9 +5,13 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
+import androidx.lifecycle.ViewModelProviders;
+
 import com.example.priscillaclient.R;
-import com.example.priscillaclient.api.app.GetChapters;
+import com.example.priscillaclient.api.GetChapterList;
 import com.example.priscillaclient.models.Chapter;
+import com.example.priscillaclient.models.viewmodel.ChaptersViewModel;
+import com.example.priscillaclient.models.viewmodel.ViewModelBase;
 import com.example.priscillaclient.views.adapters.ChapterListAdapter;
 import com.example.priscillaclient.views.fragments.FragmentBase;
 
@@ -16,18 +20,14 @@ import java.util.ArrayList;
 public class ChaptersFragment extends FragmentBase {
 
     public static final String ARG_COURSE_ID = "courseId";
+    public static final String ARG_COURSE_COLOR = "courseColor";
 
+    ChapterListAdapter adapter;
+    private ArrayList<Chapter> chapters = new ArrayList<>();
     private int courseId;
+    private int courseColor;
 
     public ChaptersFragment() { }
-
-    public static ChaptersFragment newInstance(int courseId) {
-        ChaptersFragment fragment = new ChaptersFragment();
-        Bundle args = new Bundle();
-        args.putInt(ARG_COURSE_ID, courseId);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -36,24 +36,33 @@ public class ChaptersFragment extends FragmentBase {
 
         if (getArguments() != null) {
             courseId = getArguments().getInt(ARG_COURSE_ID);
+            courseColor = getArguments().getInt(ARG_COURSE_COLOR);
         }
 
-        new GetChapters(this, courseId).execute();
+        courseId = 123456;
+
+        ChaptersViewModel viewModel = ViewModelProviders.of(this).get(ChaptersViewModel.class);
+        viewModel.getData().observe(this, (data) -> {
+            if (viewModel.hasError())
+                showError(viewModel.getError());
+            else
+                onUpdate(data);
+        });
+        viewModel.fetchData(courseId);
     }
 
-    @Override
-    public void onUpdate(Object response) {
+    public void onUpdate(ArrayList<Chapter> response) {
 
-        ArrayList<Chapter> chapters = client.chapters;
+        chapters = response;
 
         GridView chaptersListView = findViewById(R.id.chapterListView);
-        ChapterListAdapter adapter = new ChapterListAdapter(getActivity(), chapters);
+        adapter = new ChapterListAdapter(getActivity(), chapters, courseColor);
         chaptersListView.setAdapter(adapter);
         chaptersListView.setOnItemClickListener(this::onItemClick);
     }
 
     private void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        int chapterId = client.chapters.get(i).id;
+        int chapterId = chapters.get(i).id;
         Bundle args = new Bundle();
         args.putInt("chapterId", chapterId);
         navigate(R.id.taskFragment, args);

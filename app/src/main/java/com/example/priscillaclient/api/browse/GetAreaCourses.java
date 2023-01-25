@@ -1,6 +1,6 @@
 package com.example.priscillaclient.api.browse;
 
-import com.example.priscillaclient.api.ApiTask;
+import com.example.priscillaclient.api.ApiTaskLegacy;
 import com.example.priscillaclient.api.HttpConnection;
 import com.example.priscillaclient.api.HttpResponse;
 import com.example.priscillaclient.models.AreaCourse;
@@ -10,7 +10,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class GetAreaCourses extends ApiTask {
+public class GetAreaCourses extends ApiTaskLegacy {
 
     final int areaId;
 
