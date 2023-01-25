@@ -25,14 +25,6 @@ public class LoginActivity extends AppCompatActivity implements HttpResponse {
         setContentView(R.layout.activity_login);
 
         EditText inputUsername = findViewById(R.id.inputUsername);
-        inputUsername.setOnKeyListener((v, keyCode, event) -> {
-            if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
-                    (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                performLogin(null);
-                return true;
-            }
-            return false;
-        });
         EditText inputPassword = findViewById(R.id.inputPassword);
         inputPassword.setOnKeyListener((v, keyCode, event) -> {
             if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
@@ -69,6 +61,9 @@ public class LoginActivity extends AppCompatActivity implements HttpResponse {
 
     @Override
     public void onUpdate(Object response) {
+
+        if (response == null)
+            return;
 
         String username = ((EditText) findViewById(R.id.inputUsername)).getText().toString();
 

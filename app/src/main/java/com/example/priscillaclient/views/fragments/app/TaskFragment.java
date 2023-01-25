@@ -3,11 +3,12 @@ package com.example.priscillaclient.views.fragments.app;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -100,7 +101,8 @@ public class TaskFragment extends FragmentBase {
 
         inputEditText.setVisibility(View.GONE);
 
-        webView.getSettings().setJavaScriptEnabled(true);
+        WebSettings settings = webView.getSettings();
+        settings.setJavaScriptEnabled(true);
         webView.addJavascriptInterface(javascriptInterface, "Android");
 
         buttonTaskHelp.setOnClickListener(this::getTaskHelp);
@@ -112,21 +114,6 @@ public class TaskFragment extends FragmentBase {
     private void getTaskHelp(View view) {
         // TODO implement
     }
-/*
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        ArrayList<Lesson> lessons = Client.getInstance().lessons;
-        if (!lessons.isEmpty()) {
-            updateLessonList(lessons);
-        }
-
-        ArrayList<Task> tasks = Client.getInstance().tasks;
-        if (!tasks.isEmpty()) {
-            updateTaskList(tasks);
-        }
-    }*/
 
     @Override
     public void onUpdate(Object response) {
@@ -233,6 +220,8 @@ public class TaskFragment extends FragmentBase {
             shouldResetLayout = true;
             return;
         }
+
+        webView.setVisibility(View.GONE);
 
         clearTaskLayout();
         shouldResetLayout = true;
@@ -345,6 +334,15 @@ public class TaskFragment extends FragmentBase {
         }
 
         webView.loadData(css + javascript + content, "text/html; charset=utf-8", "UTF-8");
+
+        webView.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public void onProgressChanged(WebView view, int progress) {
+                if (progress == 100) {
+                    webView.setVisibility(View.VISIBLE);
+                }
+            }
+        });
     }
 
     private void clearTaskLayout() {

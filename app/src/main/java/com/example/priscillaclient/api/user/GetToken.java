@@ -29,7 +29,7 @@ public class GetToken extends ApiTask {
 
             if (connection.getErrorStream() != null) {
                 logError(connection.getErrorMessage());
-                return client;
+                return null;
             }
 
             JSONObject response = new JSONObject(connection.getResponse());
