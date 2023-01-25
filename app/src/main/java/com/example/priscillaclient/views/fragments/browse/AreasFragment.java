@@ -20,14 +20,14 @@ public class AreasFragment extends FragmentBase {
 
     public AreasFragment() { }
 
-    public AreasFragment(int categoryId) {
-        this.categoryId = categoryId;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         layoutId = R.layout.fragment_areas;
+
+        if (getArguments() != null) {
+            categoryId = getArguments().getInt("categoryId");
+        }
 
         new GetAreas(this, categoryId).execute();
     }
@@ -43,8 +43,9 @@ public class AreasFragment extends FragmentBase {
     }
 
     private void areaSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        Area area = Client.getInstance().areas.get(i);
+        Bundle args = new Bundle();
+        args.putInt("areaId", client.areas.get(i).id);
 
-        navigate(new AreaCourseFragment(area.id));
+        navigate(R.id.areaCourseFragment, args);
     }
 }

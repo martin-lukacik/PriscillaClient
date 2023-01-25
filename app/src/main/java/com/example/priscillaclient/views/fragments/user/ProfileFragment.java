@@ -53,7 +53,7 @@ public class ProfileFragment extends FragmentBase {
     }
 
     public void showProfileSettings(View view) {
-        navigate(new SettingsFragment());
+        navigate(R.id.settingsFragment);
     }
 
     @Override

@@ -24,11 +24,15 @@ public abstract class FragmentBase extends Fragment implements HttpResponse {
 
     protected final static Client client = Client.getInstance();
 
-    public void navigate(Fragment fragment) {
+    public void navigate(int layoutId) {
+        navigate(layoutId, null);
+    }
+
+    public void navigate(int layoutId, Bundle args) {
         if (getActivity() == null)
             return;
 
-        ((MainActivity) getActivity()).navigate(fragment);
+        ((MainActivity) getActivity()).navigate(layoutId, args);
     }
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedState) {

@@ -1,14 +1,10 @@
 package com.example.priscillaclient;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
@@ -17,14 +13,16 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.NavController;
+import androidx.navigation.NavOptions;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.NavigationUI;
 
 import com.example.priscillaclient.api.HttpResponse;
 import com.example.priscillaclient.api.user.GetUserParams;
 import com.example.priscillaclient.models.Client;
 import com.example.priscillaclient.models.User;
-import com.example.priscillaclient.views.fragments.app.ChaptersFragment;
-import com.example.priscillaclient.views.fragments.app.CoursesFragment;
 import com.example.priscillaclient.views.fragments.browse.AreaCourseFragment;
 import com.example.priscillaclient.views.fragments.browse.AreasFragment;
 import com.example.priscillaclient.views.fragments.browse.CategoriesFragment;
@@ -32,8 +30,6 @@ import com.example.priscillaclient.views.fragments.misc.LeaderboardFragment;
 import com.example.priscillaclient.views.fragments.user.ProfileFragment;
 import com.example.priscillaclient.views.fragments.user.SettingsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements HttpResponse {
 
@@ -58,10 +54,13 @@ public class MainActivity extends AppCompatActivity implements HttpResponse {
         int courseId = getIntent().getIntExtra("course_id", -1);
 
         if (courseId != -1) {
-            navigate(ChaptersFragment.newInstance(courseId));
-        } else {
-            navigate(new CoursesFragment());
+            Bundle args = new Bundle();
+            args.putInt("courseId", courseId);
+            navigate(R.id.chaptersFragment, args);
         }
+        /*else {
+            navigate(new CoursesFragment());
+        }*/
 
         User user = client.user;
 
@@ -71,10 +70,11 @@ public class MainActivity extends AppCompatActivity implements HttpResponse {
         new GetUserParams(this).execute();
     }
 
-    @SuppressLint("InflateParams")
+    //@SuppressLint("InflateParams")
     private void createActionBar() {
         if (getSupportActionBar() != null) {
             ActionBar actionBar = getSupportActionBar();
+            actionBar.hide();/*
             actionBar.setDisplayShowHomeEnabled(true);
             actionBar.setDisplayShowCustomEnabled(true);
             actionBar.setDisplayShowTitleEnabled(false);
@@ -82,8 +82,20 @@ public class MainActivity extends AppCompatActivity implements HttpResponse {
 
             LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View v = inflater.inflate(R.layout.actionbar, null);
-            actionBar.setCustomView(v);
+            actionBar.setCustomView(v);*/
         }
+
+        BottomNavigationView navigationView = findViewById(R.id.bottom_navigation);
+        NavHostFragment navHostFragment =
+                (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentContainerView);
+         navController = navHostFragment.getNavController();
+        NavigationUI.setupWithNavController(navigationView, navController);
+    }
+
+    NavController navController;
+    @Override
+    public boolean onNavigateUp() {
+        return navController.navigateUp() || super.onNavigateUp();
     }
 
     @Override
@@ -103,90 +115,29 @@ public class MainActivity extends AppCompatActivity implements HttpResponse {
         tv.setText(title);
     }
 
-    public static int isFragmentInBackstack(final FragmentManager fragmentManager, final String fragmentTagName) {
-        for (int entry = 0; entry < fragmentManager.getBackStackEntryCount(); entry++) {
-            if (fragmentTagName.equals(fragmentManager.getBackStackEntryAt(entry).getName())) {
-                return entry;
-            }
-        }
-        return -1;
+    public void navigate(int layoutId) {
+        navigate(layoutId, null);
     }
 
-    public void navigate(Fragment fragment) {
+    public void navigate(int layoutId, Bundle args) {
+        NavOptions opts = new NavOptions.Builder()
+                .setPopUpTo(layoutId, false, true)
+                .setRestoreState(true)
+                .build();
 
-        String tag = fragment.getClass().getSimpleName();
-
-        FragmentManager fm = getSupportFragmentManager();
-
-        int result = isFragmentInBackstack(fm, tag);
-
-        FragmentTransaction transaction = fm.beginTransaction();
-        transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out);
-
-        if (result != -1) {
-            transaction
-                .replace(R.id.fragmentContainerView, Objects.requireNonNull(fm.findFragmentByTag(tag)), tag);
-        } else {
-            transaction
-                .replace(R.id.fragmentContainerView, fragment, tag)
-                .addToBackStack(tag);
-        }
-
-        transaction.commit();
-    }
-
-    @Override
-    public void onBackPressed() {
-
-
-        super.onBackPressed();
-        FragmentManager fm = getSupportFragmentManager();
-        if (fm.getBackStackEntryCount() == 0) {
-            super.onBackPressed();
-        }
-
-        Fragment fragment = fm.findFragmentById(R.id.fragmentContainerView);
-
-        highlightMenuFromFragment(fragment);
-    }
-
-    private int getMenuItemFromFragment(Fragment fragment) {
-
-        if (fragment instanceof AreaCourseFragment
-                || fragment instanceof AreasFragment
-                || fragment instanceof CategoriesFragment) {
-            return R.id.menu_all_courses;
-        } else if (fragment instanceof LeaderboardFragment) {
-            return R.id.menu_leaderboard;
-        } else if (fragment instanceof ProfileFragment
-                || fragment instanceof SettingsFragment) {
-            return R.id.menu_profile;
-        }
-
-        return R.id.menu_dashboard;
-    }
-
-    boolean highlightingMenu = false;
-    protected void highlightMenuFromFragment(Fragment fragment) {
-        BottomNavigationView bottomNavigation = findViewById(R.id.bottom_navigation);
-        highlightingMenu = true;
-        bottomNavigation.setSelectedItemId(getMenuItemFromFragment(fragment));
-        highlightingMenu = false;
+        navController.navigate(layoutId, args, opts);
     }
 
     protected boolean onMenuItemSelected(MenuItem item) {
-        if (highlightingMenu)
-            return true;
-
-        if (item.getItemId() == R.id.menu_dashboard) {
-            navigate(new CoursesFragment());
+        /*if (item.getItemId() == R.id.menu_dashboard) {
+            navigate(R.id.coursesFragment);
         } else if (item.getItemId() == R.id.menu_all_courses) {
-            navigate(new CategoriesFragment());
+            navigate(R.id.categoriesFragment);
         } else if (item.getItemId() == R.id.menu_leaderboard) {
-            navigate(new LeaderboardFragment());
+            navigate(R.id.leaderboardFragment);
         } else if (item.getItemId() == R.id.menu_profile) {
-            navigate(new ProfileFragment());
-        }
+            navigate(R.id.profileFragment);
+        }*/
         return true;
     }
 
@@ -197,15 +148,9 @@ public class MainActivity extends AppCompatActivity implements HttpResponse {
         int courseId = intent.getIntExtra("course_id", -1);
 
         if (courseId != -1) {
-            navigate(ChaptersFragment.newInstance(courseId));
+            Bundle args = new Bundle();
+            args.putInt("courseId", courseId);
+            navigate(R.id.chaptersFragment, args);
         }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        BottomNavigationView navigationView = findViewById(R.id.bottom_navigation);
-        navigationView.getMenu().findItem(R.id.menu_dashboard).setChecked(true);
     }
 }

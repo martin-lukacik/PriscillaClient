@@ -98,6 +98,8 @@ public class CoursesFragment extends FragmentBase {
 
     private void courseSelected(AdapterView<?> adapterView, View view, int i, long l){
         int courseId = courses.get(i).course_id;
-        navigate(ChaptersFragment.newInstance(courseId));
+        Bundle args = new Bundle();
+        args.putInt("courseId", courseId);
+        navigate(R.id.chaptersFragment, args);
     }
 }

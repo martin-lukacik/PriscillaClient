@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class ChaptersFragment extends FragmentBase {
 
-    private static final String ARG_COURSE_ID = "courseId";
+    public static final String ARG_COURSE_ID = "courseId";
 
     private int courseId;
 
@@ -54,6 +54,8 @@ public class ChaptersFragment extends FragmentBase {
 
     private void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         int chapterId = client.chapters.get(i).id;
-        navigate(TaskFragment.newInstance(chapterId));
+        Bundle args = new Bundle();
+        args.putInt("chapterId", chapterId);
+        navigate(R.id.taskFragment, args);
     }
 }

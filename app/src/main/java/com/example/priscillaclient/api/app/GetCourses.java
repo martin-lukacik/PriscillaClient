@@ -2,6 +2,7 @@ package com.example.priscillaclient.api.app;
 
 import com.example.priscillaclient.api.ApiTask;
 import com.example.priscillaclient.api.HttpConnection;
+import com.example.priscillaclient.api.HttpResponse;
 import com.example.priscillaclient.views.fragments.FragmentBase;
 import com.example.priscillaclient.models.Course;
 
@@ -12,8 +13,8 @@ import java.util.ArrayList;
 
 public class GetCourses extends ApiTask {
 
-    public GetCourses(FragmentBase fragment) {
-        super(fragment);
+    public GetCourses(HttpResponse context) {
+        super(context);
 
         //showProgressDialog();
     }

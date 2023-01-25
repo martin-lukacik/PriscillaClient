@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@+id/menu_dashboard">
+
+    <!-- Dashboard -->
+    <navigation
+        android:id="@+id/menu_dashboard"
+        app:startDestination="@id/coursesFragment">
+        <fragment
+            android:id="@+id/coursesFragment"
+            android:name="com.example.priscillaclient.views.fragments.app.CoursesFragment"
+            android:label="coursesFragment"
+            tools:layout="@layout/fragment_courses">
+            <action
+                android:id="@+id/action_coursesFragment_to_chaptersFragment"
+                app:destination="@id/chaptersFragment" />
+        </fragment>
+        <fragment
+            android:id="@+id/chaptersFragment"
+            android:name="com.example.priscillaclient.views.fragments.app.ChaptersFragment"
+            android:label="fragment_chapter"
+            tools:layout="@layout/fragment_chapter">
+            <action
+                android:id="@+id/action_chaptersFragment_to_taskFragment"
+                app:destination="@id/taskFragment" />
+        </fragment>
+        <fragment
+            android:id="@+id/taskFragment"
+            android:name="com.example.priscillaclient.views.fragments.app.TaskFragment"
+            android:label="fragment_task"
+            tools:layout="@layout/fragment_task">
+        </fragment>
+    </navigation>
+
+    <!-- Browse -->
+    <navigation
+        android:id="@+id/menu_all_courses"
+        app:startDestination="@id/categoriesFragment">
+        <fragment
+            android:id="@+id/categoriesFragment"
+            android:name="com.example.priscillaclient.views.fragments.browse.CategoriesFragment"
+            android:label="fragment_categories"
+            tools:layout="@layout/fragment_categories">
+            <action
+                android:id="@+id/action_categoriesFragment_to_areasFragment"
+                app:destination="@id/areasFragment" />
+        </fragment>
+        <fragment
+            android:id="@+id/areasFragment"
+            android:name="com.example.priscillaclient.views.fragments.browse.AreasFragment"
+            android:label="fragment_areas"
+            tools:layout="@layout/fragment_areas">
+            <action
+                android:id="@+id/action_areasFragment_to_areaCourseFragment"
+                app:destination="@id/areaCourseFragment" />
+        </fragment>
+        <fragment
+            android:id="@+id/areaCourseFragment"
+            android:name="com.example.priscillaclient.views.fragments.browse.AreaCourseFragment"
+            android:label="fragment_area_course"
+            tools:layout="@layout/fragment_area_course">
+        </fragment>
+    </navigation>
+
+    <!-- Leaderboard -->
+    <navigation
+        android:id="@+id/menu_leaderboard"
+        app:startDestination="@+id/leaderboardFragment">
+        <fragment
+            android:id="@+id/leaderboardFragment"
+            android:name="com.example.priscillaclient.views.fragments.misc.LeaderboardFragment"
+            android:label="fragment_leaderboard"
+            tools:layout="@layout/fragment_leaderboard">
+        </fragment>
+    </navigation>
+
+    <!-- Profile -->
+    <navigation
+        android:id="@+id/menu_profile"
+        app:startDestination="@+id/profileFragment">
+        <fragment
+            android:id="@+id/profileFragment"
+            android:name="com.example.priscillaclient.views.fragments.user.ProfileFragment"
+            android:label="fragment_profile"
+            tools:layout="@layout/fragment_profile">
+            <action
+                android:id="@+id/action_profileFragment_to_settingsFragment"
+                app:destination="@id/settingsFragment" />
+        </fragment>
+        <fragment
+            android:id="@+id/settingsFragment"
+            android:name="com.example.priscillaclient.views.fragments.user.SettingsFragment"
+            android:label="fragment_settings"
+            tools:layout="@layout/fragment_settings">
+        </fragment>
+    </navigation>
+</navigation>

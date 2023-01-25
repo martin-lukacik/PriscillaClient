@@ -138,7 +138,7 @@ public class SettingsFragment extends FragmentBase {
             ScrollView scrollView = findViewById(R.id.settingsScrollView);
             scrollView.fullScroll(ScrollView.FOCUS_UP);
             client.user = null;
-            navigate(new ProfileFragment());
+            navigate(R.id.profileFragment);
         } else if (response.equals(client.profile)) {
             Profile profile = client.profile;
             RegistrationData data = client.registrationData;
