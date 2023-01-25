@@ -133,7 +133,6 @@ public class TaskFragment extends FragmentBase {
                 for (int i = 0; i < client.tasks.size(); ++i) {
                     if (client.tasks.get(i).passed == 1) {
                         currentTask = i;
-                        break;
                     }
                 }
                 refreshTask = false;
