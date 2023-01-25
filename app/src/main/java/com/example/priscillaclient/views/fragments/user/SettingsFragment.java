@@ -12,6 +12,8 @@ import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatDelegate;
+
 import com.example.priscillaclient.models.Pair;
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.api.user.ChangeProfile;
@@ -127,6 +129,14 @@ public class SettingsFragment extends FragmentBase {
         String nick = profileEditNickname.getText().toString();
         String surname = profileEditSurname.getText().toString();
         String theme_id = profileEditTheme.getTag().toString();
+
+        int mode = AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
+        if (theme_id.equals("1")) {
+            mode = AppCompatDelegate.MODE_NIGHT_NO;
+        } else if (theme_id.equals("2")) {
+            mode = AppCompatDelegate.MODE_NIGHT_YES;
+        }
+        AppCompatDelegate.setDefaultNightMode(mode);
 
         new ChangeProfile(this).execute(age, content_type_id, country, group, lang, name, nick, surname, theme_id);
     }
