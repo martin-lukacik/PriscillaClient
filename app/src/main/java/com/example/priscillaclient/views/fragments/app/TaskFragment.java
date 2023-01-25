@@ -141,6 +141,11 @@ public class TaskFragment extends FragmentBase {
             drawer.open();
             updateLessonList(client.lessons);
         } else if (response.equals(client.tasks)) {
+            for (int i = 0; i < client.tasks.size(); ++i) {
+                if (client.tasks.get(i).passed == 1) {
+                    currentTask = i;
+                }
+            }
             updateTaskList(client.tasks);
         } else if (response instanceof TaskResult || response instanceof String) {
 
