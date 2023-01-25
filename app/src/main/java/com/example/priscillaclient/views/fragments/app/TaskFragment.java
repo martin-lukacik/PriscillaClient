@@ -130,9 +130,10 @@ public class TaskFragment extends FragmentBase {
             updateLessonList(client.lessons);
         } else if (response.equals(client.tasks)) {
             if (refreshTask) {
-                for (int i = 0; i < client.tasks.size(); ++i) {
-                    if (client.tasks.get(i).passed == 1) {
-                        currentTask = i;
+                for (int i = client.tasks.size(); i >= 0; --i) {
+                    currentTask = i;
+                    if (client.tasks.get(i).passed != 1) {
+                        break;
                     }
                 }
                 refreshTask = false;
