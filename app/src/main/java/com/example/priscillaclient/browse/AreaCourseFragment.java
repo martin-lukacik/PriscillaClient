@@ -87,7 +87,7 @@ public class AreaCourseFragment extends FragmentBase {
             args.putInt("courseId", course.id);
             args.putInt("courseColor", courseColor);
 
-            navigate(R.id.coursesFragment);
+            navigate(R.id.coursesFragment); // needed for back stack
             navigate(R.id.chaptersFragment, args);
         }
 
