@@ -28,7 +28,7 @@ import com.example.priscillaclient.api.app.DoPassTask;
 import com.example.priscillaclient.viewmodel.app.models.Lesson;
 import com.example.priscillaclient.viewmodel.app.models.Task;
 import com.example.priscillaclient.viewmodel.app.models.TaskResult;
-import com.example.priscillaclient.models.TaskType;
+import com.example.priscillaclient.viewmodel.app.models.TaskType;
 import com.example.priscillaclient.viewmodel.app.LessonsViewModel;
 import com.example.priscillaclient.viewmodel.app.TaskResultViewModel;
 import com.example.priscillaclient.viewmodel.app.TasksViewModel;

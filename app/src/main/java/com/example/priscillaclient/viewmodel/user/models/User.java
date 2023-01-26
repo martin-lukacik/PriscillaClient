@@ -1,7 +1,5 @@
 package com.example.priscillaclient.viewmodel.user.models;
 
-import com.example.priscillaclient.models.Performance;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 

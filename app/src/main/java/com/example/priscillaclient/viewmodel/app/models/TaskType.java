@@ -1,4 +1,4 @@
-package com.example.priscillaclient.models;
+package com.example.priscillaclient.viewmodel.app.models;
 
 public enum TaskType {
     NULL,               // 0

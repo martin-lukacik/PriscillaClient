@@ -3,7 +3,6 @@ package com.example.priscillaclient.api;
 import android.os.Handler;
 import android.os.Looper;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.concurrent.Callable;

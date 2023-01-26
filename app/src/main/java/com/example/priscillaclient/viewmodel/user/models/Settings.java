@@ -1,11 +1,6 @@
 package com.example.priscillaclient.viewmodel.user.models;
 
-import com.example.priscillaclient.models.Country;
-import com.example.priscillaclient.models.Group;
-import com.example.priscillaclient.models.Language;
-import com.example.priscillaclient.models.Pair;
-import com.example.priscillaclient.models.Theme;
-import com.example.priscillaclient.viewmodel.user.models.Profile;
+import com.example.priscillaclient.viewmodel.Pair;
 
 import org.json.JSONArray;
 import org.json.JSONException;

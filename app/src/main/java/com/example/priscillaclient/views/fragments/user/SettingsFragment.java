@@ -6,14 +6,13 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatDelegate;
 
 import com.example.priscillaclient.api.HttpResponse;
-import com.example.priscillaclient.models.Pair;
+import com.example.priscillaclient.viewmodel.Pair;
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.viewmodel.user.ProfileViewModel;
 import com.example.priscillaclient.viewmodel.user.SettingsViewModel;
@@ -24,7 +23,7 @@ import com.example.priscillaclient.views.fragments.FragmentBase;
 
 import org.jetbrains.annotations.NotNull;
 
-public class SettingsFragment extends FragmentBase implements HttpResponse<Object> {
+public class SettingsFragment extends FragmentBase {
 
     Profile profile;
     Settings settings;
@@ -165,17 +164,8 @@ public class SettingsFragment extends FragmentBase implements HttpResponse<Objec
 
         UserViewModel userViewModel = (UserViewModel) getViewModel(UserViewModel.class);
         userViewModel.update(age, content_type_id, country, group, lang, name, nick, surname, theme_id);
+
         navigate(R.id.profileFragment, null);
-    }
-
-    @Override
-    public void onUpdate(Object response) {
-
-        if (response == null) {
-            /*ScrollView scrollView = findViewById(R.id.settingsScrollView);
-            scrollView.fullScroll(ScrollView.FOCUS_UP);*/
-            navigate(R.id.profileFragment);
-        }
     }
 
     private void loadSelection(Spinner spinner, String[] items, int selectedIndex) {
