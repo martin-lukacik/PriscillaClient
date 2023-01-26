@@ -37,6 +37,8 @@ public class ApiTask {
     }
 
     public String getError() {
-        return error;
+        String e = error;
+        error = null;
+        return e;
     }
 }

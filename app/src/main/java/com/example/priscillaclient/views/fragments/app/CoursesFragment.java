@@ -10,11 +10,8 @@ import android.widget.GridView;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.priscillaclient.R;
-import com.example.priscillaclient.api.GetCourseList;
-import com.example.priscillaclient.models.Client;
 import com.example.priscillaclient.models.Course;
-import com.example.priscillaclient.models.viewmodel.CoursesViewModel;
-import com.example.priscillaclient.models.viewmodel.ViewModelBase;
+import com.example.priscillaclient.viewmodel.app.CoursesViewModel;
 import com.example.priscillaclient.views.adapters.CourseListAdapter;
 import com.example.priscillaclient.views.fragments.FragmentBase;
 
@@ -41,10 +38,7 @@ public class CoursesFragment extends FragmentBase {
             else
                 onUpdate(data);
         });
-
-        if (viewModel.getData().getValue().isEmpty()) {
-            viewModel.fetchData();
-        }
+        viewModel.fetchData();
     }
 
     void pinCourse(int courseId) {
@@ -73,7 +67,8 @@ public class CoursesFragment extends FragmentBase {
             adapter.notifyDataSetChanged();
         } else if (course.course_id == pinnedCourseId) {
             togglePin(-1);
-            courses = new ArrayList<>(Client.getInstance().courses);
+            CoursesViewModel viewModel = ViewModelProviders.of(this).get(CoursesViewModel.class);
+            courses = new ArrayList<>(viewModel.getData().getValue());
             adapter = new CourseListAdapter(getActivity(), courses);
             GridView courseListView = getActivity().findViewById(R.id.courseListView);
             courseListView.setAdapter(adapter);

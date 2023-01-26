@@ -1,47 +1,38 @@
 package com.example.priscillaclient.api.app;
 
-import com.example.priscillaclient.api.ApiTaskLegacy;
 import com.example.priscillaclient.api.HttpConnection;
-import com.example.priscillaclient.api.HttpResponse;
-import com.example.priscillaclient.views.fragments.FragmentBase;
 import com.example.priscillaclient.models.Lesson;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.concurrent.Callable;
 
-public class GetLessons extends ApiTaskLegacy {
+public class GetLessons implements Callable<ArrayList<Lesson>> {
 
-    final int chapterId;
-    public GetLessons(HttpResponse fragment, int chapterId) {
-        super(fragment);
+    private final int chapterId;
+
+    public GetLessons(int chapterId) {
         this.chapterId = chapterId;
-        client.lastChapterId = chapterId;
     }
 
     @Override
-    protected ArrayList<Lesson> doInBackground(String... strings) {
-        try {
-            HttpConnection connection = new HttpConnection("/get-active-lessons2/" + chapterId, "GET", false);
+    public ArrayList<Lesson> call() throws Exception {
+        HttpConnection connection = new HttpConnection("/get-active-lessons2/" + chapterId, "GET", false);
 
-            if (connection.getErrorStream() != null) {
-                logError(connection.getErrorMessage());
-                return client.lessons;
-            }
-
-            JSONArray json = new JSONObject(connection.getResponse()).getJSONArray("lesson_list");
-
-            client.lessons.clear();
-            for (int i = 0; i < json.length(); ++i) {
-                Lesson c = new Lesson(json.getJSONObject(i));
-                client.lessons.add(c);
-            }
-
-        } catch (Exception e) {
-            logError(e.getMessage());
+        if (connection.getErrorStream() != null) {
+            throw new Exception(connection.getErrorMessage());
         }
 
-        return client.lessons;
+        JSONArray json = new JSONObject(connection.getResponse()).getJSONArray("lesson_list");
+
+        ArrayList<Lesson> lessons = new ArrayList<>();
+        for (int i = 0; i < json.length(); ++i) {
+            Lesson c = new Lesson(json.getJSONObject(i));
+            lessons.add(c);
+        }
+
+        return lessons;
     }
 }

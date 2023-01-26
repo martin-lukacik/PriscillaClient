@@ -1,10 +1,11 @@
-package com.example.priscillaclient.models.viewmodel;
+package com.example.priscillaclient.viewmodel.app;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.priscillaclient.api.GetChapterList;
+import com.example.priscillaclient.api.app.GetChapters;
 import com.example.priscillaclient.models.Chapter;
+import com.example.priscillaclient.viewmodel.ViewModelBase;
 
 import java.util.ArrayList;
 
@@ -19,9 +20,12 @@ public class ChaptersViewModel extends ViewModelBase {
     }
 
     public void fetchData(int courseId) {
-        apiTask.executeAsync(new GetChapterList(courseId), (data, error) -> {
-            setError(error);
-            state.setValue(data);
-        });
+        if (lastCourseId != courseId) {
+            apiTask.executeAsync(new GetChapters(courseId), (data, error) -> {
+                setError(error);
+                state.setValue(data);
+            });
+            lastCourseId = courseId;
+        }
     }
 }

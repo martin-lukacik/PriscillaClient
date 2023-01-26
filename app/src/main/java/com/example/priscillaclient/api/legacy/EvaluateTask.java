@@ -1,4 +1,4 @@
-package com.example.priscillaclient.api.app;
+package com.example.priscillaclient.api.legacy;
 
 import com.example.priscillaclient.api.ApiTaskLegacy;
 import com.example.priscillaclient.api.HttpConnection;

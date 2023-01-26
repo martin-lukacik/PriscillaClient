@@ -72,7 +72,7 @@ public abstract class ApiTaskLegacy extends AsyncTask<String, String, Object> {
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
             );
 
-        dialog = new LoadingDialog(activity, "Loading, please wait...");
+        dialog = new LoadingDialog(activity);
         dialog.show();
     }
 

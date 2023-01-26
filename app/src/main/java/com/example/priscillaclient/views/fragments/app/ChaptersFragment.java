@@ -8,10 +8,8 @@ import android.widget.GridView;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.priscillaclient.R;
-import com.example.priscillaclient.api.GetChapterList;
 import com.example.priscillaclient.models.Chapter;
-import com.example.priscillaclient.models.viewmodel.ChaptersViewModel;
-import com.example.priscillaclient.models.viewmodel.ViewModelBase;
+import com.example.priscillaclient.viewmodel.app.ChaptersViewModel;
 import com.example.priscillaclient.views.adapters.ChapterListAdapter;
 import com.example.priscillaclient.views.fragments.FragmentBase;
 
@@ -39,8 +37,6 @@ public class ChaptersFragment extends FragmentBase {
             courseColor = getArguments().getInt(ARG_COURSE_COLOR);
         }
 
-        courseId = 123456;
-
         ChaptersViewModel viewModel = ViewModelProviders.of(this).get(ChaptersViewModel.class);
         viewModel.getData().observe(this, (data) -> {
             if (viewModel.hasError())
@@ -64,6 +60,7 @@ public class ChaptersFragment extends FragmentBase {
     private void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         int chapterId = chapters.get(i).id;
         Bundle args = new Bundle();
+        args.putInt("courseId", courseId);
         args.putInt("chapterId", chapterId);
         navigate(R.id.taskFragment, args);
     }

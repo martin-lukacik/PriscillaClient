@@ -20,20 +20,21 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.example.priscillaclient.MainActivity;
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.api.HttpResponse;
-import com.example.priscillaclient.api.app.EvaluateTask;
-import com.example.priscillaclient.api.app.GetLessons;
-import com.example.priscillaclient.api.app.GetTasks;
-import com.example.priscillaclient.api.app.SetPassedTask;
+import com.example.priscillaclient.api.legacy.EvaluateTask;
+import com.example.priscillaclient.api.legacy.SetPassedTask;
 import com.example.priscillaclient.api.user.GetUserParams;
 import com.example.priscillaclient.models.Client;
 import com.example.priscillaclient.models.Lesson;
 import com.example.priscillaclient.models.Task;
 import com.example.priscillaclient.models.TaskResult;
 import com.example.priscillaclient.models.TaskType;
+import com.example.priscillaclient.viewmodel.app.LessonsViewModel;
+import com.example.priscillaclient.viewmodel.app.TasksViewModel;
 import com.example.priscillaclient.views.JavascriptInterface;
 import com.example.priscillaclient.views.fragments.FragmentBase;
 import com.google.android.material.navigation.NavigationView;
@@ -45,11 +46,19 @@ import java.util.ArrayList;
 
 public class TaskFragment extends FragmentBase implements HttpResponse<Object> {
 
+    private static final String ARG_COURSE_ID = "courseId";
     private static final String ARG_CHAPTER_ID = "chapterId";
 
+    private int courseId;
     private int chapterId;
-    private int lessonId = -1;
     private int currentTask = 0;
+    private int currentLessonId = 0;
+
+    ArrayList<Lesson> lessons;
+    ArrayList<Task> tasks;
+
+    LessonsViewModel lessonsViewModel;
+    TasksViewModel tasksViewModel;
 
     Button buttonTaskNext;
     Button buttonTaskPrevious;
@@ -65,24 +74,101 @@ public class TaskFragment extends FragmentBase implements HttpResponse<Object> {
 
     public TaskFragment() { }
 
-    public static TaskFragment newInstance(int chapterId) {
-        TaskFragment fragment = new TaskFragment();
-        Bundle args = new Bundle();
-        args.putInt(ARG_CHAPTER_ID, chapterId);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         layoutId = R.layout.fragment_task;
 
         if (getArguments() != null) {
+            courseId = getArguments().getInt(ARG_COURSE_ID);
             chapterId = getArguments().getInt(ARG_CHAPTER_ID);
         }
 
-        new GetLessons(this, chapterId).execute();
+        tasksViewModel = ViewModelProviders.of(this).get(TasksViewModel.class);
+        tasksViewModel.getData().observe(this, (data) -> {
+            if (tasksViewModel.hasError())
+                showError(tasksViewModel.getError());
+            else
+                onUpdateTasks(data);
+        });
+
+        lessonsViewModel = ViewModelProviders.of(this).get(LessonsViewModel.class);
+        lessonsViewModel.getData().observe(this, (data) -> {
+            if (lessonsViewModel.hasError())
+                showError(lessonsViewModel.getError());
+            else
+                onUpdateLessons(data);
+        });
+        lessonsViewModel.fetchData(chapterId);
+    }
+
+    private void onUpdateTasks(ArrayList<Task> tasks) {
+
+        this.tasks = tasks;
+
+        if (refreshTask) {
+            for (int i = tasks.size(); i >= 0; --i) {
+                currentTask = i;
+                if (tasks.get(i).passed != 1) {
+                    break;
+                }
+            }
+            refreshTask = false;
+        }
+        updateTaskList(tasks);
+    }
+
+    private void onUpdateLessons(ArrayList<Lesson> lessons) {
+
+        if (lessons.isEmpty())
+            return;
+
+        currentLessonId = lessons.get(0).id;
+        currentTask = 0;
+        this.lessons = lessons;
+
+        tasksViewModel.fetchData(courseId, chapterId, currentLessonId);
+
+        NavigationView navigationView = findViewById(R.id.navigationView);
+        navigationView.bringToFront();
+        Menu menu = navigationView.getMenu();
+        menu.clear();
+        menu.add(R.string.lessons);
+        menu.getItem(0).setEnabled(false);
+
+        DrawerLayout drawer = findViewById(R.id.drawerLayout);
+        drawer.open();
+
+        boolean initialChecked = false;
+        for (Lesson lesson : lessons) {
+            MenuItem menuItem = menu.add(lesson.name);
+
+            if (!initialChecked) {
+                menuItem.setChecked(initialChecked = true);
+            }
+
+            menuItem.setOnMenuItemClickListener((item) -> onSelectLesson(lesson.id));
+        }
+
+        navigationView.invalidate();
+    }
+
+    private boolean onSelectLesson(int lessonId) {
+        /*NavigationView navigationView = findViewById(R.id.navigationView);
+        Menu menu = navigationView.getMenu();
+
+        for (int i = 0; i < menu.size(); ++i) {
+            menu.getItem(i).setChecked(false);
+        }*/
+
+        currentTask = 0;
+        //item.setChecked(true);
+        currentLessonId = lessonId;
+        tasksViewModel.fetchData(courseId, chapterId, lessonId);
+
+        /*DrawerLayout drawer = findViewById(R.id.drawerLayout);
+        drawer.closeDrawers();*/
+        return true;
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -120,35 +206,12 @@ public class TaskFragment extends FragmentBase implements HttpResponse<Object> {
     @Override
     public void onUpdate(Object response) {
 
-        Client client = Client.getInstance();
-
-        int id = lessonId == -1 ? client.lessons.get(0).id : lessonId;
-        if (response.equals(client.lessons)) {
-            currentTask = 0;
-            new GetTasks(this, id).execute();
-            DrawerLayout drawer = findViewById(R.id.drawerLayout);
-            drawer.open();
-            updateLessonList(client.lessons);
-        } else if (response.equals(client.tasks)) {
-            if (refreshTask) {
-                for (int i = client.tasks.size(); i >= 0; --i) {
-                    currentTask = i;
-                    if (client.tasks.get(i).passed != 1) {
-                        break;
-                    }
-                }
-                refreshTask = false;
-            }
-            updateTaskList(client.tasks);
-        } else if (response instanceof TaskResult || response instanceof String) {
-
-            shouldResetLayout = false;
-            client.courses.clear();
-            client.chapters.clear();
-
-            new GetTasks(this, id).execute();
+        if (response instanceof TaskResult || response instanceof String) {
 
             refreshTask = true;
+            shouldResetLayout = false;
+
+            tasksViewModel.fetchData(courseId, chapterId, currentLessonId);
 
             if (response instanceof TaskResult) {
                 showRatingDialog(((TaskResult) response));
@@ -185,44 +248,11 @@ public class TaskFragment extends FragmentBase implements HttpResponse<Object> {
         dialog.show();
     }
 
-    public void updateLessonList(ArrayList<Lesson> lessons) {
-        NavigationView navigationView = findViewById(R.id.navigationView);
-        Menu menu = navigationView.getMenu();
-        menu.clear();
-
-        menu.add(R.string.lessons);
-        menu.getItem(0).setEnabled(false);
-
-        navigationView.bringToFront();
-
-        DrawerLayout drawer = findViewById(R.id.drawerLayout);
-        boolean initialChecked = false;
-        for (Lesson lesson : lessons) {
-            MenuItem item = menu.add(lesson.name);
-
-            if (!initialChecked) {
-                item.setChecked(initialChecked = true);
-            }
-
-            item.setOnMenuItemClickListener((e) -> {
-                for (int i = 0; i < menu.size(); ++i) {
-                    menu.getItem(i).setChecked(false);
-                }
-
-                currentTask = 0;
-                e.setChecked(true);
-                lessonId = lesson.id;
-                new GetTasks(this, lessonId).execute();
-                drawer.closeDrawers();
-                return false;
-            });
-        }
-
-        navigationView.invalidate();
-    }
-
     boolean shouldResetLayout = true;
     public void updateTaskList(ArrayList<Task> tasks) {
+
+        if (tasks.isEmpty())
+            return;
 
         if (!shouldResetLayout) {
             shouldResetLayout = true;
@@ -354,7 +384,6 @@ public class TaskFragment extends FragmentBase implements HttpResponse<Object> {
     }
 
     private void clearTaskLayout() {
-        ArrayList<Task> tasks = Client.getInstance().tasks;
 
         inputEditText.setText("");
         inputEditText.setVisibility(View.GONE);
@@ -379,8 +408,6 @@ public class TaskFragment extends FragmentBase implements HttpResponse<Object> {
     }
 
     public void submit(View view) {
-        ArrayList<Task> tasks = Client.getInstance().tasks;
-
         if (!tasks.isEmpty()) {
             Task task = tasks.get(currentTask);
             ArrayList<String> postedAnswers = new ArrayList<>();
@@ -439,7 +466,6 @@ public class TaskFragment extends FragmentBase implements HttpResponse<Object> {
     }
 
     public void nextTask(View view) {
-        ArrayList<Task> tasks = Client.getInstance().tasks;
         if (tasks.size() > currentTask + 1) {
             ++currentTask;
             updateTaskList(tasks);
@@ -447,7 +473,6 @@ public class TaskFragment extends FragmentBase implements HttpResponse<Object> {
     }
 
     public void previousTask(View view) {
-        ArrayList<Task> tasks = Client.getInstance().tasks;
         if (currentTask - 1 >= 0) {
             --currentTask;
             updateTaskList(tasks);

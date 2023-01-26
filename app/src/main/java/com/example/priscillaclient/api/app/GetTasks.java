@@ -1,55 +1,45 @@
 package com.example.priscillaclient.api.app;
 
-import com.example.priscillaclient.api.ApiTaskLegacy;
 import com.example.priscillaclient.api.HttpConnection;
-import com.example.priscillaclient.api.HttpResponse;
 import com.example.priscillaclient.models.Task;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.concurrent.Callable;
 
-public class GetTasks extends ApiTaskLegacy {
+public class GetTasks implements Callable<ArrayList<Task>> {
 
-    int courseId;
-    int chapterId;
-    int lessonId;
+    private final int courseId;
+    private final int chapterId;
+    private final int lessonId;
 
-    public GetTasks(HttpResponse context, int lessonId) {
-        super(context);
-
-        dialog.dismiss();
-        this.courseId = client.lastCourseId;
-        this.chapterId = client.lastChapterId;
+    public GetTasks(int courseId, int chapterId, int lessonId) {
+        this.courseId = courseId;
+        this.chapterId = chapterId;
         this.lessonId = lessonId;
-        client.lastLessonId = lessonId;
     }
 
     @Override
-    protected ArrayList<Task> doInBackground(String... strings) {
-        try {
-            HttpConnection connection = new HttpConnection("/get-active-tasks2/" + courseId + "/" + chapterId + "/" + lessonId, "GET", false);
+    public ArrayList<Task> call() throws Exception {
+        HttpConnection connection = new HttpConnection("/get-active-tasks2/" + courseId + "/" + chapterId + "/" + lessonId, "GET", false);
 
-            if (connection.getErrorStream() != null) {
-                logError(connection.getErrorMessage());
-                return client.tasks;
-            }
-
-            JSONObject j = new JSONObject(connection.getResponse());
-            client.lastUserCourseId = j.getInt("user_course_id");
-            JSONArray json = j.getJSONArray("task_list");
-
-            client.tasks.clear();
-            for (int i = 0; i < json.length(); ++i) {
-                Task t = new Task(json.getJSONObject(i));
-                client.tasks.add(t);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (connection.getErrorStream() != null) {
+            throw new Exception(connection.getErrorMessage());
         }
 
-        return client.tasks;
+        JSONObject j = new JSONObject(connection.getResponse());
+        int userCourseId = j.getInt("user_course_id");
+        JSONArray json = j.getJSONArray("task_list");
+
+        ArrayList<Task> tasks = new ArrayList<>();
+        for (int i = 0; i < json.length(); ++i) {
+            Task t = new Task(json.getJSONObject(i));
+            t.user_course_id = userCourseId;
+            tasks.add(t);
+        }
+
+        return tasks;
     }
 }

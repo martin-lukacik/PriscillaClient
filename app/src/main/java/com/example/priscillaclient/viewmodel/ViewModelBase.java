@@ -1,4 +1,4 @@
-package com.example.priscillaclient.models.viewmodel;
+package com.example.priscillaclient.viewmodel;
 
 import androidx.lifecycle.ViewModel;
 
