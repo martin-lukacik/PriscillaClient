@@ -42,6 +42,7 @@ import com.google.android.material.navigation.NavigationView;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 public class TaskFragment extends FragmentBase implements HttpResponse<Object> {
@@ -147,27 +148,27 @@ public class TaskFragment extends FragmentBase implements HttpResponse<Object> {
                 menuItem.setChecked(initialChecked = true);
             }
 
-            menuItem.setOnMenuItemClickListener((item) -> onSelectLesson(lesson.id));
+            menuItem.setOnMenuItemClickListener((item) -> onSelectLesson(item, lesson.id));
         }
 
         navigationView.invalidate();
     }
 
-    private boolean onSelectLesson(int lessonId) {
-        /*NavigationView navigationView = findViewById(R.id.navigationView);
+    private boolean onSelectLesson(MenuItem item, int lessonId) {
+        NavigationView navigationView = findViewById(R.id.navigationView);
         Menu menu = navigationView.getMenu();
 
         for (int i = 0; i < menu.size(); ++i) {
             menu.getItem(i).setChecked(false);
-        }*/
+        }
 
         currentTask = 0;
-        //item.setChecked(true);
+        item.setChecked(true);
         currentLessonId = lessonId;
         tasksViewModel.fetchData(courseId, chapterId, lessonId);
 
-        /*DrawerLayout drawer = findViewById(R.id.drawerLayout);
-        drawer.closeDrawers();*/
+        DrawerLayout drawer = findViewById(R.id.drawerLayout);
+        drawer.closeDrawers();
         return true;
     }
 
@@ -371,7 +372,7 @@ public class TaskFragment extends FragmentBase implements HttpResponse<Object> {
                 break;
         }
 
-        webView.loadData(css + javascript + content, "text/html; charset=utf-8", "UTF-8");
+        webView.loadDataWithBaseURL(null, css + javascript + content, "text/html; charset=utf-8", "UTF-8", null);
 
         webView.setWebChromeClient(new WebChromeClient() {
             @Override
