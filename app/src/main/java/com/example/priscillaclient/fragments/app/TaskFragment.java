@@ -198,7 +198,7 @@ public class TaskFragment extends FragmentBase {
     }
 
     private void getTaskHelp(View view) {
-        // TODO implement
+        // TODO Implement help
     }
 
     boolean refreshTask = false;

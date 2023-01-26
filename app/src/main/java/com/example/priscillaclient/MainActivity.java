@@ -22,6 +22,16 @@ import com.example.priscillaclient.viewmodel.user.UserViewModel;
 import com.example.priscillaclient.viewmodel.user.models.User;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+/*
+ * TODO Loading should show dialogs and/or clear previous state (Courses -> Chapters -> Tasks shows old data while loading)
+ * TODO Dark mode
+ * TODO Colorblind mode?
+ * TODO Submit task resets inputs
+ * TODO Proper multi-language support based on app setting
+ * TODO ViewPager for task navigation
+ * TODO Implement TaskType.TASK_CODE
+ */
+
 public class MainActivity extends AppCompatActivity {
 
     NavController navController;
