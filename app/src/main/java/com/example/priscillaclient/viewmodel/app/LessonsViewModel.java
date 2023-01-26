@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.priscillaclient.api.app.GetLessons;
-import com.example.priscillaclient.models.Lesson;
+import com.example.priscillaclient.viewmodel.app.models.Lesson;
 import com.example.priscillaclient.viewmodel.ViewModelBase;
 
 import java.util.ArrayList;

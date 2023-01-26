@@ -15,17 +15,19 @@ import androidx.appcompat.app.AppCompatDelegate;
 import com.example.priscillaclient.api.HttpResponse;
 import com.example.priscillaclient.models.Pair;
 import com.example.priscillaclient.R;
-import com.example.priscillaclient.api.legacy.ChangeProfile;
-import com.example.priscillaclient.api.legacy.GetProfileData;
-import com.example.priscillaclient.api.legacy.GetRegistrationData;
-import com.example.priscillaclient.models.Client;
-import com.example.priscillaclient.models.Profile;
-import com.example.priscillaclient.models.RegistrationData;
+import com.example.priscillaclient.viewmodel.user.ProfileViewModel;
+import com.example.priscillaclient.viewmodel.user.SettingsViewModel;
+import com.example.priscillaclient.viewmodel.user.UserViewModel;
+import com.example.priscillaclient.viewmodel.user.models.Profile;
+import com.example.priscillaclient.viewmodel.user.models.Settings;
 import com.example.priscillaclient.views.fragments.FragmentBase;
+
+import org.jetbrains.annotations.NotNull;
 
 public class SettingsFragment extends FragmentBase implements HttpResponse<Object> {
 
-    Client client = Client.getInstance();
+    Profile profile;
+    Settings settings;
 
     EditText profileEditName;
     EditText profileEditSurname;
@@ -48,12 +50,38 @@ public class SettingsFragment extends FragmentBase implements HttpResponse<Objec
         super.onCreate(savedInstanceState);
         layoutId = R.layout.fragment_settings;
 
-        new GetRegistrationData(this).execute();
-        new GetProfileData(this).execute();
+        SettingsViewModel settingsViewModel = (SettingsViewModel) getViewModel(SettingsViewModel.class);
+        settingsViewModel.getData().observe(this, this::onUpdateSettings);
+        settingsViewModel.fetchData();
+
+        ProfileViewModel profileViewModel = (ProfileViewModel) getViewModel(ProfileViewModel.class);
+        profileViewModel.getData().observe(this, this::onUpdateProfile);
+        profileViewModel.fetchData();
+    }
+
+    private void onUpdateSettings(Settings settings) {
+        this.settings = settings;
+    }
+
+    private void onUpdateProfile(Profile profile) {
+
+        this.profile = profile;
+
+        profileEditName.setText(profile.name);
+        profileEditSurname.setText(profile.surname);
+        profileEditNickname.setText(profile.nickname);
+
+        profileEditYear.updateDate(profile.yob, 0, 1);
+
+        loadProfileStudentType(profile);
+        loadProfileGroup(settings);
+        loadProfileCountry(settings);
+        loadProfileLanguage(settings);
+        loadProfileTheme(settings);
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NotNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         profileEditName = findViewById(R.id.profileEditName);
@@ -72,7 +100,7 @@ public class SettingsFragment extends FragmentBase implements HttpResponse<Objec
         profileEditGroup.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                adapterView.setTag(client.registrationData.groups.get(i).group_name);
+                adapterView.setTag(settings.groups.get(i).group_name);
             }
 
             @Override
@@ -90,7 +118,7 @@ public class SettingsFragment extends FragmentBase implements HttpResponse<Objec
         profileEditCountry.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                adapterView.setTag(client.registrationData.countries.get(i).id);
+                adapterView.setTag(settings.countries.get(i).id);
             }
 
             @Override
@@ -99,7 +127,7 @@ public class SettingsFragment extends FragmentBase implements HttpResponse<Objec
         profileEditLanguage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                adapterView.setTag(client.registrationData.languages.get(i).id);
+                adapterView.setTag(settings.languages.get(i).id);
             }
 
             @Override
@@ -108,7 +136,7 @@ public class SettingsFragment extends FragmentBase implements HttpResponse<Objec
         profileEditTheme.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                adapterView.setTag(client.registrationData.themes.get(i).id);
+                adapterView.setTag(settings.themes.get(i).id);
             }
 
             @Override
@@ -135,32 +163,18 @@ public class SettingsFragment extends FragmentBase implements HttpResponse<Objec
         }
         AppCompatDelegate.setDefaultNightMode(mode);
 
-        new ChangeProfile(this).execute(age, content_type_id, country, group, lang, name, nick, surname, theme_id);
+        UserViewModel userViewModel = (UserViewModel) getViewModel(UserViewModel.class);
+        userViewModel.update(age, content_type_id, country, group, lang, name, nick, surname, theme_id);
+        navigate(R.id.profileFragment, null);
     }
 
     @Override
     public void onUpdate(Object response) {
 
         if (response == null) {
-            ScrollView scrollView = findViewById(R.id.settingsScrollView);
-            scrollView.fullScroll(ScrollView.FOCUS_UP);
-            client.user = null;
+            /*ScrollView scrollView = findViewById(R.id.settingsScrollView);
+            scrollView.fullScroll(ScrollView.FOCUS_UP);*/
             navigate(R.id.profileFragment);
-        } else if (response.equals(client.profile)) {
-            Profile profile = client.profile;
-            RegistrationData data = client.registrationData;
-
-            profileEditName.setText(profile.name);
-            profileEditSurname.setText(profile.surname);
-            profileEditNickname.setText(profile.nickname);
-
-            profileEditYear.updateDate(profile.yob, 0, 1);
-
-            loadProfileStudentType(profile);
-            loadProfileGroup(data);
-            loadProfileCountry(data);
-            loadProfileLanguage(data);
-            loadProfileTheme(data);
         }
     }
 
@@ -175,23 +189,23 @@ public class SettingsFragment extends FragmentBase implements HttpResponse<Objec
         loadSelection(profileEditStudentType, items, profile.content_type_id - 1);
     }
 
-    private void loadProfileGroup(RegistrationData data) {
-        Pair<Integer, String[]> selection = data.getGroupSelection();
+    private void loadProfileGroup(Settings data) {
+        Pair<Integer, String[]> selection = data.getGroupSelection(profile);
         loadSelection(profileEditGroup, selection.y, selection.x);
     }
 
-    private void loadProfileCountry(RegistrationData data) {
-        Pair<Integer, String[]> selection = data.getCountrySelection();
+    private void loadProfileCountry(Settings data) {
+        Pair<Integer, String[]> selection = data.getCountrySelection(profile);
         loadSelection(profileEditCountry, selection.y, selection.x);
     }
 
-    private void loadProfileLanguage(RegistrationData data) {
-        Pair<Integer, String[]> selection = data.getLanguageSelection();
+    private void loadProfileLanguage(Settings data) {
+        Pair<Integer, String[]> selection = data.getLanguageSelection(profile);
         loadSelection(profileEditLanguage, selection.y, selection.x);
     }
 
-    private void loadProfileTheme(RegistrationData data) {
-        Pair<Integer, String[]> selection = data.getThemeSelection();
+    private void loadProfileTheme(Settings data) {
+        Pair<Integer, String[]> selection = data.getThemeSelection(profile);
         loadSelection(profileEditTheme, selection.y, selection.x);
     }
 

@@ -1,5 +1,10 @@
 package com.example.priscillaclient.models;
 
+import com.example.priscillaclient.viewmodel.user.models.Profile;
+import com.example.priscillaclient.viewmodel.user.models.Settings;
+import com.example.priscillaclient.viewmodel.user.models.Token;
+import com.example.priscillaclient.viewmodel.user.models.User;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -9,33 +14,13 @@ public class Client {
 
     // Client data
 
-    public String token_type = "";
-    public long expires_in = 0;
-    public long logged_in = 0;
-    public String access_token = "";
-    public String refresh_token = "";
-
-    public User user = null;
-    public RegistrationData registrationData = new RegistrationData();
-    public Profile profile = null;
-
-    public int lastUserCourseId = -1;
-
-    public final ArrayList<Course> courses = new ArrayList<>();
-    public final ArrayList<Chapter> chapters = new ArrayList<>();
-    public int lastCourseId = -1;
-    public final ArrayList<Lesson> lessons = new ArrayList<>();
-    public int lastChapterId = -1;
-    public final ArrayList<Task> tasks = new ArrayList<>();
-    public int lastLessonId = -1;
+    public Token token = null;
 
     public final ArrayList<Category> categories = new ArrayList<>();
     public final ArrayList<Area> areas = new ArrayList<>();
     public int lastCategoryId = -1;
     public final ArrayList<AreaCourse> areaCourses = new ArrayList<>();
     public int lastAreaId = -1;
-
-    public final ArrayList<LeaderboardItem> leaderboard = new ArrayList<>();
 
     private static Client instance = null;
 
@@ -50,20 +35,12 @@ public class Client {
         return instance;
     }
 
-    public static void set(JSONObject json) throws JSONException {
-        getInstance().token_type = json.getString("token_type");
-        getInstance().expires_in = json.getInt("expires_in");
-        getInstance().access_token = json.getString("access_token");
-        getInstance().refresh_token = json.getString("refresh_token");
-        getInstance().logged_in = System.currentTimeMillis() / 1000;
-    }
-
     public boolean hasValidToken() {
-        return !(token_type.isEmpty() || access_token.isEmpty() || isTokenExpired());
+        return token != null && !(token.token_type.isEmpty() || token.access_token.isEmpty() || isTokenExpired());
     }
 
     public boolean isTokenExpired() {
         long currentTime = System.currentTimeMillis() / 1000;
-        return (currentTime > logged_in + expires_in);
+        return token != null && (currentTime > token.logged_in + token.expires_in);
     }
 }

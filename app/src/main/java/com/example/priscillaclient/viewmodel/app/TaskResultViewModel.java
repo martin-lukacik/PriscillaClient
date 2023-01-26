@@ -3,7 +3,7 @@ package com.example.priscillaclient.viewmodel.app;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.priscillaclient.models.TaskResult;
+import com.example.priscillaclient.viewmodel.app.models.TaskResult;
 import com.example.priscillaclient.viewmodel.ViewModelBase;
 
 import java.util.concurrent.Callable;

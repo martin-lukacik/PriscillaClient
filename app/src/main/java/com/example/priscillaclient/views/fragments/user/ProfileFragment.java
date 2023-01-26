@@ -12,15 +12,17 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.example.priscillaclient.LoginActivity;
 import com.example.priscillaclient.R;
-import com.example.priscillaclient.api.HttpResponse;
-import com.example.priscillaclient.models.Client;
-import com.example.priscillaclient.models.User;
+import com.example.priscillaclient.viewmodel.user.ProfileViewModel;
+import com.example.priscillaclient.viewmodel.user.models.Profile;
+import com.example.priscillaclient.viewmodel.user.models.User;
 import com.example.priscillaclient.viewmodel.user.UserViewModel;
 import com.example.priscillaclient.views.fragments.FragmentBase;
 
 import java.util.Random;
 
 public class ProfileFragment extends FragmentBase {
+
+    Profile profile;
 
     public ProfileFragment() { }
 
@@ -37,8 +39,11 @@ public class ProfileFragment extends FragmentBase {
         int b = rand.nextInt(255);
         color = Color.argb(255, r, g, b);
 
-        UserViewModel userViewModel = ViewModelProviders.of(getActivity()).get(UserViewModel.class);
+        UserViewModel userViewModel = (UserViewModel) getViewModel(UserViewModel.class);
         userViewModel.getData().observe(this, this::onUpdate);
+
+        ProfileViewModel profileViewModel = (ProfileViewModel) getViewModel(ProfileViewModel.class);
+        profile = profileViewModel.getData().getValue();
     }
 
     public void logout(View view) {
@@ -82,8 +87,8 @@ public class ProfileFragment extends FragmentBase {
         if (!user.surname.isEmpty())
             lastName = user.surname.charAt(0);
         if (firstName == 0 && lastName == 0) {
-            if (client.profile != null && !client.profile.nickname.isEmpty()) {
-                firstName = client.profile.nickname.charAt(0);
+            if (profile != null && !profile.nickname.isEmpty()) {
+                firstName = profile.nickname.charAt(0);
             }
         }
 

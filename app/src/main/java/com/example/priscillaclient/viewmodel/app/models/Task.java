@@ -1,4 +1,6 @@
-package com.example.priscillaclient.models;
+package com.example.priscillaclient.viewmodel.app.models;
+
+import com.example.priscillaclient.models.TaskType;
 
 import org.json.JSONArray;
 import org.json.JSONException;

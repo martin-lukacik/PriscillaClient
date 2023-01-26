@@ -8,15 +8,18 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProviders;
 
-import com.example.priscillaclient.api.HttpResponse;
-import com.example.priscillaclient.api.legacy.GetToken;
-import com.example.priscillaclient.models.Client;
+import com.example.priscillaclient.viewmodel.user.TokenViewModel;
+import com.example.priscillaclient.viewmodel.user.models.Token;
+import com.example.priscillaclient.views.LoadingDialog;
 
-public class LoginActivity extends AppCompatActivity implements HttpResponse {
+public class LoginActivity extends AppCompatActivity {
 
+    LoadingDialog dialog;
     String refresh_token;
 
     @Override
@@ -35,6 +38,15 @@ public class LoginActivity extends AppCompatActivity implements HttpResponse {
             return false;
         });
 
+        dialog = new LoadingDialog(this);
+
+        TokenViewModel viewModel = ViewModelProviders.of(this).get(TokenViewModel.class);
+        viewModel.getData().observe(this, (data) -> {
+            if (viewModel.hasError())
+                Toast.makeText(this, viewModel.getError(), Toast.LENGTH_LONG).show();
+            else
+                onUpdate(data);
+        });
         SharedPreferences settings = getApplicationContext().getSharedPreferences("settings", 0);
         String username = settings.getString("username", null);
         refresh_token = settings.getString("refresh_token", null);
@@ -42,7 +54,8 @@ public class LoginActivity extends AppCompatActivity implements HttpResponse {
             CheckBox rememberUser = findViewById(R.id.rememberUser);
             rememberUser.setChecked(true);
             ((EditText) findViewById(R.id.inputUsername)).setText(username);
-            new GetToken(this).execute(username, refresh_token, username, "refresh_token");
+            viewModel.fetchData(username, refresh_token, username, "refresh_token");
+            dialog.show();
         }
     }
 
@@ -56,14 +69,18 @@ public class LoginActivity extends AppCompatActivity implements HttpResponse {
         String username = ((EditText) findViewById(R.id.inputUsername)).getText().toString();
         String password = ((EditText) findViewById(R.id.inputPassword)).getText().toString();
 
-        new GetToken(this).execute(username, password, username, "password");
+        //new GetTokenLegacy(this).execute(username, password, username, "password");
+        TokenViewModel viewModel = ViewModelProviders.of(this).get(TokenViewModel.class);
+        viewModel.fetchData(username, password, username, "password");
+        dialog.show();
     }
 
-    @Override
-    public void onUpdate(Object response) {
+    public void onUpdate(Token token) {
 
-        if (response == null)
+        if (token == null)
             return;
+
+        dialog.dismiss();
 
         String username = ((EditText) findViewById(R.id.inputUsername)).getText().toString();
 
@@ -72,7 +89,7 @@ public class LoginActivity extends AppCompatActivity implements HttpResponse {
         CheckBox rememberUser = findViewById(R.id.rememberUser);
         if (rememberUser.isChecked()) {
             editor.putString("username", username);
-            editor.putString("refresh_token", Client.getInstance().refresh_token);
+            editor.putString("refresh_token", token.refresh_token);
         } else {
             editor.putString("username", null);
             editor.putString("refresh_token", null);

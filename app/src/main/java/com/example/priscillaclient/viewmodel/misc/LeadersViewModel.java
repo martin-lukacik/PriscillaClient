@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.priscillaclient.api.misc.GetLeaders;
-import com.example.priscillaclient.models.LeaderboardItem;
+import com.example.priscillaclient.viewmodel.misc.models.LeaderboardItem;
 import com.example.priscillaclient.viewmodel.ViewModelBase;
 
 import java.util.ArrayList;

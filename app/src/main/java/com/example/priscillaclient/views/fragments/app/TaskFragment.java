@@ -25,9 +25,9 @@ import androidx.lifecycle.ViewModelProviders;
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.api.app.DoEvaluateTask;
 import com.example.priscillaclient.api.app.DoPassTask;
-import com.example.priscillaclient.models.Lesson;
-import com.example.priscillaclient.models.Task;
-import com.example.priscillaclient.models.TaskResult;
+import com.example.priscillaclient.viewmodel.app.models.Lesson;
+import com.example.priscillaclient.viewmodel.app.models.Task;
+import com.example.priscillaclient.viewmodel.app.models.TaskResult;
 import com.example.priscillaclient.models.TaskType;
 import com.example.priscillaclient.viewmodel.app.LessonsViewModel;
 import com.example.priscillaclient.viewmodel.app.TaskResultViewModel;
@@ -83,7 +83,7 @@ public class TaskFragment extends FragmentBase {
             chapterId = getArguments().getInt(ARG_CHAPTER_ID);
         }
 
-        taskResultViewModel = ViewModelProviders.of(this).get(TaskResultViewModel.class);
+        taskResultViewModel = (TaskResultViewModel) getViewModel(TaskResultViewModel.class);
         taskResultViewModel.getData().observe(this, (data) -> {
             if (taskResultViewModel.hasError())
                 showError(taskResultViewModel.getError());
@@ -91,7 +91,7 @@ public class TaskFragment extends FragmentBase {
                 onUpdate(data);
         });
 
-        tasksViewModel = ViewModelProviders.of(this).get(TasksViewModel.class);
+        tasksViewModel = (TasksViewModel) getViewModel(TasksViewModel.class);
         tasksViewModel.getData().observe(this, (data) -> {
             if (tasksViewModel.hasError())
                 showError(tasksViewModel.getError());
@@ -99,7 +99,7 @@ public class TaskFragment extends FragmentBase {
                 onUpdateTasks(data);
         });
 
-        lessonsViewModel = ViewModelProviders.of(this).get(LessonsViewModel.class);
+        lessonsViewModel = (LessonsViewModel) getViewModel(LessonsViewModel.class);
         lessonsViewModel.getData().observe(this, (data) -> {
             if (lessonsViewModel.hasError())
                 showError(lessonsViewModel.getError());

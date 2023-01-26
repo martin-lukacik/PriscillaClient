@@ -1,13 +1,12 @@
 package com.example.priscillaclient.views.fragments.misc;
 
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ListView;
 
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.priscillaclient.R;
-import com.example.priscillaclient.models.LeaderboardItem;
+import com.example.priscillaclient.viewmodel.misc.models.LeaderboardItem;
 import com.example.priscillaclient.viewmodel.misc.LeadersViewModel;
 import com.example.priscillaclient.views.LoadingDialog;
 import com.example.priscillaclient.views.adapters.LeaderboardAdapter;
@@ -29,7 +28,7 @@ public class LeaderboardFragment extends FragmentBase {
 
         dialog = new LoadingDialog(getActivity());
 
-        LeadersViewModel viewModel = ViewModelProviders.of(this).get(LeadersViewModel.class);
+        LeadersViewModel viewModel = (LeadersViewModel) getViewModel(LeadersViewModel.class);
         viewModel.getData().observe(this, (data) -> {
             if (viewModel.hasError())
                 showError(viewModel.getError());

@@ -1,22 +1,27 @@
-package com.example.priscillaclient.models;
+package com.example.priscillaclient.viewmodel.user.models;
+
+import com.example.priscillaclient.models.Country;
+import com.example.priscillaclient.models.Group;
+import com.example.priscillaclient.models.Language;
+import com.example.priscillaclient.models.Pair;
+import com.example.priscillaclient.models.Theme;
+import com.example.priscillaclient.viewmodel.user.models.Profile;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.ArrayList;
 
-public class RegistrationData {
+public class Settings {
 
     public final ArrayList<Language> languages = new ArrayList<>();
     public final ArrayList<Country> countries = new ArrayList<>();
     public final ArrayList<Group> groups = new ArrayList<>();
     public final ArrayList<Theme> themes = new ArrayList<>();
 
-    public RegistrationData() { }
+    public Settings() { }
 
-    public void set(JSONArray l, JSONArray c, JSONArray g, JSONArray t) throws JSONException {
-
-        clear();
+    public Settings(JSONArray l, JSONArray c, JSONArray g, JSONArray t) throws JSONException {
 
         for (int i = 0; i < l.length(); ++i)
             languages.add(new Language(l.optJSONObject(i)));
@@ -32,19 +37,11 @@ public class RegistrationData {
 
     }
 
-    public void clear() {
-        languages.clear();
-        countries.clear();
-        groups.clear();
-        themes.clear();
-    }
-
     public boolean isEmpty() {
         return (languages.isEmpty() && countries.isEmpty() && groups.isEmpty() && themes.isEmpty());
     }
 
-    public Pair<Integer, String[]> getCountrySelection() {
-        Profile profile = Client.getInstance().profile;
+    public Pair<Integer, String[]> getCountrySelection(Profile profile) {
         int selectedIndex = 0;
         String[] items = new String[countries.size()];
         for (int i = 0; i < countries.size(); ++i) {
@@ -57,8 +54,7 @@ public class RegistrationData {
         return new Pair<>(selectedIndex, items);
     }
 
-    public Pair<Integer, String[]> getGroupSelection() {
-        Profile profile = Client.getInstance().profile;
+    public Pair<Integer, String[]> getGroupSelection(Profile profile) {
         int selectedIndex = 0;
         String[] items = new String[groups.size()];
         for (int i = 0; i < groups.size(); ++i) {
@@ -71,8 +67,7 @@ public class RegistrationData {
         return new Pair<>(selectedIndex, items);
     }
 
-    public Pair<Integer, String[]> getLanguageSelection() {
-        Profile profile = Client.getInstance().profile;
+    public Pair<Integer, String[]> getLanguageSelection(Profile profile) {
         int selectedIndex = 0;
         String[] items = new String[languages.size()];
         for (int i = 0; i < languages.size(); ++i) {
@@ -85,8 +80,7 @@ public class RegistrationData {
         return new Pair<>(selectedIndex, items);
     }
 
-    public Pair<Integer, String[]> getThemeSelection() {
-        Profile profile = Client.getInstance().profile;
+    public Pair<Integer, String[]> getThemeSelection(Profile profile) {
         int selectedIndex = 0;
         String[] items = new String[themes.size()];
         for (int i = 0; i < themes.size(); ++i) {

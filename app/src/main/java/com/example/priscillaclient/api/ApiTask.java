@@ -3,6 +3,9 @@ package com.example.priscillaclient.api;
 import android.os.Handler;
 import android.os.Looper;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -23,7 +26,11 @@ public class ApiTask {
             try {
                 result = callable.call();
             } catch (Exception e) {
-                setError(e.getMessage());
+                try {
+                    setError(new JSONObject(e.getMessage()).getString("message"));
+                } catch (Exception ignore) {
+                    setError(e.getMessage());
+                }
             }
             final T r = result;
             handler.post(() -> {

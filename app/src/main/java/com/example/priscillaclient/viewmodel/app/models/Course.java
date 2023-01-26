@@ -1,4 +1,4 @@
-package com.example.priscillaclient.models;
+package com.example.priscillaclient.viewmodel.app.models;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;

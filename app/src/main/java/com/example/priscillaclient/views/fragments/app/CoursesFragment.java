@@ -10,7 +10,7 @@ import android.widget.GridView;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.priscillaclient.R;
-import com.example.priscillaclient.models.Course;
+import com.example.priscillaclient.viewmodel.app.models.Course;
 import com.example.priscillaclient.viewmodel.app.CoursesViewModel;
 import com.example.priscillaclient.views.adapters.CourseListAdapter;
 import com.example.priscillaclient.views.fragments.FragmentBase;
@@ -31,7 +31,7 @@ public class CoursesFragment extends FragmentBase {
         super.onCreate(savedInstanceState);
         layoutId = R.layout.fragment_courses;
 
-        CoursesViewModel viewModel = ViewModelProviders.of(this).get(CoursesViewModel.class);
+        CoursesViewModel viewModel = (CoursesViewModel) getViewModel(CoursesViewModel.class);
         viewModel.getData().observe(this, (data) -> {
             if (viewModel.hasError())
                 showError(viewModel.getError());

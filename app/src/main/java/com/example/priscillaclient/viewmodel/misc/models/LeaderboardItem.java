@@ -1,4 +1,4 @@
-package com.example.priscillaclient.models;
+package com.example.priscillaclient.viewmodel.misc.models;
 
 import org.json.JSONException;
 import org.json.JSONObject;

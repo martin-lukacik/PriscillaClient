@@ -7,9 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.example.priscillaclient.MainActivity;
 import com.example.priscillaclient.models.Client;
+import com.example.priscillaclient.viewmodel.ViewModelBase;
+import com.example.priscillaclient.viewmodel.misc.LeadersViewModel;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -62,5 +66,11 @@ public abstract class FragmentBase extends Fragment {
     public void showError(String error) {
         if (getActivity() != null)
             ((MainActivity) getActivity()).showError(error);
+    }
+
+    protected ViewModel getViewModel(Class c) {
+        if (getActivity() != null)
+            return ViewModelProviders.of(getActivity()).get(c);
+        return null;
     }
 }

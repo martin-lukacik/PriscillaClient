@@ -30,7 +30,7 @@ public class HttpConnection {
         connection.setRequestProperty("Accept", "application/json");
 
         if (client.hasValidToken()) {
-            connection.setRequestProperty("Authorization", client.token_type + " " + client.access_token);
+            connection.setRequestProperty("Authorization", client.token.token_type + " " + client.token.access_token);
         }
 
         connection.setDoOutput(doOutput);

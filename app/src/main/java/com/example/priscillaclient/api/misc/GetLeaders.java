@@ -1,7 +1,7 @@
 package com.example.priscillaclient.api.misc;
 
 import com.example.priscillaclient.api.HttpConnection;
-import com.example.priscillaclient.models.LeaderboardItem;
+import com.example.priscillaclient.viewmodel.misc.models.LeaderboardItem;
 
 import org.json.JSONArray;
 import org.json.JSONException;
