@@ -1,4 +1,4 @@
-package com.example.priscillaclient.views.fragments.user;
+package com.example.priscillaclient.fragments.user;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,15 +8,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-import androidx.lifecycle.ViewModelProviders;
-
 import com.example.priscillaclient.LoginActivity;
 import com.example.priscillaclient.R;
+import com.example.priscillaclient.fragments.FragmentBase;
 import com.example.priscillaclient.viewmodel.user.ProfileViewModel;
 import com.example.priscillaclient.viewmodel.user.models.Profile;
 import com.example.priscillaclient.viewmodel.user.models.User;
 import com.example.priscillaclient.viewmodel.user.UserViewModel;
-import com.example.priscillaclient.views.fragments.FragmentBase;
 
 import java.util.Random;
 

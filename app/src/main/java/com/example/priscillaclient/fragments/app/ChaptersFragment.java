@@ -1,17 +1,16 @@
-package com.example.priscillaclient.views.fragments.app;
+package com.example.priscillaclient.fragments.app;
 
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
-import androidx.lifecycle.ViewModelProviders;
-
 import com.example.priscillaclient.R;
+import com.example.priscillaclient.fragments.FragmentBase;
 import com.example.priscillaclient.viewmodel.app.models.Chapter;
 import com.example.priscillaclient.viewmodel.app.ChaptersViewModel;
+import com.example.priscillaclient.views.LoadingDialog;
 import com.example.priscillaclient.views.adapters.ChapterListAdapter;
-import com.example.priscillaclient.views.fragments.FragmentBase;
 
 import java.util.ArrayList;
 

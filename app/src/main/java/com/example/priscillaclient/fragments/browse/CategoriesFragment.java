@@ -1,4 +1,4 @@
-package com.example.priscillaclient.views.fragments.browse;
+package com.example.priscillaclient.fragments.browse;
 
 import android.os.Bundle;
 import android.view.View;
@@ -9,9 +9,9 @@ import android.widget.ListView;
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.api.HttpResponse;
 import com.example.priscillaclient.api.browse.GetCategories;
+import com.example.priscillaclient.fragments.FragmentBase;
 import com.example.priscillaclient.models.Category;
 import com.example.priscillaclient.models.Client;
-import com.example.priscillaclient.views.fragments.FragmentBase;
 
 import java.util.ArrayList;
 

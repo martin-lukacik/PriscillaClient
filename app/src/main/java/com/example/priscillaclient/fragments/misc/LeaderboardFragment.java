@@ -1,16 +1,14 @@
-package com.example.priscillaclient.views.fragments.misc;
+package com.example.priscillaclient.fragments.misc;
 
 import android.os.Bundle;
 import android.widget.ListView;
 
-import androidx.lifecycle.ViewModelProviders;
-
 import com.example.priscillaclient.R;
+import com.example.priscillaclient.fragments.FragmentBase;
 import com.example.priscillaclient.viewmodel.misc.models.LeaderboardItem;
 import com.example.priscillaclient.viewmodel.misc.LeadersViewModel;
 import com.example.priscillaclient.views.LoadingDialog;
 import com.example.priscillaclient.views.adapters.LeaderboardAdapter;
-import com.example.priscillaclient.views.fragments.FragmentBase;
 
 import java.util.ArrayList;
 

@@ -30,13 +30,12 @@ public class GetTasks implements Callable<ArrayList<Task>> {
         }
 
         JSONObject j = new JSONObject(connection.getResponse());
-        int userCourseId = j.getInt("user_course_id");
+        Task.user_course_id = j.getInt("user_course_id");
         JSONArray json = j.getJSONArray("task_list");
 
         ArrayList<Task> tasks = new ArrayList<>();
         for (int i = 0; i < json.length(); ++i) {
             Task t = new Task(json.getJSONObject(i));
-            t.user_course_id = userCourseId;
             tasks.add(t);
         }
 

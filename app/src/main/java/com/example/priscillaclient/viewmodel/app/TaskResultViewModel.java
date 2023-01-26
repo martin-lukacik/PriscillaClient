@@ -9,7 +9,7 @@ import com.example.priscillaclient.viewmodel.ViewModelBase;
 import java.util.concurrent.Callable;
 
 public class TaskResultViewModel extends ViewModelBase {
-    private final MutableLiveData<TaskResult> state = new MutableLiveData<>(null);
+    private MutableLiveData<TaskResult> state = new MutableLiveData<>(null);
 
     public LiveData<TaskResult> getData() {
         return state;
@@ -20,5 +20,9 @@ public class TaskResultViewModel extends ViewModelBase {
             setError(error);
             state.setValue(data);
         });
+    }
+
+    public void clear() {
+        state = new MutableLiveData<>(null);
     }
 }

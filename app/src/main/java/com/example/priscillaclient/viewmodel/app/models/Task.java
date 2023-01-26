@@ -26,7 +26,7 @@ public class Task {
     public final int clarity;
     public final int difficulty;
 
-    public int user_course_id;
+    public static int user_course_id;
 
     String help;
     public ArrayList<String> answers = null;

@@ -1,4 +1,4 @@
-package com.example.priscillaclient.views.fragments.browse;
+package com.example.priscillaclient.fragments.browse;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -16,13 +15,10 @@ import android.widget.ListView;
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.api.HttpResponse;
 import com.example.priscillaclient.api.browse.GetAreaCourses;
+import com.example.priscillaclient.fragments.FragmentBase;
 import com.example.priscillaclient.models.AreaCourse;
 import com.example.priscillaclient.models.Client;
-import com.example.priscillaclient.views.fragments.FragmentBase;
-import com.example.priscillaclient.views.fragments.app.ChaptersFragment;
 import com.google.android.material.textview.MaterialTextView;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 

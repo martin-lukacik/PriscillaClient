@@ -1,4 +1,4 @@
-package com.example.priscillaclient.views.fragments.app;
+package com.example.priscillaclient.fragments.app;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
@@ -25,6 +25,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.api.app.DoEvaluateTask;
 import com.example.priscillaclient.api.app.DoPassTask;
+import com.example.priscillaclient.fragments.FragmentBase;
 import com.example.priscillaclient.viewmodel.app.models.Lesson;
 import com.example.priscillaclient.viewmodel.app.models.Task;
 import com.example.priscillaclient.viewmodel.app.models.TaskResult;
@@ -34,7 +35,6 @@ import com.example.priscillaclient.viewmodel.app.TaskResultViewModel;
 import com.example.priscillaclient.viewmodel.app.TasksViewModel;
 import com.example.priscillaclient.viewmodel.user.UserViewModel;
 import com.example.priscillaclient.views.JavascriptInterface;
-import com.example.priscillaclient.views.fragments.FragmentBase;
 import com.google.android.material.navigation.NavigationView;
 
 import org.jetbrains.annotations.NotNull;
@@ -84,6 +84,7 @@ public class TaskFragment extends FragmentBase {
         }
 
         taskResultViewModel = (TaskResultViewModel) getViewModel(TaskResultViewModel.class);
+        taskResultViewModel.clear();
         taskResultViewModel.getData().observe(this, (data) -> {
             if (taskResultViewModel.hasError())
                 showError(taskResultViewModel.getError());

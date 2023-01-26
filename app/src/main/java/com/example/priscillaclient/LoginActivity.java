@@ -42,8 +42,10 @@ public class LoginActivity extends AppCompatActivity {
 
         TokenViewModel viewModel = ViewModelProviders.of(this).get(TokenViewModel.class);
         viewModel.getData().observe(this, (data) -> {
-            if (viewModel.hasError())
+            if (viewModel.hasError()) {
+                dialog.dismiss();
                 Toast.makeText(this, viewModel.getError(), Toast.LENGTH_LONG).show();
+            }
             else
                 onUpdate(data);
         });
