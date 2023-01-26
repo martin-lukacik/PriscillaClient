@@ -8,17 +8,19 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.lifecycle.ViewModelProviders;
+
 import com.example.priscillaclient.LoginActivity;
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.api.HttpResponse;
-import com.example.priscillaclient.api.user.GetUserParams;
 import com.example.priscillaclient.models.Client;
 import com.example.priscillaclient.models.User;
+import com.example.priscillaclient.viewmodel.user.UserViewModel;
 import com.example.priscillaclient.views.fragments.FragmentBase;
 
 import java.util.Random;
 
-public class ProfileFragment extends FragmentBase implements HttpResponse<Object> {
+public class ProfileFragment extends FragmentBase {
 
     public ProfileFragment() { }
 
@@ -35,7 +37,8 @@ public class ProfileFragment extends FragmentBase implements HttpResponse<Object
         int b = rand.nextInt(255);
         color = Color.argb(255, r, g, b);
 
-        new GetUserParams(this).execute();
+        UserViewModel userViewModel = ViewModelProviders.of(getActivity()).get(UserViewModel.class);
+        userViewModel.getData().observe(this, this::onUpdate);
     }
 
     public void logout(View view) {
@@ -57,11 +60,7 @@ public class ProfileFragment extends FragmentBase implements HttpResponse<Object
         navigate(R.id.settingsFragment);
     }
 
-    @Override
-    public void onUpdate(Object response) {
-
-        Client client = Client.getInstance();
-        User user = client.user;
+    public void onUpdate(User user) {
 
         if (user == null)
             return;

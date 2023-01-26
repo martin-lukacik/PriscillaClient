@@ -21,8 +21,8 @@ public class TasksViewModel extends ViewModelBase {
         return state;
     }
 
-    public void fetchData(int courseId, int chapterId, int lessonId) {
-        if (lastLessonId != lessonId) {
+    public void fetchData(int courseId, int chapterId, int lessonId, boolean forceFetch) {
+        if (forceFetch || lastLessonId != lessonId) {
             apiTask.executeAsync(new GetTasks(courseId, chapterId, lessonId), (data, error) -> {
                 setError(error);
                 state.setValue(data);

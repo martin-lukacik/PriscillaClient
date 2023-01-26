@@ -22,12 +22,9 @@ import android.widget.TextView;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.example.priscillaclient.MainActivity;
 import com.example.priscillaclient.R;
-import com.example.priscillaclient.api.HttpResponse;
 import com.example.priscillaclient.api.app.DoEvaluateTask;
-import com.example.priscillaclient.api.legacy.SetPassedTask;
-import com.example.priscillaclient.api.user.GetUserParams;
+import com.example.priscillaclient.api.app.DoPassTask;
 import com.example.priscillaclient.models.Lesson;
 import com.example.priscillaclient.models.Task;
 import com.example.priscillaclient.models.TaskResult;
@@ -35,6 +32,7 @@ import com.example.priscillaclient.models.TaskType;
 import com.example.priscillaclient.viewmodel.app.LessonsViewModel;
 import com.example.priscillaclient.viewmodel.app.TaskResultViewModel;
 import com.example.priscillaclient.viewmodel.app.TasksViewModel;
+import com.example.priscillaclient.viewmodel.user.UserViewModel;
 import com.example.priscillaclient.views.JavascriptInterface;
 import com.example.priscillaclient.views.fragments.FragmentBase;
 import com.google.android.material.navigation.NavigationView;
@@ -44,7 +42,7 @@ import org.json.JSONArray;
 
 import java.util.ArrayList;
 
-public class TaskFragment extends FragmentBase implements HttpResponse<Object> {
+public class TaskFragment extends FragmentBase {
 
     private static final String ARG_COURSE_ID = "courseId";
     private static final String ARG_CHAPTER_ID = "chapterId";
@@ -115,15 +113,6 @@ public class TaskFragment extends FragmentBase implements HttpResponse<Object> {
 
         this.tasks = tasks;
 
-        if (refreshTask) {
-            for (int i = tasks.size() - 1; i >= 0; --i) {
-                currentTask = i;
-                if (tasks.get(i).passed != 1) {
-                    break;
-                }
-            }
-            refreshTask = false;
-        }
         updateTaskList(tasks);
     }
 
@@ -136,7 +125,7 @@ public class TaskFragment extends FragmentBase implements HttpResponse<Object> {
         currentTask = 0;
         this.lessons = lessons;
 
-        tasksViewModel.fetchData(courseId, chapterId, currentLessonId);
+        tasksViewModel.fetchData(courseId, chapterId, currentLessonId, false);
 
         NavigationView navigationView = findViewById(R.id.navigationView);
         navigationView.bringToFront();
@@ -173,7 +162,7 @@ public class TaskFragment extends FragmentBase implements HttpResponse<Object> {
         currentTask = 0;
         item.setChecked(true);
         currentLessonId = lessonId;
-        tasksViewModel.fetchData(courseId, chapterId, lessonId);
+        tasksViewModel.fetchData(courseId, chapterId, lessonId, false);
 
         DrawerLayout drawer = findViewById(R.id.drawerLayout);
         drawer.closeDrawers();
@@ -214,17 +203,15 @@ public class TaskFragment extends FragmentBase implements HttpResponse<Object> {
     boolean refreshTask = false;
     public void onUpdate(Object response) {
 
-        if (response instanceof TaskResult || response instanceof String) {
+        refreshTask = true;
 
-            refreshTask = true;
-            shouldResetLayout = false;
+        tasksViewModel.fetchData(courseId, chapterId, currentLessonId, true);
 
-            tasksViewModel.fetchData(courseId, chapterId, currentLessonId);
+        if (response instanceof TaskResult) {
+            showRatingDialog(((TaskResult) response));
 
-            if (response instanceof TaskResult) {
-                showRatingDialog(((TaskResult) response));
-                new GetUserParams((MainActivity) getActivity()).execute();
-            }
+            UserViewModel userViewModel = ViewModelProviders.of(getActivity()).get(UserViewModel.class);
+            userViewModel.fetchData();
         }
     }
 
@@ -256,21 +243,14 @@ public class TaskFragment extends FragmentBase implements HttpResponse<Object> {
         dialog.show();
     }
 
-    boolean shouldResetLayout = true;
     public void updateTaskList(ArrayList<Task> tasks) {
 
         if (tasks.isEmpty())
             return;
 
-        if (!shouldResetLayout) {
-            shouldResetLayout = true;
-            return;
-        }
-
         webView.setVisibility(View.GONE);
 
         clearTaskLayout();
-        shouldResetLayout = true;
 
         taskCount.setText((currentTask + 1) + " / " + tasks.size());
 
@@ -283,7 +263,7 @@ public class TaskFragment extends FragmentBase implements HttpResponse<Object> {
             buttonTaskHelp.setVisibility(View.VISIBLE);
         }
 
-        if ((task.type == TaskType.TASK_READ && task.passed == 0) || (task.type != TaskType.TASK_READ)) {
+        if (task.type != TaskType.TASK_READ || task.passed == 0) {
             buttonTaskSubmit.setVisibility(View.VISIBLE);
         } else {
             buttonTaskSubmit.setVisibility(View.GONE);
@@ -424,7 +404,8 @@ public class TaskFragment extends FragmentBase implements HttpResponse<Object> {
             switch (task.type) {
 
                 case TASK_READ:
-                    new SetPassedTask(this, task.task_id).execute();
+
+                    taskResultViewModel.postData(new DoPassTask(task));
                     return;
 
                 case TASK_ORDER:
@@ -471,7 +452,7 @@ public class TaskFragment extends FragmentBase implements HttpResponse<Object> {
                     break;
             }
 
-            taskResultViewModel.postData(new DoEvaluateTask(answer, task.task_id, task.task_type_id, 10));
+            taskResultViewModel.postData(new DoEvaluateTask(task, answer, 10));
         }
     }
 

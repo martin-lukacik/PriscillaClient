@@ -1,6 +1,7 @@
 package com.example.priscillaclient.api.app;
 
 import com.example.priscillaclient.api.HttpConnection;
+import com.example.priscillaclient.models.Task;
 import com.example.priscillaclient.models.TaskResult;
 
 import org.json.JSONObject;
@@ -9,15 +10,13 @@ import java.util.concurrent.Callable;
 
 public class DoEvaluateTask implements Callable<TaskResult> {
 
+    Task task;
     String answersJson;
-    int taskId;
-    int taskTypeId;
     int timeLength;
 
-    public DoEvaluateTask(String answersJson, int taskId, int taskTypeId, int timeLength) {
+    public DoEvaluateTask(Task task, String answersJson, int timeLength) {
         this.answersJson = answersJson;
-        this.taskId = taskId;
-        this.taskTypeId = taskTypeId;
+        this.task = task;
         this.timeLength = timeLength;
     }
 
@@ -28,8 +27,8 @@ public class DoEvaluateTask implements Callable<TaskResult> {
         JSONObject json = new JSONObject();
         json.put("answer_list", answersJson);
         json.put("activity_type", "chapter"); // TODO hardcoded
-        json.put("task_id", taskId);
-        json.put("task_type_id", taskTypeId);
+        json.put("task_id", task.task_id);
+        json.put("task_type_id", task.task_type_id);
         json.put("time_length", timeLength);
 
         connection.sendRequest(json);

@@ -1,9 +1,7 @@
 package com.example.priscillaclient.views.fragments.user;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
@@ -17,15 +15,13 @@ import androidx.appcompat.app.AppCompatDelegate;
 import com.example.priscillaclient.api.HttpResponse;
 import com.example.priscillaclient.models.Pair;
 import com.example.priscillaclient.R;
-import com.example.priscillaclient.api.user.ChangeProfile;
-import com.example.priscillaclient.api.user.GetProfileData;
-import com.example.priscillaclient.api.user.GetRegistrationData;
+import com.example.priscillaclient.api.legacy.ChangeProfile;
+import com.example.priscillaclient.api.legacy.GetProfileData;
+import com.example.priscillaclient.api.legacy.GetRegistrationData;
 import com.example.priscillaclient.models.Client;
 import com.example.priscillaclient.models.Profile;
 import com.example.priscillaclient.models.RegistrationData;
 import com.example.priscillaclient.views.fragments.FragmentBase;
-
-import org.jetbrains.annotations.NotNull;
 
 public class SettingsFragment extends FragmentBase implements HttpResponse<Object> {
 
