@@ -25,15 +25,15 @@ import androidx.lifecycle.ViewModelProviders;
 import com.example.priscillaclient.MainActivity;
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.api.HttpResponse;
-import com.example.priscillaclient.api.legacy.EvaluateTask;
+import com.example.priscillaclient.api.app.DoEvaluateTask;
 import com.example.priscillaclient.api.legacy.SetPassedTask;
 import com.example.priscillaclient.api.user.GetUserParams;
-import com.example.priscillaclient.models.Client;
 import com.example.priscillaclient.models.Lesson;
 import com.example.priscillaclient.models.Task;
 import com.example.priscillaclient.models.TaskResult;
 import com.example.priscillaclient.models.TaskType;
 import com.example.priscillaclient.viewmodel.app.LessonsViewModel;
+import com.example.priscillaclient.viewmodel.app.TaskResultViewModel;
 import com.example.priscillaclient.viewmodel.app.TasksViewModel;
 import com.example.priscillaclient.views.JavascriptInterface;
 import com.example.priscillaclient.views.fragments.FragmentBase;
@@ -42,7 +42,6 @@ import com.google.android.material.navigation.NavigationView;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 
-import java.net.URLEncoder;
 import java.util.ArrayList;
 
 public class TaskFragment extends FragmentBase implements HttpResponse<Object> {
@@ -60,6 +59,7 @@ public class TaskFragment extends FragmentBase implements HttpResponse<Object> {
 
     LessonsViewModel lessonsViewModel;
     TasksViewModel tasksViewModel;
+    TaskResultViewModel taskResultViewModel;
 
     Button buttonTaskNext;
     Button buttonTaskPrevious;
@@ -85,6 +85,14 @@ public class TaskFragment extends FragmentBase implements HttpResponse<Object> {
             chapterId = getArguments().getInt(ARG_CHAPTER_ID);
         }
 
+        taskResultViewModel = ViewModelProviders.of(this).get(TaskResultViewModel.class);
+        taskResultViewModel.getData().observe(this, (data) -> {
+            if (taskResultViewModel.hasError())
+                showError(taskResultViewModel.getError());
+            else
+                onUpdate(data);
+        });
+
         tasksViewModel = ViewModelProviders.of(this).get(TasksViewModel.class);
         tasksViewModel.getData().observe(this, (data) -> {
             if (tasksViewModel.hasError())
@@ -108,7 +116,7 @@ public class TaskFragment extends FragmentBase implements HttpResponse<Object> {
         this.tasks = tasks;
 
         if (refreshTask) {
-            for (int i = tasks.size(); i >= 0; --i) {
+            for (int i = tasks.size() - 1; i >= 0; --i) {
                 currentTask = i;
                 if (tasks.get(i).passed != 1) {
                     break;
@@ -204,7 +212,6 @@ public class TaskFragment extends FragmentBase implements HttpResponse<Object> {
     }
 
     boolean refreshTask = false;
-    @Override
     public void onUpdate(Object response) {
 
         if (response instanceof TaskResult || response instanceof String) {
@@ -413,16 +420,17 @@ public class TaskFragment extends FragmentBase implements HttpResponse<Object> {
             Task task = tasks.get(currentTask);
             ArrayList<String> postedAnswers = new ArrayList<>();
 
+            String answer = null;
             switch (task.type) {
+
+                case TASK_READ:
+                    new SetPassedTask(this, task.task_id).execute();
+                    return;
 
                 case TASK_ORDER:
                 case TASK_FILL:
                 case TASK_DRAG:
-                    new EvaluateTask(this).execute(javascriptInterface.data, task.task_id + "", task.task_type_id + "", "10");
-                    break;
-
-                case TASK_READ:
-                    new SetPassedTask(this, task.task_id).execute();
+                    answer = javascriptInterface.data;;
                     break;
 
                 case TASK_CHOICE:
@@ -441,12 +449,11 @@ public class TaskFragment extends FragmentBase implements HttpResponse<Object> {
                         }
                     }
 
-                    String answer = (index == -1 ? "" : task.answers.get(index));
-                    new EvaluateTask(this).execute("[\"" + answer + "\"]", task.task_id + "", task.task_type_id + "", "10");
+                    answer = "[\"" + (index == -1 ? "" : task.answers.get(index)) + "\"]";
                     break;
 
                 case TASK_INPUT:
-                    new EvaluateTask(this).execute("[\"" + inputEditText.getText().toString() + "\"]", task.task_id + "", task.task_type_id + "", "10");
+                    answer = "[\"" + inputEditText.getText().toString() + "\"]";
                     break;
 
                 case TASK_MULTI:
@@ -460,9 +467,11 @@ public class TaskFragment extends FragmentBase implements HttpResponse<Object> {
                             }
                         }
                     }
-                    new EvaluateTask(this).execute(new JSONArray(postedAnswers).toString(), task.task_id + "", task.task_type_id + "", "10");
+                    answer = new JSONArray(postedAnswers).toString();
                     break;
             }
+
+            taskResultViewModel.postData(new DoEvaluateTask(answer, task.task_id, task.task_type_id, 10));
         }
     }
 
