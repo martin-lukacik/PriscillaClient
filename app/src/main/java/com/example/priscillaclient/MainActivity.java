@@ -16,10 +16,10 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
-import com.example.priscillaclient.viewmodel.user.ProfileViewModel;
-import com.example.priscillaclient.viewmodel.user.SettingsViewModel;
-import com.example.priscillaclient.viewmodel.user.UserViewModel;
-import com.example.priscillaclient.viewmodel.user.models.User;
+import com.example.priscillaclient.user.viewmodel.ProfileViewModel;
+import com.example.priscillaclient.user.viewmodel.SettingsViewModel;
+import com.example.priscillaclient.user.viewmodel.UserViewModel;
+import com.example.priscillaclient.user.viewmodel.models.User;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 /*
@@ -66,22 +66,22 @@ public class MainActivity extends AppCompatActivity {
         if (navHostFragment != null) {
             navController = navHostFragment.getNavController();
             NavigationUI.setupWithNavController(navigationView, navController);
-
-            UserViewModel userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
-            userViewModel.getData().observe(this, (data) -> {
-                if (userViewModel.hasError())
-                    showError(userViewModel.getError());
-                else
-                    onUpdate(data);
-            });
-            userViewModel.fetchData();
-
-            SettingsViewModel settingsViewModel = ViewModelProviders.of(this).get(SettingsViewModel.class);
-            settingsViewModel.fetchData();
-
-            ProfileViewModel profileViewModel = ViewModelProviders.of(this).get(ProfileViewModel.class);
-            profileViewModel.fetchData();
         }
+
+        UserViewModel userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
+        userViewModel.getData().observe(this, (data) -> {
+            if (userViewModel.hasError())
+                showError(userViewModel.getError());
+            else
+                onUpdate(data);
+        });
+        userViewModel.fetchData();
+
+        SettingsViewModel settingsViewModel = ViewModelProviders.of(this).get(SettingsViewModel.class);
+        settingsViewModel.fetchData();
+
+        ProfileViewModel profileViewModel = ViewModelProviders.of(this).get(ProfileViewModel.class);
+        profileViewModel.fetchData();
     }
 
     @Override

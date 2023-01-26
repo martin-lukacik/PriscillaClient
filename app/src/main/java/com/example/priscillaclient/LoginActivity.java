@@ -13,9 +13,9 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.example.priscillaclient.viewmodel.user.TokenViewModel;
-import com.example.priscillaclient.viewmodel.user.models.Token;
-import com.example.priscillaclient.views.LoadingDialog;
+import com.example.priscillaclient.user.viewmodel.TokenViewModel;
+import com.example.priscillaclient.user.viewmodel.models.Token;
+import com.example.priscillaclient.util.LoadingDialog;
 
 public class LoginActivity extends AppCompatActivity {
 
