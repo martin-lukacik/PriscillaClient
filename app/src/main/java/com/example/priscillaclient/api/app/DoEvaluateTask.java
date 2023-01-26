@@ -22,7 +22,7 @@ public class DoEvaluateTask implements Callable<TaskResult> {
 
     @Override
     public TaskResult call() throws Exception {
-        HttpConnection connection = new HttpConnection("/task-evaluate2", "POST", true);
+        HttpConnection connection = new HttpConnection("/task-evaluate2", "POST");
 
         JSONObject json = new JSONObject();
         json.put("answer_list", answersJson);

@@ -15,7 +15,7 @@ public class GetCourses implements Callable<ArrayList<Course>> {
 
     @Override
     public ArrayList<Course> call() throws Exception {
-        HttpConnection connection = new HttpConnection("/get-active-user-courses2", "GET", false);
+        HttpConnection connection = new HttpConnection("/get-active-user-courses2", "GET");
 
         if (connection.getErrorStream() != null) {
             throw new Exception(connection.getErrorMessage());

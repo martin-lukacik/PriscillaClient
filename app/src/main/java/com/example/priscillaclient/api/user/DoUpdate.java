@@ -32,7 +32,7 @@ public class DoUpdate implements Callable<String> {
 
     @Override
     public String call() throws Exception {
-        HttpConnection connection = new HttpConnection("/profile-change", "POST", true);
+        HttpConnection connection = new HttpConnection("/profile-change", "POST");
 
         JSONObject json = new JSONObject();
         json.put("age", age);

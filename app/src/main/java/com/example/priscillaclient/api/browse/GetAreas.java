@@ -30,7 +30,7 @@ public class GetAreas extends ApiTaskLegacy {
         client.lastCategoryId = categoryId;
 
         try {
-            HttpConnection connection = new HttpConnection("/get-areas/" + categoryId, "GET", false);
+            HttpConnection connection = new HttpConnection("/get-areas/" + categoryId, "GET");
 
             if (connection.getErrorStream() != null) {
                 logError(connection.getErrorMessage());

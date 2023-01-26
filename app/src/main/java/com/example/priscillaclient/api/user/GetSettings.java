@@ -11,7 +11,7 @@ import java.util.concurrent.Callable;
 public class GetSettings implements Callable<Settings> {
     @Override
     public Settings call() throws Exception {
-        HttpConnection connection = new HttpConnection("/get-registration-data", "GET", false);
+        HttpConnection connection = new HttpConnection("/get-registration-data", "GET");
 
         if (connection.getErrorStream() != null) {
             throw new Exception(connection.getErrorMessage());

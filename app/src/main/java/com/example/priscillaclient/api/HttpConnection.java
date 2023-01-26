@@ -21,7 +21,7 @@ public class HttpConnection {
 
     static Client client = Client.getInstance();
 
-    public HttpConnection(String endpoint, String method, boolean doOutput) throws Exception {
+    public HttpConnection(String endpoint, String method) throws Exception {
         URL url = new URL(ApiTaskLegacy.baseUrl + endpoint);
 
         connection = (HttpURLConnection) url.openConnection();
@@ -33,12 +33,8 @@ public class HttpConnection {
             connection.setRequestProperty("Authorization", client.token.token_type + " " + client.token.access_token);
         }
 
-        connection.setDoOutput(doOutput);
+        connection.setDoOutput(method.equals("POST"));
         connection.setDoInput(true);
-    }
-
-    public HttpURLConnection getInstance() {
-        return connection;
     }
 
     public void sendRequest(JSONObject json) throws IOException {

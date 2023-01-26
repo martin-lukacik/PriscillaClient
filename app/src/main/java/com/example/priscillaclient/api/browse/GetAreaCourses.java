@@ -30,7 +30,7 @@ public class GetAreaCourses extends ApiTaskLegacy {
         client.lastAreaId = areaId;
 
         try {
-            HttpConnection connection = new HttpConnection("/area-all-courses/" + areaId, "GET", false);
+            HttpConnection connection = new HttpConnection("/area-all-courses/" + areaId, "GET");
 
             if (connection.getErrorStream() != null) {
                 logError(connection.getErrorMessage());

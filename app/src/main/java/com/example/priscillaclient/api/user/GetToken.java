@@ -26,7 +26,7 @@ public class GetToken implements Callable<Token> {
 
     @Override
     public Token call() throws Exception {
-        HttpConnection connection = new HttpConnection("/oauth/token", "POST", true);
+        HttpConnection connection = new HttpConnection("/oauth/token", "POST");
 
         JSONObject json = new JSONObject();
         json.put("client_id", client_id);

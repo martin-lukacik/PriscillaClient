@@ -15,7 +15,7 @@ public class GetLeaders implements Callable<ArrayList<LeaderboardItem>> {
     @Override
     public ArrayList<LeaderboardItem> call() throws Exception {
 
-        HttpConnection connection = new HttpConnection("/get-leaders2", "POST", true);
+        HttpConnection connection = new HttpConnection("/get-leaders2", "POST");
 
         JSONObject json = getJSONObject();
 

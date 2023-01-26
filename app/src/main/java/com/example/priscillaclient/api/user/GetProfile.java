@@ -10,7 +10,7 @@ import java.util.concurrent.Callable;
 public class GetProfile implements Callable<Profile> {
     @Override
     public Profile call() throws Exception {
-        HttpConnection connection = new HttpConnection("/get-profile-data", "GET", false);
+        HttpConnection connection = new HttpConnection("/get-profile-data", "GET");
 
         if (connection.getErrorStream() != null) {
             throw new Exception(connection.getErrorMessage());

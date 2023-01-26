@@ -21,7 +21,7 @@ public class GetChapters implements Callable<ArrayList<Chapter>> {
 
     @Override
     public ArrayList<Chapter> call() throws Exception {
-        HttpConnection connection = new HttpConnection("/get-active-chapters2/" + courseId, "GET", false);
+        HttpConnection connection = new HttpConnection("/get-active-chapters2/" + courseId, "GET");
 
         if (connection.getErrorStream() != null) {
             throw new Exception(connection.getErrorMessage());

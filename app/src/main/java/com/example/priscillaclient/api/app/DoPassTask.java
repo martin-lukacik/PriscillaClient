@@ -17,7 +17,7 @@ public class DoPassTask implements Callable<TaskResult> {
 
     @Override
     public TaskResult call() throws Exception {
-        HttpConnection connection = new HttpConnection("/set-passed-tasks-content2", "POST", true);
+        HttpConnection connection = new HttpConnection("/set-passed-tasks-content2", "POST");
 
         JSONObject json = new JSONObject();
         json.put("task_id", task.task_id);

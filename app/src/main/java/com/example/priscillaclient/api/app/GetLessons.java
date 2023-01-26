@@ -19,7 +19,7 @@ public class GetLessons implements Callable<ArrayList<Lesson>> {
 
     @Override
     public ArrayList<Lesson> call() throws Exception {
-        HttpConnection connection = new HttpConnection("/get-active-lessons2/" + chapterId, "GET", false);
+        HttpConnection connection = new HttpConnection("/get-active-lessons2/" + chapterId, "GET");
 
         if (connection.getErrorStream() != null) {
             throw new Exception(connection.getErrorMessage());

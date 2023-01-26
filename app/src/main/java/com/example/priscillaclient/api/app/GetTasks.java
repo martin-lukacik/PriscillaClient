@@ -23,7 +23,7 @@ public class GetTasks implements Callable<ArrayList<Task>> {
 
     @Override
     public ArrayList<Task> call() throws Exception {
-        HttpConnection connection = new HttpConnection("/get-active-tasks2/" + courseId + "/" + chapterId + "/" + lessonId, "GET", false);
+        HttpConnection connection = new HttpConnection("/get-active-tasks2/" + courseId + "/" + chapterId + "/" + lessonId, "GET");
 
         if (connection.getErrorStream() != null) {
             throw new Exception(connection.getErrorMessage());
