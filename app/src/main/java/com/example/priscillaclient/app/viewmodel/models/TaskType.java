@@ -10,4 +10,5 @@ public enum TaskType {
     TASK_DRAG,          // 6
     TASK_ORDER,         // 7
     TASK_CODE,          // 8
+    TASK_CODE2,         // 9
 }

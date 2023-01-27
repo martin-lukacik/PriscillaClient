@@ -3,13 +3,13 @@ package com.example.priscillaclient.app;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.SharedPreferences;
-import android.content.res.ColorStateList;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -22,8 +22,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import androidx.core.content.ContextCompat;
-import androidx.core.widget.CompoundButtonCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -38,6 +36,7 @@ import com.example.priscillaclient.app.viewmodel.models.Task;
 import com.example.priscillaclient.app.viewmodel.models.TaskResult;
 import com.example.priscillaclient.app.viewmodel.models.TaskType;
 import com.example.priscillaclient.user.viewmodel.UserViewModel;
+import com.example.priscillaclient.user.viewmodel.models.Theme;
 import com.example.priscillaclient.util.FragmentBase;
 import com.example.priscillaclient.util.JavascriptInterface;
 import com.google.android.material.navigation.NavigationView;
@@ -47,10 +46,15 @@ import org.json.JSONArray;
 
 import java.util.ArrayList;
 
+import io.github.rosemoe.sora.langs.java.JavaLanguage;
+import io.github.rosemoe.sora.widget.CodeEditor;
+
 public class TaskFragment extends FragmentBase {
 
     private static final String ARG_COURSE_ID = "courseId";
     private static final String ARG_CHAPTER_ID = "chapterId";
+
+    private int themeId = Theme.THEME_LIGHT;
 
     private int courseId;
     private int chapterId;
@@ -69,6 +73,7 @@ public class TaskFragment extends FragmentBase {
     Button buttonTaskHelp;
     Button buttonTaskSubmit;
     LinearLayout taskLayout;
+    LinearLayout codeTaskLayout;
     TextView taskCount;
     WebView webView;
     EditText inputEditText;
@@ -113,6 +118,11 @@ public class TaskFragment extends FragmentBase {
                 onUpdateLessons(data);
         });
         lessonsViewModel.fetchData(chapterId);
+
+        if (getActivity() != null) {
+            SharedPreferences settings = getActivity().getSharedPreferences("settings", 0);
+            themeId = settings.getInt("theme_id", 0);
+        }
     }
 
     private void onUpdateTasks(ArrayList<Task> tasks) {
@@ -183,6 +193,7 @@ public class TaskFragment extends FragmentBase {
         webView = findViewById(R.id.webView);
         stars = findViewById(R.id.stars);
         taskLayout = findViewById(R.id.taskLayout);
+        codeTaskLayout = findViewById(R.id.codeTaskLayout);
         taskCount = findViewById(R.id.taskCount);
         inputEditText = findViewById(R.id.inputEditText);
         buttonTaskNext = findViewById(R.id.buttonTaskNext);
@@ -195,6 +206,10 @@ public class TaskFragment extends FragmentBase {
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
         webView.addJavascriptInterface(javascriptInterface, "Android");
+        webView.setOnLongClickListener(v -> true);
+        webView.setOnTouchListener((v, event) -> (event.getAction() == MotionEvent.ACTION_MOVE));
+        webView.setVerticalScrollBarEnabled(false);
+        webView.setHorizontalScrollBarEnabled(false);
 
         buttonTaskHelp.setOnClickListener(this::getTaskHelp);
         buttonTaskNext.setOnClickListener(this::nextTask);
@@ -249,20 +264,7 @@ public class TaskFragment extends FragmentBase {
         dialog.show();
     }
 
-    public void updateTaskList(ArrayList<Task> tasks) {
-
-        if (tasks.isEmpty())
-            return;
-
-        webView.setVisibility(View.GONE);
-
-        clearTaskLayout();
-
-        taskCount.setText((currentTask + 1) + " / " + tasks.size());
-
-        Task task = tasks.get(currentTask);
-
-        stars.removeAllViews();
+    private void setButtonsVisibility(Task task) {
         if (task.max_score == 0 && task.passed != 1) {
             buttonTaskHelp.setVisibility(View.GONE);
         } else {
@@ -278,82 +280,127 @@ public class TaskFragment extends FragmentBase {
         if (task.passed == 1) {
             buttonTaskHelp.setText("PASSED");
             buttonTaskHelp.setEnabled(false);
-
-            if (task.max_score > 0) {
-                for (int i = 1; i <= 5; ++i) {
-                    ImageView star = new ImageView(getActivity());
-                    star.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
-                    int ratingAdjusted = (int) Math.ceil((task.score / (float) task.max_score) * 100 / 20f);
-                    if (ratingAdjusted >= i) {
-                        star.setBackgroundResource(R.drawable.ic_star_full);
-                    } else {
-                        star.setBackgroundResource(R.drawable.ic_star);
-                    }
-
-                    stars.addView(star);
-                }
-            }
         } else {
             buttonTaskHelp.setText("Help");
             buttonTaskHelp.setEnabled(true);
         }
+    }
+
+    private void setStarsRating(Task task) {
+        for (int i = 1; i <= 5; ++i) {
+            ImageView star = new ImageView(getActivity());
+            star.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
+            int ratingAdjusted = (int) Math.ceil((task.score / (float) task.max_score) * 100 / 20f);
+            if (ratingAdjusted >= i) {
+                star.setBackgroundResource(R.drawable.ic_star_full);
+            } else {
+                star.setBackgroundResource(R.drawable.ic_star);
+            }
+
+            stars.addView(star);
+        }
+    }
+
+    int currentIndex = 0;
+    public void updateTaskList(ArrayList<Task> tasks) {
+
+        if (tasks.isEmpty())
+            return;
+
+        Task task = tasks.get(currentTask);
+        clearTaskLayout();
+        setButtonsVisibility(task);
+
+        if (task.passed == 1 && task.max_score > 0)
+            setStarsRating(task);
 
         int taskStyleId = R.raw.task_style;
 
-        SharedPreferences settings = getActivity().getSharedPreferences("settings", 0);
-        int theme_id = settings.getInt("theme_id", 0);
-
-        if (theme_id == 2) {
+        if (themeId == 2)
             taskStyleId = R.raw.task_style_dark;
-        }
-
 
         String css = "<style>" + readFile(taskStyleId) + "</style>";
         String javascript = "<script>" + readFile(R.raw.task_script) + "</script>";
 
         String content = task.content;
 
+
+        codeTaskLayout.setVisibility(View.GONE);
         switch (task.type) {
 
-            case TASK_CHOICE:
-                if (task.answers != null) {
-                    RadioGroup radioGroup = new RadioGroup(getActivity());
-                    radioGroup.setTag("CLEAR");
+            case TASK_CODE:
+            case TASK_CODE2:
 
-                    for (String answer : task.answers) {
-                        RadioButton radioButton = new RadioButton(getActivity());
-                        radioButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                        radioButton.setText(answer);
-                        if (theme_id == 2)
-                            radioButton.setTextColor(0xffffffff);
-                        CompoundButtonCompat.setButtonTintList(radioButton, ContextCompat.getColorStateList(getActivity(), com.google.android.material.R.color.design_default_color_secondary));
-                        radioGroup.addView(radioButton);
+                codeTaskLayout.setVisibility(View.VISIBLE);
+
+                CodeEditor codeView = new CodeEditor(getActivity());
+                codeView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                codeView.setHighlightCurrentLine(true);
+                codeView.setHighlightBracketPair(true);
+                codeView.setEditorLanguage(new JavaLanguage());
+
+                codeView.setOnTouchListener((v, event) -> {
+                    if (codeView.hasFocus()) {
+                        v.getParent().requestDisallowInterceptTouchEvent(true);
+                        switch (event.getAction() & MotionEvent.ACTION_MASK){
+                            case MotionEvent.ACTION_SCROLL:
+                                v.getParent().requestDisallowInterceptTouchEvent(false);
+                                return true;
+                        }
                     }
-                    taskLayout.addView(radioGroup);
+                    return false;
+                });
+
+                for (int i = 0; i < task.fileNames.size(); ++i) {
+                    TextView fileNameView = new TextView(getActivity());
+                    fileNameView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                    fileNameView.setText(task.fileNames.get(i));
+                    fileNameView.setTextSize(18);
+
+
+                    int finalI = i;
+                    int defaultColor = fileNameView.getTextColors().getDefaultColor();
+                    if (i == 0) {
+                        fileNameView.setTextColor(0xff008000);
+                    }
+                    fileNameView.setOnClickListener((e) -> {
+                        // TODO Make an answer list
+                        task.files.set(currentIndex, codeView.getText().toString());
+                        currentIndex = finalI;
+                        codeView.setText(task.files.get(finalI));
+
+                        for (int j = 0; j < codeTaskLayout.getChildCount(); ++j) {
+                            View v = codeTaskLayout.getChildAt(j);
+                            if (v instanceof TextView) {
+                                ((TextView) v).setTextColor(defaultColor);
+                            }
+                        }
+
+                        ((TextView) e).setTextColor(0xff008000);
+                    });
+
+                    codeView.setText(task.files.get(0));
+
+                    codeTaskLayout.addView(fileNameView);
                 }
+
+                codeTaskLayout.addView(codeView);
+
+                break;
+
+            case TASK_CHOICE:
+                if (task.answers != null)
+                    TaskHelper.initializeRadioGroup(getActivity(), taskLayout, themeId, task.answers);
                 break;
             case TASK_FILL:
                 content = task.content.replaceAll("§§_§§", "<input class=\"answer\" type=\"text\" oninput=\"process();\">");
                 break;
-
             case TASK_INPUT:
                 inputEditText.setVisibility(View.VISIBLE);
                 break;
             case TASK_MULTI:
-                if (task.answers != null) {
-                    for (String answer : task.answers) {
-                        CheckBox checkBox = new CheckBox(getActivity());
-                        checkBox.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                        checkBox.setText(answer);
-                        checkBox.setTag("CLEAR");
-
-                        if (theme_id == 2)
-                            checkBox.setTextColor(0xffffffff);
-
-                        CompoundButtonCompat.setButtonTintList(checkBox, ContextCompat.getColorStateList(getActivity(), com.google.android.material.R.color.design_default_color_secondary));
-                        taskLayout.addView(checkBox);
-                    }
-                }
+                if (task.answers != null)
+                    TaskHelper.initializeCheckBoxes(getActivity(), taskLayout, themeId, task.answers);
                 break;
             case TASK_DRAG:
 
@@ -396,6 +443,13 @@ public class TaskFragment extends FragmentBase {
     }
 
     private void clearTaskLayout() {
+
+        webView.setVisibility(View.GONE);
+        taskCount.setText((currentTask + 1) + " / " + tasks.size());
+        stars.removeAllViews();
+
+        codeTaskLayout.removeAllViews();
+        codeTaskLayout.setVisibility(View.GONE);
 
         inputEditText.setText("");
         inputEditText.setVisibility(View.GONE);

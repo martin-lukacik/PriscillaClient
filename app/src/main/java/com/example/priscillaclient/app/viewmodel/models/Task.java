@@ -32,6 +32,8 @@ public class Task {
     public ArrayList<String> answers = null;
     public ArrayList<String> fakes = null;
     public ArrayList<String> codes = null;
+    public ArrayList<String> fileNames = null;
+    public ArrayList<String> files = null;
 
     public TaskType type;
     static TaskType[] taskTypes = TaskType.values();
@@ -61,7 +63,8 @@ public class Task {
 
         try {
             JSONObject j = new JSONObject(content);
-            content = j.getString("content");
+            String c = j.optString("content", null);
+            content = (c == null ? j.getString("assignment") : c);
 
             if (j.has("help")) {
                 help = json.optString("help");
@@ -90,6 +93,31 @@ public class Task {
                     codes.add(jCodes.optString(i));
                 }
             }
-        } catch (Exception ignore) { }
+
+
+            if (type == TaskType.TASK_CODE || type == TaskType.TASK_CODE2) {
+
+                JSONObject g = new JSONObject(globals);
+                if (g.has("files")) {
+                    fileNames = new ArrayList<>();
+                    JSONArray gFiles = g.getJSONObject("files").getJSONArray("files");
+                    for (int i = 0; i < gFiles.length(); ++i) {
+                        fileNames.add(gFiles.optString(i));
+                    }
+                }
+
+                if (j.has("files")) {
+                    files = new ArrayList<>();
+                    JSONArray jFiles = j.getJSONArray("files");
+                    for (int i = 0; i < jFiles.length(); ++i) {
+                        files.add(jFiles.getJSONObject(i).getString("rContent"));
+                    }
+                }
+
+                content = j.getString("assignment");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

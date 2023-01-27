@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:id="@+id/drawerLayout"
     tools:context=".app.TaskFragment">
@@ -21,80 +22,80 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:paddingBottom="0dp"
-                android:orientation="horizontal">
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="32sp"
-                    android:textColor="?colorSecondary"
-                    style="?android:attr/borderlessButtonStyle"
-                    android:backgroundTint="@android:color/transparent"
-                    android:layout_weight="1"
-                    android:textStyle="bold"
-                    android:text="«"
-                    android:id="@+id/buttonTaskPrevious"
-                    android:layout_gravity="start" />
-                <TextView
-                    android:id="@+id/taskCount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="5"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
-                    android:gravity="center"
-                    android:layout_gravity="center" />
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="32sp"
-                    android:textColor="?colorSecondary"
-                    style="?android:attr/borderlessButtonStyle"
-                    android:backgroundTint="@android:color/transparent"
-                    android:layout_weight="1"
-                    android:textStyle="bold"
-                    android:text="»"
-                    android:id="@+id/buttonTaskNext"
-                    android:layout_gravity="end" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="15dp"
-                android:orientation="horizontal">
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/help"
-                    android:id="@+id/buttonTaskHelp"
-                    android:layout_gravity="start"/>
+                android:orientation="vertical">
                 <LinearLayout
-                    android:id="@+id/stars"
-                    android:layout_gravity="center"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_weight="5"
-                    android:orientation="horizontal" />
-                <Button
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_marginEnd="10dp"
-                    android:background="@drawable/ic_submit"
-                    android:id="@+id/buttonTaskSubmit"
-                    android:layout_gravity="center" />
-            </LinearLayout>
+                    android:padding="10dp"
+                    android:paddingBottom="0dp"
+                    android:orientation="horizontal">
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="32sp"
+                        android:textColor="?colorSecondary"
+                        style="?android:attr/borderlessButtonStyle"
+                        android:backgroundTint="@android:color/transparent"
+                        android:layout_weight="1"
+                        android:textStyle="bold"
+                        android:text="«"
+                        android:id="@+id/buttonTaskPrevious"
+                        android:layout_gravity="start" />
+                    <TextView
+                        android:id="@+id/taskCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="5"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:layout_gravity="center" />
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="32sp"
+                        android:textColor="?colorSecondary"
+                        style="?android:attr/borderlessButtonStyle"
+                        android:backgroundTint="@android:color/transparent"
+                        android:layout_weight="1"
+                        android:textStyle="bold"
+                        android:text="»"
+                        android:id="@+id/buttonTaskNext"
+                        android:layout_gravity="end" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="15dp"
+                    android:orientation="horizontal">
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/help"
+                        android:id="@+id/buttonTaskHelp"
+                        android:layout_gravity="start"/>
+                    <LinearLayout
+                        android:id="@+id/stars"
+                        android:layout_gravity="center"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_weight="5"
+                        android:orientation="horizontal" />
+                    <Button
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_marginEnd="10dp"
+                        android:background="@drawable/ic_submit"
+                        android:id="@+id/buttonTaskSubmit"
+                        android:layout_gravity="center" />
+                </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -112,9 +113,16 @@
                         android:inputType="textNoSuggestions"
                         android:hint="@string/answer"
                         android:autofillHints="" />
+
+                    <LinearLayout
+                        android:id="@+id/codeTaskLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:paddingBottom="25dp"
+                        android:orientation="vertical" />
                 </LinearLayout>
-        </LinearLayout>
-    </ScrollView>
+            </LinearLayout>
+        </ScrollView>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
