@@ -29,6 +29,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.app.api.DoEvaluateTask;
 import com.example.priscillaclient.app.api.DoPassTask;
+import com.example.priscillaclient.app.api.DoRunProgram;
 import com.example.priscillaclient.app.viewmodel.LessonsViewModel;
 import com.example.priscillaclient.app.viewmodel.TaskResultViewModel;
 import com.example.priscillaclient.app.viewmodel.TasksViewModel;
@@ -506,15 +507,19 @@ public class TaskFragment extends FragmentBase {
             Task task = tasks.get(currentTask);
             ArrayList<String> postedAnswers = new ArrayList<>();
 
+            int exeType = 0;
             String answer = null;
             switch (task.type) {
 
+                case TASK_CODE3:
+                    exeType = 1;
                 case TASK_CODE:
                 case TASK_CODE2:
-                case TASK_CODE3: // exe_type 1
                     codes.set(currentIndex, codeView.getText().toString());
-                    taskResultViewModel.saveCode(task.task_id, task.fileNames, codes);
+                    //taskResultViewModel.saveCode(task.task_id, task.fileNames, codes);
+                    taskResultViewModel.postData(new DoRunProgram(exeType, task, task.fileNames, codes, 60));
                     return;
+
                 case TASK_READ:
 
                     taskResultViewModel.postData(new DoPassTask(task));
