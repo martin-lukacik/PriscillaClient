@@ -117,7 +117,7 @@
                     <LinearLayout
                         android:id="@+id/codeTaskLayout"
                         android:layout_width="match_parent"
-                        android:layout_height="200dp"
+                        android:layout_height="500dp"
                         android:paddingBottom="25dp"
                         android:orientation="vertical" />
                 </LinearLayout>

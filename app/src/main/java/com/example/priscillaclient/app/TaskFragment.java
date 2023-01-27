@@ -3,6 +3,7 @@ package com.example.priscillaclient.app;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -100,6 +101,21 @@ public class TaskFragment extends FragmentBase {
                 showError(taskResultViewModel.getError());
             else
                 onUpdate(data);
+        });
+        taskResultViewModel.getSaveState().observe(this, (data) -> {
+            if (taskResultViewModel.hasError())
+                showError(taskResultViewModel.getError());
+            else
+                showError(data);
+        });
+        taskResultViewModel.getLoadedCode().observe(this, (data) -> {
+            if (taskResultViewModel.hasError())
+                showError(taskResultViewModel.getError());
+            else if (tasks != null && !tasks.isEmpty()) {
+                codes = data.y;//tasks.get(currentTask).files = data.y;
+
+                updateTaskCode(tasks.get(currentTask));
+            }
         });
 
         tasksViewModel = (TasksViewModel) getViewModel(TasksViewModel.class);
@@ -301,6 +317,64 @@ public class TaskFragment extends FragmentBase {
         }
     }
 
+    public void updateTaskCode(Task task) {
+
+        CodeEditor codeView = new CodeEditor(getActivity());
+        codeView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        codeView.setHighlightCurrentLine(true);
+        codeView.setHighlightBracketPair(true);
+        codeView.setEditorLanguage(new JavaLanguage());
+        codeView.setTypefaceText(Typeface.MONOSPACE);
+
+        codeView.setOnTouchListener((v, event) -> {
+            if (codeView.hasFocus()) {
+                v.getParent().requestDisallowInterceptTouchEvent(true);
+                switch (event.getAction() & MotionEvent.ACTION_MASK){
+                    case MotionEvent.ACTION_SCROLL:
+                        v.getParent().requestDisallowInterceptTouchEvent(false);
+                        return true;
+                }
+            }
+            return false;
+        });
+
+        for (int i = 0; i < task.fileNames.size(); ++i) {
+            TextView fileNameView = new TextView(getActivity());
+            fileNameView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            fileNameView.setText(task.fileNames.get(i));
+            fileNameView.setTextSize(18);
+
+
+            int finalI = i;
+            int defaultColor = fileNameView.getTextColors().getDefaultColor();
+            if (i == 0) {
+                fileNameView.setTextColor(0xff008000);
+            }
+
+            fileNameView.setOnClickListener((e) -> {
+                // TODO Make an answer list
+                codes.set(currentIndex, codeView.getText().toString());
+                currentIndex = finalI;
+                codeView.setText(codes.get(finalI));
+
+                for (int j = 0; j < codeTaskLayout.getChildCount(); ++j) {
+                    View v = codeTaskLayout.getChildAt(j);
+                    if (v instanceof TextView) {
+                        ((TextView) v).setTextColor(defaultColor);
+                    }
+                }
+
+                ((TextView) e).setTextColor(0xff008000);
+            });
+
+            codeView.setText(codes.get(0));
+
+            codeTaskLayout.addView(fileNameView);
+        }
+
+        codeTaskLayout.addView(codeView);
+    }
+
     int currentIndex = 0;
     public void updateTaskList(ArrayList<Task> tasks) {
 
@@ -330,61 +404,10 @@ public class TaskFragment extends FragmentBase {
 
             case TASK_CODE:
             case TASK_CODE2:
+            case TASK_CODE3:
 
+                taskResultViewModel.loadCode(task.task_id);
                 codeTaskLayout.setVisibility(View.VISIBLE);
-
-                CodeEditor codeView = new CodeEditor(getActivity());
-                codeView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-                codeView.setHighlightCurrentLine(true);
-                codeView.setHighlightBracketPair(true);
-                codeView.setEditorLanguage(new JavaLanguage());
-
-                codeView.setOnTouchListener((v, event) -> {
-                    if (codeView.hasFocus()) {
-                        v.getParent().requestDisallowInterceptTouchEvent(true);
-                        switch (event.getAction() & MotionEvent.ACTION_MASK){
-                            case MotionEvent.ACTION_SCROLL:
-                                v.getParent().requestDisallowInterceptTouchEvent(false);
-                                return true;
-                        }
-                    }
-                    return false;
-                });
-
-                for (int i = 0; i < task.fileNames.size(); ++i) {
-                    TextView fileNameView = new TextView(getActivity());
-                    fileNameView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                    fileNameView.setText(task.fileNames.get(i));
-                    fileNameView.setTextSize(18);
-
-
-                    int finalI = i;
-                    int defaultColor = fileNameView.getTextColors().getDefaultColor();
-                    if (i == 0) {
-                        fileNameView.setTextColor(0xff008000);
-                    }
-                    fileNameView.setOnClickListener((e) -> {
-                        // TODO Make an answer list
-                        task.files.set(currentIndex, codeView.getText().toString());
-                        currentIndex = finalI;
-                        codeView.setText(task.files.get(finalI));
-
-                        for (int j = 0; j < codeTaskLayout.getChildCount(); ++j) {
-                            View v = codeTaskLayout.getChildAt(j);
-                            if (v instanceof TextView) {
-                                ((TextView) v).setTextColor(defaultColor);
-                            }
-                        }
-
-                        ((TextView) e).setTextColor(0xff008000);
-                    });
-
-                    codeView.setText(task.files.get(0));
-
-                    codeTaskLayout.addView(fileNameView);
-                }
-
-                codeTaskLayout.addView(codeView);
 
                 break;
 
@@ -473,6 +496,8 @@ public class TaskFragment extends FragmentBase {
         }
     }
 
+    ArrayList<String> codes = new ArrayList<>();
+
     public void submit(View view) {
         if (!tasks.isEmpty()) {
             Task task = tasks.get(currentTask);
@@ -481,6 +506,11 @@ public class TaskFragment extends FragmentBase {
             String answer = null;
             switch (task.type) {
 
+                case TASK_CODE:
+                case TASK_CODE2:
+                case TASK_CODE3: // exe_type 1
+                    taskResultViewModel.saveCode(task.task_id, task.fileNames, codes);
+                    return;
                 case TASK_READ:
 
                     taskResultViewModel.postData(new DoPassTask(task));

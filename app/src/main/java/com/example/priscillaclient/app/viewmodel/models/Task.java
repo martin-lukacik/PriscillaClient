@@ -95,7 +95,7 @@ public class Task {
             }
 
 
-            if (type == TaskType.TASK_CODE || type == TaskType.TASK_CODE2) {
+            if (type == TaskType.TASK_CODE || type == TaskType.TASK_CODE2 || type == TaskType.TASK_CODE3) {
 
                 JSONObject g = new JSONObject(globals);
                 if (g.has("files")) {

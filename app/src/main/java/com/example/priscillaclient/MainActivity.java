@@ -131,6 +131,7 @@ public class MainActivity extends ActivityBase {
     }
 
     public void showError(String error) {
-        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+        if (error != null)
+            Toast.makeText(this, error, Toast.LENGTH_LONG).show();
     }
 }
