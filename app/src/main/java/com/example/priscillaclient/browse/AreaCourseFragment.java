@@ -29,7 +29,6 @@ public class AreaCourseFragment extends FragmentBase {
 
     public AreaCourseFragment() { }
 
-    boolean firstLoad = true;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,20 +38,14 @@ public class AreaCourseFragment extends FragmentBase {
             areaId = getArguments().getInt("areaId");
         }
 
-        dialog = new LoadingDialog(getActivity());
-
         AreaCoursesViewModel viewModel = (AreaCoursesViewModel) getViewModel(AreaCoursesViewModel.class);
         viewModel.getData().observe(this, (data) -> {
             if (viewModel.hasError())
                 showError(viewModel.getError());
-            else if (data != null && !firstLoad) {
+            else if (data != null)
                 onUpdate(data);
-                dialog.dismiss();
-            }
-            firstLoad = false;
         });
         viewModel.fetchData(areaId);
-        dialog.show();
     }
 
     public void onUpdate(ArrayList<AreaCourse> areaCourses) {

@@ -6,9 +6,9 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.example.priscillaclient.R;
-import com.example.priscillaclient.util.FragmentBase;
-import com.example.priscillaclient.app.viewmodel.models.Chapter;
 import com.example.priscillaclient.app.viewmodel.ChaptersViewModel;
+import com.example.priscillaclient.app.viewmodel.models.Chapter;
+import com.example.priscillaclient.util.FragmentBase;
 import com.example.priscillaclient.util.adapters.ChapterListAdapter;
 
 import java.util.ArrayList;
@@ -39,7 +39,7 @@ public class ChaptersFragment extends FragmentBase {
         viewModel.getData().observe(this, (data) -> {
             if (viewModel.hasError())
                 showError(viewModel.getError());
-            else
+            else if (data != null)
                 onUpdate(data);
         });
         viewModel.fetchData(courseId);

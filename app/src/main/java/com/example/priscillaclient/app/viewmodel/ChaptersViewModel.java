@@ -11,9 +11,13 @@ import java.util.ArrayList;
 
 public class ChaptersViewModel extends ViewModelBase {
 
-    private final MutableLiveData<ArrayList<Chapter>> state = new MutableLiveData<>(new ArrayList<>());
+    private final MutableLiveData<ArrayList<Chapter>> state = new MutableLiveData<>(null);
 
     private int lastCourseId = -1;
+
+    public int getLastCourseId() {
+        return lastCourseId;
+    }
 
     public LiveData<ArrayList<Chapter>> getData() {
         return state;
