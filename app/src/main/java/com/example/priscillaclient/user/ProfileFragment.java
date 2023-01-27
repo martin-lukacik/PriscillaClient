@@ -1,5 +1,7 @@
 package com.example.priscillaclient.user;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -46,18 +48,30 @@ public class ProfileFragment extends FragmentBase {
 
     public void logout(View view) {
 
-        if (getActivity() == null)
-            return;
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Log out");
+        builder.setMessage("All local settings will be reset!");
+        builder.setPositiveButton("Log out", (dialog, id) -> {
+            // Clear settings
+            if (getActivity() != null) {
+                SharedPreferences settings = getActivity().getApplicationContext().getSharedPreferences("settings", 0);
+                SharedPreferences.Editor editor = settings.edit();
+                editor.clear();
+                editor.apply();
+            }
 
-        SharedPreferences settings = getActivity().getApplicationContext().getSharedPreferences("settings", 0);
-        SharedPreferences.Editor editor = settings.edit();
+            // Redirect to login
+            LoginActivity.userLoggedIn = false;
+            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            startActivity(intent);
+        });
+        builder.setNegativeButton("Cancel", (dialog, id) -> {
+        });
 
-        editor.clear();
-        editor.apply();
+        AlertDialog d = builder.create();
+        d.show();
 
-        LoginActivity.userLoggedIn = false;
-        Intent intent = new Intent(getActivity(), LoginActivity.class);
-        startActivity(intent);
+        d.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(0xffff0000);
     }
 
     public void showProfileSettings(View view) {
