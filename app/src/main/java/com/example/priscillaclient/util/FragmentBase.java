@@ -21,7 +21,7 @@ public abstract class FragmentBase extends Fragment {
     protected int layoutId = 0;
     private View layout;
 
-    protected final static Client client = Client.getInstance();
+    protected LoadingDialog dialog;
 
     public void navigate(int layoutId) {
         navigate(layoutId, null);

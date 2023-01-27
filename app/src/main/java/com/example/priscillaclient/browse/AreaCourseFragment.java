@@ -16,6 +16,7 @@ import com.example.priscillaclient.app.viewmodel.models.Course;
 import com.example.priscillaclient.browse.viewmodel.AreaCoursesViewModel;
 import com.example.priscillaclient.browse.viewmodel.models.AreaCourse;
 import com.example.priscillaclient.util.FragmentBase;
+import com.example.priscillaclient.util.LoadingDialog;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.textview.MaterialTextView;
 
@@ -28,6 +29,7 @@ public class AreaCourseFragment extends FragmentBase {
 
     public AreaCourseFragment() { }
 
+    boolean firstLoad = true;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,14 +39,20 @@ public class AreaCourseFragment extends FragmentBase {
             areaId = getArguments().getInt("areaId");
         }
 
+        dialog = new LoadingDialog(getActivity());
+
         AreaCoursesViewModel viewModel = (AreaCoursesViewModel) getViewModel(AreaCoursesViewModel.class);
         viewModel.getData().observe(this, (data) -> {
             if (viewModel.hasError())
                 showError(viewModel.getError());
-            else
+            else if (data != null && !firstLoad) {
                 onUpdate(data);
+                dialog.dismiss();
+            }
+            firstLoad = false;
         });
         viewModel.fetchData(areaId);
+        dialog.show();
     }
 
     public void onUpdate(ArrayList<AreaCourse> areaCourses) {

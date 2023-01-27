@@ -22,7 +22,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 /*
  * TODO Loading should show dialogs and/or clear previous state (Courses -> Chapters -> Tasks shows old data while loading)
- * TODO Dark mode
  * TODO Colorblind mode?
  * TODO Submit task resets inputs
  * TODO Proper multi-language support based on app setting

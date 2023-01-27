@@ -11,6 +11,7 @@ import com.example.priscillaclient.util.FragmentBase;
 import com.example.priscillaclient.browse.viewmodel.models.Category;
 import com.example.priscillaclient.util.Client;
 import com.example.priscillaclient.browse.viewmodel.CategoriesViewModel;
+import com.example.priscillaclient.util.LoadingDialog;
 
 import java.util.ArrayList;
 
@@ -25,14 +26,19 @@ public class CategoriesFragment extends FragmentBase {
         super.onCreate(savedInstanceState);
         layoutId = R.layout.fragment_categories;
 
+        dialog = new LoadingDialog(getActivity());
+
         CategoriesViewModel viewModel = (CategoriesViewModel) getViewModel(CategoriesViewModel.class);
         viewModel.getData().observe(this, (data) -> {
             if (viewModel.hasError())
                 showError(viewModel.getError());
-            else
+            else if (data != null) {
                 onUpdate(data);
+                dialog.dismiss();
+            }
         });
         viewModel.fetchData();
+        dialog.show();
     }
 
     public void onUpdate(ArrayList<Category> categories) {

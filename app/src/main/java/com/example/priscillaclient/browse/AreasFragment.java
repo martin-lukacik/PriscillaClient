@@ -10,6 +10,7 @@ import com.example.priscillaclient.R;
 import com.example.priscillaclient.browse.viewmodel.AreasViewModel;
 import com.example.priscillaclient.browse.viewmodel.models.Area;
 import com.example.priscillaclient.util.FragmentBase;
+import com.example.priscillaclient.util.LoadingDialog;
 
 import java.util.ArrayList;
 
@@ -20,6 +21,7 @@ public class AreasFragment extends FragmentBase {
 
     public AreasFragment() { }
 
+    boolean firstLoad = true;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,14 +31,20 @@ public class AreasFragment extends FragmentBase {
             categoryId = getArguments().getInt("categoryId");
         }
 
+        dialog = new LoadingDialog(getActivity());
+
         AreasViewModel viewModel = (AreasViewModel) getViewModel(AreasViewModel.class);
         viewModel.getData().observe(this, (data) -> {
             if (viewModel.hasError())
                 showError(viewModel.getError());
-            else
+            else if (data != null && !firstLoad) {
+                dialog.dismiss();
                 onUpdate(data);
+            }
+            firstLoad = false;
         });
         viewModel.fetchData(categoryId);
+        dialog.show();
     }
 
     public void onUpdate(ArrayList<Area> areas) {

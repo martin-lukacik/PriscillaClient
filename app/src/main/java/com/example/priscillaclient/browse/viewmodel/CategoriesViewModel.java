@@ -10,14 +10,14 @@ import com.example.priscillaclient.util.ViewModelBase;
 import java.util.ArrayList;
 
 public class CategoriesViewModel extends ViewModelBase {
-    private final MutableLiveData<ArrayList<Category>> state = new MutableLiveData<>(new ArrayList<>());
+    private final MutableLiveData<ArrayList<Category>> state = new MutableLiveData<>(null);
 
     public LiveData<ArrayList<Category>> getData() {
         return state;
     }
 
     public void fetchData() {
-        if (getData().getValue().isEmpty()) {
+        if (getData().getValue() == null) {
             apiTask.executeAsync(new GetCategories(), (data, error) -> {
                 setError(error);
                 state.setValue(data);
