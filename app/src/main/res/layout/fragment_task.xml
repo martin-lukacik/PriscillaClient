@@ -13,10 +13,14 @@
         android:layout_width="wrap_content"
         android:layout_gravity="start" />
 
+
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -32,7 +36,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="32sp"
-                    android:textColor="@color/black"
+                    android:textColor="?colorSecondary"
                     style="?android:attr/borderlessButtonStyle"
                     android:backgroundTint="@android:color/transparent"
                     android:layout_weight="1"
@@ -53,7 +57,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="32sp"
-                    android:textColor="@color/black"
+                    android:textColor="?colorSecondary"
                     style="?android:attr/borderlessButtonStyle"
                     android:backgroundTint="@android:color/transparent"
                     android:layout_weight="1"
@@ -91,10 +95,6 @@
                     android:id="@+id/buttonTaskSubmit"
                     android:layout_gravity="center" />
             </LinearLayout>
-
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -113,8 +113,8 @@
                         android:hint="@string/answer"
                         android:autofillHints="" />
                 </LinearLayout>
-            </ScrollView>
         </LinearLayout>
+    </ScrollView>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

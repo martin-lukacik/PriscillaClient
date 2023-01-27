@@ -55,6 +55,7 @@ public class ProfileFragment extends FragmentBase {
         editor.putString("refresh_token", null);
         editor.apply();
 
+        LoginActivity.userLoggedIn = false;
         Intent intent = new Intent(getActivity(), LoginActivity.class);
         startActivity(intent);
     }

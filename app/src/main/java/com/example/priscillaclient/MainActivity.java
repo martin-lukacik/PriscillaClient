@@ -2,6 +2,7 @@ package com.example.priscillaclient;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.TextView;
@@ -9,6 +10,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProviders;
@@ -38,6 +40,19 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
+        SharedPreferences settings = getSharedPreferences("settings", 0);
+
+        int theme_id = settings.getInt("theme_id", 0);
+        int theme = AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
+        if (theme_id == 1) {
+            theme = AppCompatDelegate.MODE_NIGHT_NO;
+        } else if (theme_id == 2) {
+            theme = AppCompatDelegate.MODE_NIGHT_YES;
+        }
+        AppCompatDelegate.setDefaultNightMode(theme);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -81,8 +96,27 @@ public class MainActivity extends AppCompatActivity {
         settingsViewModel.fetchData();
 
         ProfileViewModel profileViewModel = ViewModelProviders.of(this).get(ProfileViewModel.class);
+        profileViewModel.getData().observe(this, (data) -> {
+            if (data != null) {
+                int mode = AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
+                if (data.theme_id == 1) {
+                    mode = AppCompatDelegate.MODE_NIGHT_NO;
+                } else if (data.theme_id == 2) {
+                    mode = AppCompatDelegate.MODE_NIGHT_YES;
+                }
+                if (AppCompatDelegate.getDefaultNightMode() != mode)
+                    AppCompatDelegate.setDefaultNightMode(mode);
+
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putInt("theme_id", mode);
+                editor.apply();
+                themeSet = true;
+            }
+        });
         profileViewModel.fetchData();
     }
+
+    boolean themeSet = false;
 
     @Override
     public boolean onNavigateUp() {

@@ -1,5 +1,6 @@
 package com.example.priscillaclient.user;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -160,6 +161,11 @@ public class SettingsFragment extends FragmentBase {
             mode = AppCompatDelegate.MODE_NIGHT_YES;
         }
         AppCompatDelegate.setDefaultNightMode(mode);
+
+        SharedPreferences settings = getActivity().getSharedPreferences("settings", 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putInt("theme_id", Integer.parseInt(theme_id));
+        editor.apply();
 
         UserViewModel userViewModel = (UserViewModel) getViewModel(UserViewModel.class);
         userViewModel.update(age, content_type_id, country, group, lang, name, nick, surname, theme_id);

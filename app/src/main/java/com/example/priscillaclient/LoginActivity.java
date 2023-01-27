@@ -52,12 +52,15 @@ public class LoginActivity extends AppCompatActivity {
         SharedPreferences settings = getApplicationContext().getSharedPreferences("settings", 0);
         String username = settings.getString("username", null);
         refresh_token = settings.getString("refresh_token", null);
-        if (username != null && refresh_token != null) {
-            CheckBox rememberUser = findViewById(R.id.rememberUser);
-            rememberUser.setChecked(true);
-            ((EditText) findViewById(R.id.inputUsername)).setText(username);
-            viewModel.fetchData(username, refresh_token, username, "refresh_token");
-            dialog.show();
+
+        if (!userLoggedIn) {
+            if (username != null && refresh_token != null) {
+                CheckBox rememberUser = findViewById(R.id.rememberUser);
+                rememberUser.setChecked(true);
+                ((EditText) findViewById(R.id.inputUsername)).setText(username);
+                viewModel.fetchData(username, refresh_token, username, "refresh_token");
+                dialog.show();
+            }
         }
     }
 
@@ -77,9 +80,10 @@ public class LoginActivity extends AppCompatActivity {
         dialog.show();
     }
 
+    public static boolean userLoggedIn = false;
     public void onUpdate(Token token) {
 
-        if (token == null)
+        if (userLoggedIn || token == null)
             return;
 
         dialog.dismiss();
@@ -98,6 +102,7 @@ public class LoginActivity extends AppCompatActivity {
         }
         editor.apply();
 
+        userLoggedIn = true;
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();

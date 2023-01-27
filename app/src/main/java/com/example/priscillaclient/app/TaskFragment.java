@@ -2,7 +2,10 @@ package com.example.priscillaclient.app;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,21 +22,23 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
+import androidx.core.widget.CompoundButtonCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.app.api.DoEvaluateTask;
 import com.example.priscillaclient.app.api.DoPassTask;
-import com.example.priscillaclient.util.FragmentBase;
+import com.example.priscillaclient.app.viewmodel.LessonsViewModel;
+import com.example.priscillaclient.app.viewmodel.TaskResultViewModel;
+import com.example.priscillaclient.app.viewmodel.TasksViewModel;
 import com.example.priscillaclient.app.viewmodel.models.Lesson;
 import com.example.priscillaclient.app.viewmodel.models.Task;
 import com.example.priscillaclient.app.viewmodel.models.TaskResult;
 import com.example.priscillaclient.app.viewmodel.models.TaskType;
-import com.example.priscillaclient.app.viewmodel.LessonsViewModel;
-import com.example.priscillaclient.app.viewmodel.TaskResultViewModel;
-import com.example.priscillaclient.app.viewmodel.TasksViewModel;
 import com.example.priscillaclient.user.viewmodel.UserViewModel;
+import com.example.priscillaclient.util.FragmentBase;
 import com.example.priscillaclient.util.JavascriptInterface;
 import com.google.android.material.navigation.NavigationView;
 
@@ -293,7 +298,17 @@ public class TaskFragment extends FragmentBase {
             buttonTaskHelp.setEnabled(true);
         }
 
-        String css = "<style>" + readFile(R.raw.task_style) + "</style>";
+        int taskStyleId = R.raw.task_style;
+
+        SharedPreferences settings = getActivity().getSharedPreferences("settings", 0);
+        int theme_id = settings.getInt("theme_id", 0);
+
+        if (theme_id == 2) {
+            taskStyleId = R.raw.task_style_dark;
+        }
+
+
+        String css = "<style>" + readFile(taskStyleId) + "</style>";
         String javascript = "<script>" + readFile(R.raw.task_script) + "</script>";
 
         String content = task.content;
@@ -309,6 +324,9 @@ public class TaskFragment extends FragmentBase {
                         RadioButton radioButton = new RadioButton(getActivity());
                         radioButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                         radioButton.setText(answer);
+                        if (theme_id == 2)
+                            radioButton.setTextColor(0xffffffff);
+                        CompoundButtonCompat.setButtonTintList(radioButton, ContextCompat.getColorStateList(getActivity(), com.google.android.material.R.color.design_default_color_secondary));
                         radioGroup.addView(radioButton);
                     }
                     taskLayout.addView(radioGroup);
@@ -328,6 +346,11 @@ public class TaskFragment extends FragmentBase {
                         checkBox.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                         checkBox.setText(answer);
                         checkBox.setTag("CLEAR");
+
+                        if (theme_id == 2)
+                            checkBox.setTextColor(0xffffffff);
+
+                        CompoundButtonCompat.setButtonTintList(checkBox, ContextCompat.getColorStateList(getActivity(), com.google.android.material.R.color.design_default_color_secondary));
                         taskLayout.addView(checkBox);
                     }
                 }

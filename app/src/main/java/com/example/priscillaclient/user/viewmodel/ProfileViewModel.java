@@ -10,7 +10,7 @@ import com.example.priscillaclient.user.viewmodel.models.Profile;
 import org.json.JSONException;
 
 public class ProfileViewModel extends ViewModelBase {
-    private final MutableLiveData<Profile> state = new MutableLiveData<>(new Profile());
+    private final MutableLiveData<Profile> state = new MutableLiveData<>(null);
 
     public ProfileViewModel() throws JSONException {
     }
