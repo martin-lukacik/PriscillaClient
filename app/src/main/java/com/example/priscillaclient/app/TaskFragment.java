@@ -112,7 +112,7 @@ public class TaskFragment extends FragmentBase {
             if (taskResultViewModel.hasError())
                 showError(taskResultViewModel.getError());
             else if (tasks != null && !tasks.isEmpty()) {
-                codes = data.y;//tasks.get(currentTask).files = data.y;
+                codes = new ArrayList<>(data.y);//tasks.get(currentTask).files = data.y;
 
                 updateTaskCode(tasks.get(currentTask));
             }
@@ -316,10 +316,10 @@ public class TaskFragment extends FragmentBase {
             stars.addView(star);
         }
     }
-
+    CodeEditor codeView;
     public void updateTaskCode(Task task) {
 
-        CodeEditor codeView = new CodeEditor(getActivity());
+        codeView = new CodeEditor(getActivity());
         codeView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         codeView.setHighlightCurrentLine(true);
         codeView.setHighlightBracketPair(true);
@@ -337,6 +337,10 @@ public class TaskFragment extends FragmentBase {
             }
             return false;
         });
+
+        if (codes.isEmpty()) {
+            codes = new ArrayList<>(task.files);
+        }
 
         for (int i = 0; i < task.fileNames.size(); ++i) {
             TextView fileNameView = new TextView(getActivity());
@@ -367,11 +371,10 @@ public class TaskFragment extends FragmentBase {
                 ((TextView) e).setTextColor(0xff008000);
             });
 
-            codeView.setText(codes.get(0));
-
             codeTaskLayout.addView(fileNameView);
         }
 
+        codeView.setText(codes.get(0));
         codeTaskLayout.addView(codeView);
     }
 
@@ -509,6 +512,7 @@ public class TaskFragment extends FragmentBase {
                 case TASK_CODE:
                 case TASK_CODE2:
                 case TASK_CODE3: // exe_type 1
+                    codes.set(currentIndex, codeView.getText().toString());
                     taskResultViewModel.saveCode(task.task_id, task.fileNames, codes);
                     return;
                 case TASK_READ:

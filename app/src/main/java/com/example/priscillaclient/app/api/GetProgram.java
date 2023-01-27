@@ -33,16 +33,19 @@ public class GetProgram implements Callable<Pair<ArrayList<String>, ArrayList<St
 
         String r = connection.getResponse();
         String j = new JSONObject(r).getString("code").replaceAll("\\\\\\\\", "\\\\");
-        JSONArray response = new JSONArray(j);
 
         ArrayList<String> fileNames = new ArrayList<>();
         ArrayList<String> fileContents = new ArrayList<>();
-        for (int i = 0; i < response.length(); ++i) {
-            JSONObject file = response.getJSONObject(i);
-            fileNames.add(file.getString("filename"));
-            fileContents.add(file.getString("filecontent"));
-        }
 
+        if (!j.equals("null")) {
+            JSONArray response = new JSONArray(j);
+
+            for (int i = 0; i < response.length(); ++i) {
+                JSONObject file = response.getJSONObject(i);
+                fileNames.add(file.getString("filename"));
+                fileContents.add(file.getString("filecontent"));
+            }
+        }
         return new Pair<>(fileNames, fileContents);
     }
 }

@@ -43,7 +43,6 @@ public class DoSaveProgram implements Callable<String> {
         connection.sendRequest(json);
 
         if (connection.getErrorStream() != null) {
-            String a = connection.getErrorMessage();
             throw new Exception(connection.getErrorMessage());
         }
 
