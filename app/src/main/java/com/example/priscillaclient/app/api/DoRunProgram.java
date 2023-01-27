@@ -79,6 +79,19 @@ public class DoRunProgram implements Callable<TaskResult> {
         }
 
         JSONObject response = new JSONObject(connection.getResponse());
-        return new TaskResult(response);
+        TaskResult result = new TaskResult(response);
+
+        if (result.compilation.contains("The compilation process did not generate an executable nor error message.")) {
+            if (attempts++ < 5) {
+                Thread.sleep(1000);
+                return getResult(adminTicket);
+            } else {
+                throw new Exception("Timed out while evaluating task.");
+            }
+        }
+
+        return result;
     }
+
+    private int attempts = 0;
 }

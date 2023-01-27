@@ -21,7 +21,7 @@ public class DoPassTask implements Callable<TaskResult> {
 
         JSONObject json = new JSONObject();
         json.put("task_id", task.task_id);
-        json.put("user_course_id", task.user_course_id);
+        json.put("user_course_id", Task.user_course_id);
 
         connection.sendRequest(json);
 

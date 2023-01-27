@@ -3,8 +3,10 @@ package com.example.priscillaclient.app;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -21,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -260,6 +263,26 @@ public class TaskFragment extends FragmentBase {
         View view = View.inflate(getActivity(), R.layout.layout_dialog_taskeval, null);
 
         LinearLayout stars = view.findViewById(R.id.dialog_stars);
+        TextView compilation = view.findViewById(R.id.dialogCompilation);
+        TextView execution = view.findViewById(R.id.dialogExecution);
+
+        boolean limitScrollView = false;
+        if (eval.execution != null && !eval.execution.isEmpty()) {
+            execution.setText("Execution:\n\n" + eval.execution);
+            execution.setVisibility(View.VISIBLE);
+            limitScrollView = true;
+        }
+        if (eval.compilation != null && !eval.compilation.isEmpty()) {
+            compilation.setText("Compilation:\n\n" + eval.compilation);
+            compilation.setVisibility(View.VISIBLE);
+            limitScrollView = true;
+        }
+        if (limitScrollView) {
+            ScrollView scrollView = view.findViewById(R.id.dialogScrollView);
+            scrollView.getLayoutParams().height = 500;
+            scrollView.requestLayout();
+        }
+
         for (int i = 1; i <= 5; ++i) {
             ImageView star = new ImageView(getActivity());
             star.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
@@ -516,7 +539,8 @@ public class TaskFragment extends FragmentBase {
                 case TASK_CODE:
                 case TASK_CODE2:
                     codes.set(currentIndex, codeView.getText().toString());
-                    //taskResultViewModel.saveCode(task.task_id, task.fileNames, codes);
+                    // TODO implement save button for code tasks only
+                    taskResultViewModel.saveCode(task.task_id, task.fileNames, codes);
                     taskResultViewModel.postData(new DoRunProgram(exeType, task, task.fileNames, codes, 60));
                     return;
 

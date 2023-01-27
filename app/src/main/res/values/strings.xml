@@ -41,7 +41,7 @@
     <string name="priscilla_logo">Priscilla logo</string>
     <string name="help">Help</string>
     <string name="answer" tools:ignore="TypographyEllipsis">Answer...</string>
-    <string name="rating">Rating</string>
+    <string name="result">Result</string>
     <string name="task_icon">Task icon</string>
     <string name="code_icon">Code icon</string>
     <string name="content_icon">Content icon</string>
