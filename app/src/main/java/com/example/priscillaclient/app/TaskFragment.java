@@ -44,6 +44,7 @@ import com.example.priscillaclient.user.viewmodel.UserViewModel;
 import com.example.priscillaclient.user.viewmodel.models.Theme;
 import com.example.priscillaclient.util.FragmentBase;
 import com.example.priscillaclient.util.JavascriptInterface;
+import com.example.priscillaclient.util.LoadingDialog;
 import com.google.android.material.navigation.NavigationView;
 
 import org.jetbrains.annotations.NotNull;
@@ -105,6 +106,8 @@ public class TaskFragment extends FragmentBase {
                 showError(taskResultViewModel.getError());
             else
                 onUpdate(data);
+            if (dialog != null)
+                dialog.dismiss();
         });
         taskResultViewModel.getSaveState().observe(this, (data) -> {
             if (taskResultViewModel.hasError())
@@ -541,6 +544,8 @@ public class TaskFragment extends FragmentBase {
                     codes.set(currentIndex, codeView.getText().toString());
                     // TODO implement save button for code tasks only
                     taskResultViewModel.saveCode(task.task_id, task.fileNames, codes);
+                    dialog = new LoadingDialog(getActivity());
+                    dialog.show();
                     taskResultViewModel.postData(new DoRunProgram(exeType, task, task.fileNames, codes, 60));
                     return;
 
