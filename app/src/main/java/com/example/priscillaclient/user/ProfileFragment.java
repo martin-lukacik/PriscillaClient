@@ -51,8 +51,8 @@ public class ProfileFragment extends FragmentBase {
 
         SharedPreferences settings = getActivity().getApplicationContext().getSharedPreferences("settings", 0);
         SharedPreferences.Editor editor = settings.edit();
-        editor.putString("username", null);
-        editor.putString("refresh_token", null);
+
+        editor.clear();
         editor.apply();
 
         LoginActivity.userLoggedIn = false;

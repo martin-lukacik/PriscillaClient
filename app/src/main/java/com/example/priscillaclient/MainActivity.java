@@ -1,18 +1,13 @@
 package com.example.priscillaclient;
 
-import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
@@ -21,6 +16,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.example.priscillaclient.user.viewmodel.ProfileViewModel;
 import com.example.priscillaclient.user.viewmodel.SettingsViewModel;
 import com.example.priscillaclient.user.viewmodel.UserViewModel;
+import com.example.priscillaclient.user.viewmodel.models.Theme;
 import com.example.priscillaclient.user.viewmodel.models.User;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -34,37 +30,14 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
  * TODO Implement TaskType.TASK_CODE
  */
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends ActivityBase {
 
     NavController navController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-
-        SharedPreferences settings = getSharedPreferences("settings", 0);
-
-        int theme_id = settings.getInt("theme_id", 0);
-        int theme = AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
-        if (theme_id == 1) {
-            theme = AppCompatDelegate.MODE_NIGHT_NO;
-        } else if (theme_id == 2) {
-            theme = AppCompatDelegate.MODE_NIGHT_YES;
-        }
-        AppCompatDelegate.setDefaultNightMode(theme);
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET) !=
-                PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET}, 1);
-        }
-
-        if (getSupportActionBar() != null) {
-            ActionBar actionBar = getSupportActionBar();
-            actionBar.hide();
-        }
 
         int courseId = getIntent().getIntExtra("course_id", -1);
 
@@ -74,15 +47,12 @@ public class MainActivity extends AppCompatActivity {
             navigate(R.id.chaptersFragment, args);
         }
 
-        BottomNavigationView navigationView = findViewById(R.id.bottom_navigation);
-        NavHostFragment navHostFragment =
-                (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentContainerView);
+        setupNavigation();
 
-        if (navHostFragment != null) {
-            navController = navHostFragment.getNavController();
-            NavigationUI.setupWithNavController(navigationView, navController);
-        }
+        fetchData();
+    }
 
+    private void fetchData() {
         UserViewModel userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
         userViewModel.getData().observe(this, (data) -> {
             if (userViewModel.hasError())
@@ -96,27 +66,19 @@ public class MainActivity extends AppCompatActivity {
         settingsViewModel.fetchData();
 
         ProfileViewModel profileViewModel = ViewModelProviders.of(this).get(ProfileViewModel.class);
-        profileViewModel.getData().observe(this, (data) -> {
-            if (data != null) {
-                int mode = AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
-                if (data.theme_id == 1) {
-                    mode = AppCompatDelegate.MODE_NIGHT_NO;
-                } else if (data.theme_id == 2) {
-                    mode = AppCompatDelegate.MODE_NIGHT_YES;
-                }
-                if (AppCompatDelegate.getDefaultNightMode() != mode)
-                    AppCompatDelegate.setDefaultNightMode(mode);
-
-                SharedPreferences.Editor editor = settings.edit();
-                editor.putInt("theme_id", mode);
-                editor.apply();
-                themeSet = true;
-            }
-        });
         profileViewModel.fetchData();
     }
 
-    boolean themeSet = false;
+    private void setupNavigation() {
+        FragmentManager manager = getSupportFragmentManager();
+        BottomNavigationView navigationView = findViewById(R.id.bottomNavigation);
+        NavHostFragment navHostFragment = (NavHostFragment) manager.findFragmentById(R.id.fragmentContainer);
+
+        if (navHostFragment != null) {
+            navController = navHostFragment.getNavController();
+            NavigationUI.setupWithNavController(navigationView, navController);
+        }
+    }
 
     @Override
     public boolean onNavigateUp() {
@@ -124,8 +86,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onUpdate(User user) {
-        if (user != null)
-            setActionBarTitle(user.performance.xp + " XP | " + user.performance.coins + " ©");
+        if (user == null)
+            return;
+
+        setActionBarTitle(user.performance.xp + " XP | " + user.performance.coins + " ©");
+        setDarkMode(user.theme_id, true);
     }
 
     void setActionBarTitle(String title) {
@@ -147,6 +112,22 @@ public class MainActivity extends AppCompatActivity {
             Bundle args = new Bundle();
             args.putInt("courseId", courseId);
             navigate(R.id.chaptersFragment, args);
+        }
+    }
+
+
+    @Override
+    public void onBackPressed(){
+        FragmentManager manager = getSupportFragmentManager();
+        NavHostFragment navHostFragment = (NavHostFragment) manager.findFragmentById(R.id.fragmentContainer);
+        FragmentManager fm = navHostFragment.getChildFragmentManager();
+        if (fm.getBackStackEntryCount() > 0) {
+            super.onBackPressed();
+        } else {
+            // Prevents login screen on return to the app
+            Intent i = new Intent(Intent.ACTION_MAIN);
+            i.addCategory(Intent.CATEGORY_HOME);
+            startActivity(i);
         }
     }
 

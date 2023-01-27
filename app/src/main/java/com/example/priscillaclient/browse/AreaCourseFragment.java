@@ -56,7 +56,7 @@ public class AreaCourseFragment extends FragmentBase {
             public View getView(int position, View convertView, ViewGroup parent){
                 View view = super.getView(position, convertView, parent);
                 if (areaCourses.get(position).status == AreaCourse.CourseStatus.OPENED)
-                    ((MaterialTextView) view).setTextColor(Color.parseColor("#00FF00"));
+                    ((MaterialTextView) view).setTextColor(Color.parseColor("#008000"));
                 return view;
             }
         };
@@ -69,7 +69,7 @@ public class AreaCourseFragment extends FragmentBase {
         AreaCourse course = areaCourses.get(i);
         if (course.status == AreaCourse.CourseStatus.OPENED) {
 
-            BottomNavigationView navigationView = findViewById(R.id.bottom_navigation);
+            BottomNavigationView navigationView = findViewById(R.id.bottomNavigation);
             navigationView.setSelectedItemId(R.id.menu_dashboard);
 
             CoursesViewModel coursesViewModel = (CoursesViewModel) getViewModel(CoursesViewModel.class);
@@ -89,19 +89,18 @@ public class AreaCourseFragment extends FragmentBase {
 
             navigate(R.id.coursesFragment); // needed for back stack
             navigate(R.id.chaptersFragment, args);
+        } else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle(course.title);
+            builder.setMessage("Join course " + course.title + " ?");
+            builder.setPositiveButton("JOIN", (dialog, id) -> {
+                // TODO join course
+            });
+            builder.setNegativeButton("Cancel", (dialog, id) -> {
+            });
+
+            Dialog d = builder.create();
+            d.show();
         }
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(course.title);
-        builder.setMessage("Join course " + course.title + " ?");
-        builder.setPositiveButton("JOIN", (dialog, id) -> {
-            // TODO join course
-        });
-        builder.setNegativeButton("Cancel", (dialog, id) -> {
-            // User cancelled the dialog
-        });
-
-        Dialog d = builder.create();
-        d.show();
     }
 }

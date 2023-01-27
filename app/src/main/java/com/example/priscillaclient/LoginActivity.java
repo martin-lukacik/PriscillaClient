@@ -11,42 +11,28 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.priscillaclient.user.viewmodel.TokenViewModel;
 import com.example.priscillaclient.user.viewmodel.models.Token;
 import com.example.priscillaclient.util.LoadingDialog;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends ActivityBase {
 
-    LoadingDialog dialog;
-    String refresh_token;
+    public static boolean userLoggedIn = false;
+    private LoadingDialog dialog;
+    private String refreshToken;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
-        SharedPreferences settings = getSharedPreferences("settings", 0);
-
-        int theme_id = settings.getInt("theme_id", 0);
-        int theme = AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
-        if (theme_id == 1) {
-            theme = AppCompatDelegate.MODE_NIGHT_NO;
-        } else if (theme_id == 2) {
-            theme = AppCompatDelegate.MODE_NIGHT_YES;
-        }
-        AppCompatDelegate.setDefaultNightMode(theme);
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        if (theme_id == 2) {
+        if (themeId == 2) {
             ImageView loginLogo = findViewById(R.id.loginLogo);
             loginLogo.setImageResource(R.drawable.priscilla_logo_dark);
         }
 
-        EditText inputUsername = findViewById(R.id.inputUsername);
         EditText inputPassword = findViewById(R.id.inputPassword);
         inputPassword.setOnKeyListener((v, keyCode, event) -> {
             if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
@@ -69,14 +55,14 @@ public class LoginActivity extends AppCompatActivity {
                 onUpdate(data);
         });
         String username = settings.getString("username", null);
-        refresh_token = settings.getString("refresh_token", null);
+        refreshToken = settings.getString("refresh_token", null);
 
         if (!userLoggedIn) {
-            if (username != null && refresh_token != null) {
+            if (username != null && refreshToken != null) {
                 CheckBox rememberUser = findViewById(R.id.rememberUser);
                 rememberUser.setChecked(true);
                 ((EditText) findViewById(R.id.inputUsername)).setText(username);
-                viewModel.fetchData(username, refresh_token, username, "refresh_token");
+                viewModel.fetchData(username, refreshToken, username, "refresh_token");
                 dialog.show();
             }
         }
@@ -92,15 +78,12 @@ public class LoginActivity extends AppCompatActivity {
         String username = ((EditText) findViewById(R.id.inputUsername)).getText().toString();
         String password = ((EditText) findViewById(R.id.inputPassword)).getText().toString();
 
-        //new GetTokenLegacy(this).execute(username, password, username, "password");
         TokenViewModel viewModel = ViewModelProviders.of(this).get(TokenViewModel.class);
         viewModel.fetchData(username, password, username, "password");
         dialog.show();
     }
 
-    public static boolean userLoggedIn = false;
     public void onUpdate(Token token) {
-
         if (userLoggedIn || token == null)
             return;
 
@@ -108,7 +91,6 @@ public class LoginActivity extends AppCompatActivity {
 
         String username = ((EditText) findViewById(R.id.inputUsername)).getText().toString();
 
-        SharedPreferences settings = getApplicationContext().getSharedPreferences("settings", 0);
         SharedPreferences.Editor editor = settings.edit();
         CheckBox rememberUser = findViewById(R.id.rememberUser);
         if (rememberUser.isChecked()) {

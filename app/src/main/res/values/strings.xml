@@ -45,4 +45,5 @@
     <string name="task_icon">Task icon</string>
     <string name="code_icon">Code icon</string>
     <string name="content_icon">Content icon</string>
+    <string name="birth_year">Birth year</string>
 </resources>

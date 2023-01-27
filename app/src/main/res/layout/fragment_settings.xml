@@ -68,8 +68,8 @@
                 android:text="@string/primary_group"
                 android:textSize="18sp" />
             <Spinner
-                android:layout_marginStart="15dp"
-                android:layout_marginEnd="15dp"
+                android:layout_marginStart="25dp"
+                android:layout_marginEnd="25dp"
                 android:padding="10dp"
                 android:id="@+id/profileEditGroup"
                 android:layout_width="match_parent"
@@ -86,8 +86,8 @@
                 android:text="@string/student_type"
                 android:textSize="18sp" />
             <Spinner
-                android:layout_marginStart="15dp"
-                android:layout_marginEnd="15dp"
+                android:layout_marginStart="25dp"
+                android:layout_marginEnd="25dp"
                 android:padding="10dp"
                 android:id="@+id/profileEditStudentType"
                 android:layout_width="match_parent"
@@ -104,8 +104,8 @@
                 android:text="@string/country"
                 android:textSize="18sp" />
             <Spinner
-                android:layout_marginStart="15dp"
-                android:layout_marginEnd="15dp"
+                android:layout_marginStart="25dp"
+                android:layout_marginEnd="25dp"
                 android:padding="10dp"
                 android:id="@+id/profileEditCountry"
                 android:layout_width="match_parent"
@@ -122,8 +122,8 @@
                 android:text="@string/language"
                 android:textSize="18sp" />
             <Spinner
-                android:layout_marginStart="15dp"
-                android:layout_marginEnd="15dp"
+                android:layout_marginStart="25dp"
+                android:layout_marginEnd="25dp"
                 android:padding="10dp"
                 android:id="@+id/profileEditLanguage"
                 android:layout_width="match_parent"
@@ -140,8 +140,8 @@
                 android:text="@string/theme"
                 android:textSize="18sp" />
             <Spinner
-                android:layout_marginStart="15dp"
-                android:layout_marginEnd="15dp"
+                android:layout_marginStart="25dp"
+                android:layout_marginEnd="25dp"
                 android:padding="10dp"
                 android:id="@+id/profileEditTheme"
                 android:layout_width="match_parent"
@@ -149,7 +149,18 @@
                 android:background="@android:drawable/btn_dropdown"
                 android:spinnerMode="dropdown" />
 
+            <!-- Birth year -->
+            <TextView
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/birth_year"
+                android:textSize="18sp" />
             <DatePicker
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
                 android:id="@+id/profileEditYear"
                 android:layout_width="wrap_content"
                 android:layout_gravity="center"
@@ -167,6 +178,6 @@
                 android:gravity="center"
                 android:text="@string/save_changes"
                 android:textSize="20sp"
-                android:textColor="#0000FF" />
+                android:textColor="@android:color/holo_blue_dark" />
         </LinearLayout>
 </ScrollView>

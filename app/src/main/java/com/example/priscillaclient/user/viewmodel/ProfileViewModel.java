@@ -12,8 +12,7 @@ import org.json.JSONException;
 public class ProfileViewModel extends ViewModelBase {
     private final MutableLiveData<Profile> state = new MutableLiveData<>(null);
 
-    public ProfileViewModel() throws JSONException {
-    }
+    public ProfileViewModel() { }
 
     public LiveData<Profile> getData() {
         return state;
