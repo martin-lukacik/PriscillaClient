@@ -8,9 +8,11 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.priscillaclient.user.viewmodel.TokenViewModel;
@@ -24,8 +26,25 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
+        SharedPreferences settings = getSharedPreferences("settings", 0);
+
+        int theme_id = settings.getInt("theme_id", 0);
+        int theme = AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
+        if (theme_id == 1) {
+            theme = AppCompatDelegate.MODE_NIGHT_NO;
+        } else if (theme_id == 2) {
+            theme = AppCompatDelegate.MODE_NIGHT_YES;
+        }
+        AppCompatDelegate.setDefaultNightMode(theme);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        if (theme_id == 2) {
+            ImageView loginLogo = findViewById(R.id.loginLogo);
+            loginLogo.setImageResource(R.drawable.priscilla_logo_dark);
+        }
 
         EditText inputUsername = findViewById(R.id.inputUsername);
         EditText inputPassword = findViewById(R.id.inputPassword);
@@ -49,7 +68,6 @@ public class LoginActivity extends AppCompatActivity {
             else
                 onUpdate(data);
         });
-        SharedPreferences settings = getApplicationContext().getSharedPreferences("settings", 0);
         String username = settings.getString("username", null);
         refresh_token = settings.getString("refresh_token", null);
 

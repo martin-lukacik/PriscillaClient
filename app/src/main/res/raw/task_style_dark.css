@@ -1,12 +1,12 @@
 *{
-    color:white;
+    color:white !important;
     background:rgb(18,18,18);
 }
 pre{
     background:#2D3033;
-    color:white;
+    color:white !important;
     overflow-y:scroll;
 }
 .answer {
-    max-width:4em
+    max-width:4em;
 }
