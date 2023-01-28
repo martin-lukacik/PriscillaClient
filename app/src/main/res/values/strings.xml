@@ -3,7 +3,7 @@
     <string name="hashtag_sign">#</string>
     <string name="nickname">Nickname</string>
     <string name="xp">XP</string>
-    <string name="username_or_email">Username or email</string>
+    <string name="username_or_email">Username or e-mail</string>
     <string name="password">Password</string>
     <string name="remember_login">Remember me</string>
     <string name="sign_in">Log in</string>
