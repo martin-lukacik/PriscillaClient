@@ -15,6 +15,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.content.ContextCompat;
 
 import com.example.priscillaclient.ActivityBase;
 import com.example.priscillaclient.MainActivity;
@@ -242,13 +243,18 @@ public class SettingsFragment extends FragmentBase {
 
                 if (settingsViewModel.getData().getValue() != null) {
                     String shortcut = settingsViewModel.getData().getValue().languages.get(position).shortcut;
-
+/*
                     ImageView imageView = ((ImageView) v.findViewById(R.id.spinnerLanguageIcon));
 
                     Context context = imageView.getContext();
                     int id = context.getResources().getIdentifier("flag_" + shortcut.toLowerCase(), "drawable", context.getPackageName());
 
-                    imageView.setImageResource(id);
+                    imageView.setImageResource(id);*/
+
+                    int id = getContext().getResources().getIdentifier("flag_" + shortcut.toLowerCase(), "drawable", getContext().getPackageName());
+                    TextView textView = v.findViewById(R.id.spinnerLanguage);
+                    textView.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(getContext(), id), null, null, null);
+
                 }
                 return v;
             }
