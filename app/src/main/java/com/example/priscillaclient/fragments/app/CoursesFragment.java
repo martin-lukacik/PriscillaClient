@@ -55,24 +55,21 @@ public class CoursesFragment extends FragmentBase {
 
     private boolean coursePinned(AdapterView<?> adapterView, View view, int i, long l) {
 
-        if (getActivity() == null)
-            return true;
-
-        SharedPreferences settings = getActivity().getApplicationContext().getSharedPreferences(PREF_SET, 0);
-        int pinnedCourseId = settings.getInt("pinnedCourseId", -1);
+        SharedPreferences settings = requireActivity().getApplicationContext().getSharedPreferences(PREF_SET, 0);
+        int savedPinId = settings.getInt("pinnedCourseId", -1);
 
         Course course = courses.get(i);
-        if (pinnedCourseId == -1) {
+        if (savedPinId == -1) {
             togglePin(course.course_id);
             adapter.notifyDataSetChanged();
-        } else if (course.course_id == pinnedCourseId) {
+        } else if (course.course_id == savedPinId) {
             togglePin(-1);
-            CoursesViewModel viewModel = ViewModelProviders.of(this).get(CoursesViewModel.class);
+            CoursesViewModel viewModel = (CoursesViewModel) getViewModel(CoursesViewModel.class);
 
             if (viewModel.getData().getValue() != null) {
                 courses = new ArrayList<>(viewModel.getData().getValue());
                 adapter = new CourseListAdapter(getActivity(), courses);
-                GridView courseListView = getActivity().findViewById(R.id.courseListView);
+                GridView courseListView = requireActivity().findViewById(R.id.courseListView);
                 courseListView.setAdapter(adapter);
             }
         }
@@ -81,11 +78,7 @@ public class CoursesFragment extends FragmentBase {
     }
 
     private void togglePin(int courseId) {
-
-        if (getActivity() == null)
-            return;
-
-        SharedPreferences settings = getActivity().getApplicationContext().getSharedPreferences(PREF_SET, 0);
+        SharedPreferences settings = requireActivity().getApplicationContext().getSharedPreferences(PREF_SET, 0);
         SharedPreferences.Editor editor = settings.edit();
         editor.putInt("pinnedCourseId", courseId);
         editor.apply();
@@ -102,19 +95,15 @@ public class CoursesFragment extends FragmentBase {
     }
 
     public void onUpdate(ArrayList<Course> response) {
-
-        if (getActivity() == null)
-            return;
-
         courses = new ArrayList<>(response);
 
-        SharedPreferences settings = getActivity().getApplicationContext().getSharedPreferences(PREF_SET, 0);
+        SharedPreferences settings = requireActivity().getApplicationContext().getSharedPreferences(PREF_SET, 0);
         int pinnedCourseId = settings.getInt("pinnedCourseId", -1);
         pinCourse(pinnedCourseId);
 
         adapter = new CourseListAdapter(getActivity(), courses);
 
-        GridView courseListView = getActivity().findViewById(R.id.courseListView);
+        GridView courseListView = requireActivity().findViewById(R.id.courseListView);
         courseListView.setAdapter(adapter);
         courseListView.setOnItemClickListener(this::courseSelected);
         courseListView.setOnItemLongClickListener(this::coursePinned);
