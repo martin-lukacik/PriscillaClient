@@ -1,6 +1,7 @@
 package com.example.priscillaclient;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -14,6 +15,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.example.priscillaclient.user.viewmodel.ProfileViewModel;
 import com.example.priscillaclient.user.viewmodel.SettingsViewModel;
 import com.example.priscillaclient.user.viewmodel.UserViewModel;
+import com.example.priscillaclient.user.viewmodel.models.Language;
 import com.example.priscillaclient.user.viewmodel.models.User;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -109,7 +111,6 @@ public class MainActivity extends ActivityBase {
             navigate(R.id.chaptersFragment, args);
         }
     }
-
 
     @Override
     public void onBackPressed(){

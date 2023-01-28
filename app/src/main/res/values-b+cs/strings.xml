@@ -31,4 +31,5 @@
     <string name="cancel">Zrušit</string>
     <string name="ok">Ok</string>
     <string name="language_changed">Jazykové preference se změnily. Aby se změny projevily, je potřeba restart.</string>
+    <string name="loading" tools:ignore="TypographyEllipsis">Načítám...</string>
 </resources>

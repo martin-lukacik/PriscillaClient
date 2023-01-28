@@ -31,4 +31,5 @@
     <string name="cancel">Megszünteti</string>
     <string name="ok">Rendben</string>
     <string name="language_changed">A nyelvi beállítások megváltoztak. A változtatások életbe léptetéséhez újra kell indítani.</string>
+    <string name="loading" tools:ignore="TypographyEllipsis">Betöltés...</string>
 </resources>

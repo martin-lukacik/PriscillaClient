@@ -31,4 +31,5 @@
     <string name="cancel">Отмена</string>
     <string name="ok">Хорошо</string>
     <string name="language_changed">Языковые предпочтения изменились. Чтобы изменения вступили в силу, необходим перезапуск.</string>
+    <string name="loading" tools:ignore="TypographyEllipsis">Загрузка...</string>
 </resources>

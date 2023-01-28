@@ -31,4 +31,5 @@
     <string name="cancel">Anuluj</string>
     <string name="ok">Ok</string>
     <string name="language_changed">Preferencje językowe uległy zmianie. Aby zmiany odniosły skutek, konieczne jest ponowne uruchomienie.</string>
+    <string name="loading" tools:ignore="TypographyEllipsis">Ładowanie...</string>
 </resources>
