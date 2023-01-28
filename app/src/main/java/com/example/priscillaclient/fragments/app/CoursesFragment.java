@@ -40,6 +40,17 @@ public class CoursesFragment extends FragmentBase {
         viewModel.fetchData();
     }
 
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        GridView courseListView = findViewById(R.id.courseListView);
+
+        View emptyView = getLayoutInflater().inflate(R.layout.loading_view, null);
+        requireActivity().addContentView(emptyView, courseListView.getLayoutParams());
+        courseListView.setEmptyView(emptyView);
+    }
+
     void pinCourse(int courseId) {
         for (int i = 0; i < courses.size(); ++i) {
             courses.get(i).isPinned = false;

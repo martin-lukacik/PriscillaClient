@@ -15,16 +15,13 @@ public class ChaptersViewModel extends ViewModelBase {
 
     private int lastCourseId = -1;
 
-    public int getLastCourseId() {
-        return lastCourseId;
-    }
-
     public LiveData<ArrayList<Chapter>> getData() {
         return state;
     }
 
     public void fetchData(int courseId) {
         if (lastCourseId != courseId) {
+            state.setValue(null);
             apiTask.executeAsync(new GetChapters(courseId), (data, error) -> {
                 setError(error);
                 state.setValue(data);

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ListView;
 
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.viewmodels.app.ChaptersViewModel;
@@ -43,6 +44,17 @@ public class ChaptersFragment extends FragmentBase {
                 onUpdate(data);
         });
         viewModel.fetchData(courseId);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        GridView chaptersListView = findViewById(R.id.chapterListView);
+
+        View emptyView = getLayoutInflater().inflate(R.layout.loading_view, null);
+        requireActivity().addContentView(emptyView, chaptersListView.getLayoutParams());
+        chaptersListView.setEmptyView(emptyView);
     }
 
     public void onUpdate(ArrayList<Chapter> response) {
