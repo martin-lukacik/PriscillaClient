@@ -1,7 +1,7 @@
 package com.example.priscillaclient.api.browse;
 
 import com.example.priscillaclient.api.HttpConnection;
-import com.example.priscillaclient.viewmodel.app.models.Lesson;
+import com.example.priscillaclient.viewmodels.app.models.Lesson;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

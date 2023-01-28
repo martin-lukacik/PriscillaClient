@@ -1,8 +1,8 @@
 package com.example.priscillaclient.api.tasks;
 
 import com.example.priscillaclient.api.HttpConnection;
-import com.example.priscillaclient.viewmodel.app.models.Task;
-import com.example.priscillaclient.viewmodel.app.models.TaskResult;
+import com.example.priscillaclient.viewmodels.app.models.Task;
+import com.example.priscillaclient.viewmodels.app.models.TaskResult;
 
 import org.json.JSONObject;
 

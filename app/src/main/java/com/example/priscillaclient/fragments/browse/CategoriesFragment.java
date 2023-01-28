@@ -8,8 +8,8 @@ import android.widget.ListView;
 
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.fragments.FragmentBase;
-import com.example.priscillaclient.viewmodel.browse.models.Category;
-import com.example.priscillaclient.viewmodel.browse.CategoriesViewModel;
+import com.example.priscillaclient.viewmodels.browse.models.Category;
+import com.example.priscillaclient.viewmodels.browse.CategoriesViewModel;
 import com.example.priscillaclient.util.LoadingDialog;
 
 import java.util.ArrayList;

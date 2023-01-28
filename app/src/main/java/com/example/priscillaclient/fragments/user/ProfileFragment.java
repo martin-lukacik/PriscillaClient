@@ -12,10 +12,10 @@ import android.widget.TextView;
 import com.example.priscillaclient.LoginActivity;
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.fragments.FragmentBase;
-import com.example.priscillaclient.viewmodel.user.ProfileViewModel;
-import com.example.priscillaclient.viewmodel.user.models.Profile;
-import com.example.priscillaclient.viewmodel.user.models.User;
-import com.example.priscillaclient.viewmodel.user.UserViewModel;
+import com.example.priscillaclient.viewmodels.user.ProfileViewModel;
+import com.example.priscillaclient.viewmodels.user.models.Profile;
+import com.example.priscillaclient.viewmodels.user.models.User;
+import com.example.priscillaclient.viewmodels.user.UserViewModel;
 
 import java.util.Random;
 

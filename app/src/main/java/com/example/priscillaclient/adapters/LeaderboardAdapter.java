@@ -9,7 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.example.priscillaclient.R;
-import com.example.priscillaclient.viewmodel.misc.models.LeaderboardItem;
+import com.example.priscillaclient.viewmodels.misc.models.LeaderboardItem;
 
 import java.util.ArrayList;
 

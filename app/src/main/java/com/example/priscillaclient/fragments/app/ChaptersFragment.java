@@ -6,8 +6,8 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.example.priscillaclient.R;
-import com.example.priscillaclient.viewmodel.app.ChaptersViewModel;
-import com.example.priscillaclient.viewmodel.app.models.Chapter;
+import com.example.priscillaclient.viewmodels.app.ChaptersViewModel;
+import com.example.priscillaclient.viewmodels.app.models.Chapter;
 import com.example.priscillaclient.fragments.FragmentBase;
 import com.example.priscillaclient.adapters.ChapterListAdapter;
 

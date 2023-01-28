@@ -21,12 +21,12 @@ import com.example.priscillaclient.MainActivity;
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.fragments.FragmentBase;
 import com.example.priscillaclient.util.Pair;
-import com.example.priscillaclient.viewmodel.user.ProfileViewModel;
-import com.example.priscillaclient.viewmodel.user.SettingsViewModel;
-import com.example.priscillaclient.viewmodel.user.UserViewModel;
-import com.example.priscillaclient.viewmodel.user.models.Language;
-import com.example.priscillaclient.viewmodel.user.models.Profile;
-import com.example.priscillaclient.viewmodel.user.models.Settings;
+import com.example.priscillaclient.viewmodels.user.ProfileViewModel;
+import com.example.priscillaclient.viewmodels.user.SettingsViewModel;
+import com.example.priscillaclient.viewmodels.user.UserViewModel;
+import com.example.priscillaclient.viewmodels.user.models.Language;
+import com.example.priscillaclient.viewmodels.user.models.Profile;
+import com.example.priscillaclient.viewmodels.user.models.Settings;
 
 import org.jetbrains.annotations.NotNull;
 

@@ -1,6 +1,6 @@
 package com.example.priscillaclient.util;
 
-import com.example.priscillaclient.viewmodel.user.models.Token;
+import com.example.priscillaclient.viewmodels.user.models.Token;
 
 public class Client {
 

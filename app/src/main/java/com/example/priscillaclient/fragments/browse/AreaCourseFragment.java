@@ -11,10 +11,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.priscillaclient.R;
-import com.example.priscillaclient.viewmodel.app.CoursesViewModel;
-import com.example.priscillaclient.viewmodel.app.models.Course;
-import com.example.priscillaclient.viewmodel.browse.AreaCoursesViewModel;
-import com.example.priscillaclient.viewmodel.browse.models.AreaCourse;
+import com.example.priscillaclient.viewmodels.app.CoursesViewModel;
+import com.example.priscillaclient.viewmodels.app.models.Course;
+import com.example.priscillaclient.viewmodels.browse.AreaCoursesViewModel;
+import com.example.priscillaclient.viewmodels.browse.models.AreaCourse;
 import com.example.priscillaclient.fragments.FragmentBase;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.textview.MaterialTextView;

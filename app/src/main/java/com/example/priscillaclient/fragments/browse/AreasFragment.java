@@ -7,8 +7,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.priscillaclient.R;
-import com.example.priscillaclient.viewmodel.browse.AreasViewModel;
-import com.example.priscillaclient.viewmodel.browse.models.Area;
+import com.example.priscillaclient.viewmodels.browse.AreasViewModel;
+import com.example.priscillaclient.viewmodels.browse.models.Area;
 import com.example.priscillaclient.fragments.FragmentBase;
 
 import java.util.ArrayList;

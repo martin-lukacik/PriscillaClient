@@ -11,8 +11,8 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.fragments.FragmentBase;
-import com.example.priscillaclient.viewmodel.app.models.Course;
-import com.example.priscillaclient.viewmodel.app.CoursesViewModel;
+import com.example.priscillaclient.viewmodels.app.models.Course;
+import com.example.priscillaclient.viewmodels.app.CoursesViewModel;
 import com.example.priscillaclient.adapters.CourseListAdapter;
 
 import java.util.ArrayList;

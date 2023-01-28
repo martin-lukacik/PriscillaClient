@@ -13,8 +13,8 @@ import android.widget.Toast;
 
 import androidx.lifecycle.ViewModelProviders;
 
-import com.example.priscillaclient.viewmodel.user.TokenViewModel;
-import com.example.priscillaclient.viewmodel.user.models.Token;
+import com.example.priscillaclient.viewmodels.user.TokenViewModel;
+import com.example.priscillaclient.viewmodels.user.models.Token;
 import com.example.priscillaclient.util.LoadingDialog;
 
 public class LoginActivity extends ActivityBase {

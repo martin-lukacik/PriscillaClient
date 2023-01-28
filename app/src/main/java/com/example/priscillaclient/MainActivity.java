@@ -12,11 +12,11 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
-import com.example.priscillaclient.viewmodel.user.ProfileViewModel;
-import com.example.priscillaclient.viewmodel.user.SettingsViewModel;
-import com.example.priscillaclient.viewmodel.user.UserViewModel;
-import com.example.priscillaclient.viewmodel.user.models.Language;
-import com.example.priscillaclient.viewmodel.user.models.User;
+import com.example.priscillaclient.viewmodels.user.ProfileViewModel;
+import com.example.priscillaclient.viewmodels.user.SettingsViewModel;
+import com.example.priscillaclient.viewmodels.user.UserViewModel;
+import com.example.priscillaclient.viewmodels.user.models.Language;
+import com.example.priscillaclient.viewmodels.user.models.User;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 /*

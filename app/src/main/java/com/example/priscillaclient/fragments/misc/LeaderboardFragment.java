@@ -6,8 +6,8 @@ import android.widget.ListView;
 
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.fragments.FragmentBase;
-import com.example.priscillaclient.viewmodel.misc.models.LeaderboardItem;
-import com.example.priscillaclient.viewmodel.misc.LeadersViewModel;
+import com.example.priscillaclient.viewmodels.misc.models.LeaderboardItem;
+import com.example.priscillaclient.viewmodels.misc.LeadersViewModel;
 import com.example.priscillaclient.util.LoadingDialog;
 import com.example.priscillaclient.adapters.LeaderboardAdapter;
 

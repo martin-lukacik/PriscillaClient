@@ -16,7 +16,7 @@ import android.widget.TextView;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.example.priscillaclient.R;
-import com.example.priscillaclient.viewmodel.app.models.Chapter;
+import com.example.priscillaclient.viewmodels.app.models.Chapter;
 
 import java.util.ArrayList;
 

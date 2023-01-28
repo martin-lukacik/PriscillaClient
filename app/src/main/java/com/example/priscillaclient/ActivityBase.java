@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.example.priscillaclient.viewmodel.user.models.Theme;
+import com.example.priscillaclient.viewmodels.user.models.Theme;
 
 import java.util.Locale;
 
