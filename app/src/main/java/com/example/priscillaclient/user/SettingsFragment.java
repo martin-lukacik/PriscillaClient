@@ -2,6 +2,7 @@ package com.example.priscillaclient.user;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,9 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatDelegate;
 
+import com.example.priscillaclient.ActivityBase;
+import com.example.priscillaclient.MainActivity;
+import com.example.priscillaclient.user.viewmodel.models.Language;
 import com.example.priscillaclient.util.FragmentBase;
 import com.example.priscillaclient.util.Pair;
 import com.example.priscillaclient.R;
@@ -25,6 +29,8 @@ import com.example.priscillaclient.user.viewmodel.models.Profile;
 import com.example.priscillaclient.user.viewmodel.models.Settings;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Locale;
 
 public class SettingsFragment extends FragmentBase {
 
@@ -129,7 +135,7 @@ public class SettingsFragment extends FragmentBase {
         profileEditLanguage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                adapterView.setTag(settings.languages.get(i).id);
+                adapterView.setTag(settings.languages.get(i));
             }
 
             @Override
@@ -151,7 +157,7 @@ public class SettingsFragment extends FragmentBase {
         String content_type_id = profileEditStudentType.getTag().toString();
         String country = profileEditCountry.getTag().toString();
         String group = profileEditGroup.getTag().toString();
-        String lang = profileEditLanguage.getTag().toString();
+        String lang = ((Language) profileEditLanguage.getTag()).id + "";
         String name = profileEditName.getText().toString();
         String nick = profileEditNickname.getText().toString();
         String surname = profileEditSurname.getText().toString();
@@ -165,10 +171,20 @@ public class SettingsFragment extends FragmentBase {
         }
         AppCompatDelegate.setDefaultNightMode(mode);
 
+        String shortcut = ((Language) profileEditLanguage.getTag()).shortcut.toLowerCase();
+
         SharedPreferences settings = getActivity().getSharedPreferences("settings", 0);
+
+        String savedShortcut = settings.getString("language_shortcut", "en");
+
         SharedPreferences.Editor editor = settings.edit();
+        if (!savedShortcut.equals(shortcut)) {
+            ((ActivityBase) getContext()).changeLocale(shortcut, MainActivity.class);
+            editor.putString("language_shortcut", shortcut);
+        }
         editor.putInt("theme_id", Integer.parseInt(theme_id));
         editor.apply();
+
 
         UserViewModel userViewModel = (UserViewModel) getViewModel(UserViewModel.class);
         userViewModel.update(age, content_type_id, country, group, lang, name, nick, surname, theme_id);

@@ -1,8 +1,10 @@
 package com.example.priscillaclient;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.os.Bundle;
 
 import androidx.appcompat.app.ActionBar;
@@ -12,6 +14,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.priscillaclient.user.viewmodel.models.Theme;
+
+import java.util.Locale;
 
 public class ActivityBase extends AppCompatActivity {
 
@@ -25,6 +29,8 @@ public class ActivityBase extends AppCompatActivity {
 
         themeId = settings.getInt("theme_id", 0);
         setDarkMode(themeId, false);
+
+        changeLocale(settings.getString("language_shortcut", "en"));
 
         super.onCreate(savedInstanceState);
 
@@ -59,5 +65,21 @@ public class ActivityBase extends AppCompatActivity {
 
         if (AppCompatDelegate.getDefaultNightMode() != themeId)
             AppCompatDelegate.setDefaultNightMode(themeId);
+    }
+
+    public void changeLocale(String lang, Class className) {
+        changeLocale(lang);
+
+        startActivity(new Intent(this, className));
+        finish();
+    }
+
+    public void changeLocale(String lang) {
+        Locale locale = new Locale(lang);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.locale = locale;
+
+        getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
     }
 }
