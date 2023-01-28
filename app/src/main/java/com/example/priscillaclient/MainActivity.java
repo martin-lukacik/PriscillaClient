@@ -59,11 +59,38 @@ public class MainActivity extends ActivityBase {
         });
         userViewModel.fetchData();
 
-        SettingsViewModel settingsViewModel = ViewModelProviders.of(this).get(SettingsViewModel.class);
-        settingsViewModel.fetchData();
 
+        // TODO synchronize with registration data
         ProfileViewModel profileViewModel = ViewModelProviders.of(this).get(ProfileViewModel.class);
         profileViewModel.fetchData();
+
+        SettingsViewModel settingsViewModel = ViewModelProviders.of(this).get(SettingsViewModel.class);
+        settingsViewModel.fetchData();
+        settingsViewModel.getData().observe(this, (data) -> {
+            profileViewModel.getData().observe(this, (d) -> {
+
+                if (d == null)
+                    return;
+
+                String currentShortcut = settings.getString("language_shortcut", "en");
+                String shortcut = "en";
+
+                for (Language language : data.languages) {
+                    if (language.id == d.pref_lang_id) {
+                        shortcut = language.shortcut;
+                        break;
+                    }
+                }
+
+                if (!shortcut.equals(currentShortcut)) {
+                    SharedPreferences.Editor editor = settings.edit();
+                    editor.putString("language_shortcut", shortcut);
+                    editor.apply();
+                    // TODO restart activity to take effect
+                    changeLocale(shortcut);
+                }
+            });
+        });
     }
 
     private void setupNavigation() {

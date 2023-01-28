@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="nickname">Přezdívka</string>
-    <string name="username_or_email">Uživatelské jmémno nebo e-mail</string>
+    <string name="username_or_email">Uživatelské jméno nebo e-mail</string>
     <string name="password">Heslo</string>
     <string name="remember_login">Zůstat přihlášený</string>
     <string name="sign_in">Přihlásit se</string>
