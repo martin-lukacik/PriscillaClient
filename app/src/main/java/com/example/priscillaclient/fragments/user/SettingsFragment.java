@@ -258,7 +258,17 @@ public class SettingsFragment extends FragmentBase {
                 }
                 return v;
             }
+
+            @Override
+            public View getDropDownView(int position, View convertView, @NotNull ViewGroup parent) {
+                View v = getView(position, convertView, parent);
+
+                v.setPadding(0, 10, 0, 10);
+
+                return v;
+            }
         };
+        adapter.setDropDownViewResource(R.layout.spinner_row);
         profileEditLanguage.setAdapter(adapter);
         profileEditLanguage.setSelection(selection.x);
     }
