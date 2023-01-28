@@ -1,6 +1,7 @@
 *{
     color:white !important;
     background:rgb(18,18,18);
+    -webkit-user-select: none;
 }
 pre{
     background:#2D3033;
@@ -9,4 +10,7 @@ pre{
 }
 .answer {
     max-width:4em;
+}
+img {
+    max-width:100vw;
 }

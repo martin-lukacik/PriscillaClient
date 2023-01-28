@@ -230,7 +230,7 @@ public class TaskFragment extends FragmentBase {
         settings.setJavaScriptEnabled(true);
         webView.addJavascriptInterface(javascriptInterface, "Android");
         webView.setOnLongClickListener(v -> true);
-        webView.setOnTouchListener((v, event) -> (event.getAction() == MotionEvent.ACTION_MOVE));
+        webView.setLongClickable(false);
         webView.setVerticalScrollBarEnabled(false);
         webView.setHorizontalScrollBarEnabled(false);
 

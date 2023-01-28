@@ -82,8 +82,8 @@ public class DoRunProgram implements Callable<TaskResult> {
         TaskResult result = new TaskResult(response);
 
         if (result.compilation.contains("The compilation process did not generate an executable nor error message.")) {
-            if (attempts++ < 5) {
-                Thread.sleep(1000);
+            if (attempts++ < 15) {
+                Thread.sleep(2000);
                 return getResult(adminTicket);
             } else {
                 throw new Exception("Timed out while evaluating task.");
