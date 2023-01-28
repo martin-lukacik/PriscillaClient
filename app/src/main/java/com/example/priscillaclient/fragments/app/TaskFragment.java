@@ -490,12 +490,16 @@ public class TaskFragment extends FragmentBase {
             public void onProgressChanged(WebView view, int progress) {
                 if (progress == 100) {
                     webView.setVisibility(View.VISIBLE);
+
+                    taskLayout.setVisibility(View.VISIBLE);
                 }
             }
         });
     }
 
     private void clearTaskLayout() {
+
+        taskLayout.setVisibility(View.GONE);
 
         webView.setVisibility(View.GONE);
         taskCount.setText((currentTask + 1) + " / " + tasks.size());
