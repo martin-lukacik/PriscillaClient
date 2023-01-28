@@ -1,11 +1,6 @@
 package com.example.priscillaclient.util;
 
-import com.example.priscillaclient.browse.viewmodel.models.Area;
-import com.example.priscillaclient.browse.viewmodel.models.AreaCourse;
-import com.example.priscillaclient.browse.viewmodel.models.Category;
-import com.example.priscillaclient.user.viewmodel.models.Token;
-
-import java.util.ArrayList;
+import com.example.priscillaclient.viewmodel.user.models.Token;
 
 public class Client {
 

@@ -7,7 +7,7 @@
     android:paddingStart="15dp"
     android:paddingEnd="15dp"
     android:paddingTop="15dp"
-    tools:context=".app.ChaptersFragment">
+    tools:context=".fragments.app.ChaptersFragment">
 
     <TextView
         android:layout_width="match_parent"

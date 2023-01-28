@@ -12,11 +12,11 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
-import com.example.priscillaclient.user.viewmodel.ProfileViewModel;
-import com.example.priscillaclient.user.viewmodel.SettingsViewModel;
-import com.example.priscillaclient.user.viewmodel.UserViewModel;
-import com.example.priscillaclient.user.viewmodel.models.Language;
-import com.example.priscillaclient.user.viewmodel.models.User;
+import com.example.priscillaclient.viewmodel.user.ProfileViewModel;
+import com.example.priscillaclient.viewmodel.user.SettingsViewModel;
+import com.example.priscillaclient.viewmodel.user.UserViewModel;
+import com.example.priscillaclient.viewmodel.user.models.Language;
+import com.example.priscillaclient.viewmodel.user.models.User;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 /*
@@ -143,14 +143,17 @@ public class MainActivity extends ActivityBase {
     public void onBackPressed(){
         FragmentManager manager = getSupportFragmentManager();
         NavHostFragment navHostFragment = (NavHostFragment) manager.findFragmentById(R.id.fragmentContainer);
-        FragmentManager fm = navHostFragment.getChildFragmentManager();
-        if (fm.getBackStackEntryCount() > 0) {
-            super.onBackPressed();
-        } else {
-            // Prevents login screen on return to the app
-            Intent i = new Intent(Intent.ACTION_MAIN);
-            i.addCategory(Intent.CATEGORY_HOME);
-            startActivity(i);
+
+        if (navHostFragment != null) {
+            FragmentManager fm = navHostFragment.getChildFragmentManager();
+            if (fm.getBackStackEntryCount() > 0) {
+                super.onBackPressed();
+            } else {
+                // Prevents login screen on return to the app
+                Intent i = new Intent(Intent.ACTION_MAIN);
+                i.addCategory(Intent.CATEGORY_HOME);
+                startActivity(i);
+            }
         }
     }
 
