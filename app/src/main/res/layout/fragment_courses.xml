@@ -3,9 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".app.CoursesFragment"
-    android:orientation="vertical">
-
+    android:orientation="vertical"
+    android:paddingStart="15dp"
+    android:paddingEnd="15dp"
+    android:paddingTop="15dp"
+    tools:context=".app.CoursesFragment">
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,7 +22,7 @@
         android:id="@+id/courseListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="10dp"
+        android:paddingTop="10dp"
         android:verticalSpacing="15dp"
         android:horizontalSpacing="15dp"
         android:numColumns="1" />

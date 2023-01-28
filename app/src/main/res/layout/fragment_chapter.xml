@@ -4,6 +4,9 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
+    android:paddingStart="15dp"
+    android:paddingEnd="15dp"
+    android:paddingTop="15dp"
     tools:context=".app.ChaptersFragment">
 
     <TextView
@@ -20,7 +23,7 @@
         android:id="@+id/chapterListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="10dp"
+        android:paddingTop="10dp"
         android:verticalSpacing="15dp"
         android:horizontalSpacing="15dp"
         android:numColumns="1" />
