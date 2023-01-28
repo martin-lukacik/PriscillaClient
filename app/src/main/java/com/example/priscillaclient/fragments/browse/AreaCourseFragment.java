@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.priscillaclient.R;
+import com.example.priscillaclient.fragments.app.ChaptersFragment;
 import com.example.priscillaclient.viewmodels.app.CoursesViewModel;
 import com.example.priscillaclient.viewmodels.app.models.Course;
 import com.example.priscillaclient.viewmodels.browse.AreaCoursesViewModel;
@@ -25,6 +26,8 @@ import java.util.ArrayList;
 
 public class AreaCourseFragment extends FragmentBase {
 
+    public static final String ARG_AREA_ID = "areaId";
+
     ArrayList<AreaCourse> areaCourses;
     int areaId = -1;
 
@@ -36,7 +39,7 @@ public class AreaCourseFragment extends FragmentBase {
         layoutId = R.layout.fragment_area_course;
 
         if (getArguments() != null) {
-            areaId = getArguments().getInt("areaId");
+            areaId = getArguments().getInt(ARG_AREA_ID);
         }
 
         AreaCoursesViewModel viewModel = (AreaCoursesViewModel) getViewModel(AreaCoursesViewModel.class);
@@ -98,8 +101,8 @@ public class AreaCourseFragment extends FragmentBase {
                 }
 
                 Bundle args = new Bundle();
-                args.putInt("courseId", course.id);
-                args.putInt("courseColor", courseColor);
+                args.putInt(ChaptersFragment.ARG_COURSE_ID, course.id);
+                args.putInt(ChaptersFragment.ARG_COURSE_COLOR, courseColor);
 
                 navigate(R.id.coursesFragment); // needed for back stack
                 navigate(R.id.chaptersFragment, args);

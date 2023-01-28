@@ -17,6 +17,8 @@ import java.util.ArrayList;
 
 public class AreasFragment extends FragmentBase {
 
+    public static final String ARG_CATEGORY_ID = "categoryId";
+
     ArrayList<Area> areas;
     int categoryId = -1;
 
@@ -28,7 +30,7 @@ public class AreasFragment extends FragmentBase {
         layoutId = R.layout.fragment_areas;
 
         if (getArguments() != null) {
-            categoryId = getArguments().getInt("categoryId");
+            categoryId = getArguments().getInt(ARG_CATEGORY_ID);
         }
 
         AreasViewModel viewModel = (AreasViewModel) getViewModel(AreasViewModel.class);
@@ -62,7 +64,7 @@ public class AreasFragment extends FragmentBase {
 
     private void areaSelected(AdapterView<?> adapterView, View view, int i, long l) {
         Bundle args = new Bundle();
-        args.putInt("areaId", areas.get(i).id);
+        args.putInt(AreaCourseFragment.ARG_AREA_ID, areas.get(i).id);
 
         navigate(R.id.areaCourseFragment, args);
     }

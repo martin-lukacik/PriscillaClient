@@ -99,8 +99,8 @@ public class CoursesFragment extends FragmentBase {
         int courseId = courses.get(i).course_id;
         int courseColor = Color.parseColor(courses.get(i).area_color);
         Bundle args = new Bundle();
-        args.putInt("courseId", courseId);
-        args.putInt("courseColor", courseColor);
+        args.putInt(ChaptersFragment.ARG_COURSE_ID, courseId);
+        args.putInt(ChaptersFragment.ARG_COURSE_COLOR, courseColor);
         navigate(R.id.chaptersFragment, args);
     }
 

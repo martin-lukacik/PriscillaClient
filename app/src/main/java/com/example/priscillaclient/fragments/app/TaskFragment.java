@@ -55,8 +55,8 @@ import io.github.rosemoe.sora.widget.CodeEditor;
 
 public class TaskFragment extends FragmentBase {
 
-    private static final String ARG_COURSE_ID = "courseId";
-    private static final String ARG_CHAPTER_ID = "chapterId";
+    public static final String ARG_COURSE_ID = "courseId";
+    public static final String ARG_CHAPTER_ID = "chapterId";
 
     private int themeId = Theme.THEME_LIGHT;
 

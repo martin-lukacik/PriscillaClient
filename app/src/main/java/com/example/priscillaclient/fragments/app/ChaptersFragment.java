@@ -71,8 +71,8 @@ public class ChaptersFragment extends FragmentBase {
     private void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         int chapterId = chapters.get(i).id;
         Bundle args = new Bundle();
-        args.putInt("courseId", courseId);
-        args.putInt("chapterId", chapterId);
+        args.putInt(TaskFragment.ARG_COURSE_ID, courseId);
+        args.putInt(TaskFragment.ARG_CHAPTER_ID, chapterId);
         navigate(R.id.taskFragment, args);
     }
 }

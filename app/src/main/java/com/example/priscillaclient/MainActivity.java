@@ -30,6 +30,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends ActivityBase {
 
+    public static final String INTENT_COURSE_ID = "course_id";
+
     NavController navController;
 
     @Override
@@ -37,11 +39,11 @@ public class MainActivity extends ActivityBase {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        int courseId = getIntent().getIntExtra("course_id", -1);
+        int courseId = getIntent().getIntExtra(INTENT_COURSE_ID, -1);
 
         if (courseId != -1) {
             Bundle args = new Bundle();
-            args.putInt("courseId", courseId);
+            args.putInt(INTENT_COURSE_ID, courseId);
             navigate(R.id.chaptersFragment, args);
         }
 
