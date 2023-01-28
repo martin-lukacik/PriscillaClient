@@ -47,6 +47,17 @@ public class AreaCourseFragment extends FragmentBase {
         viewModel.fetchData(areaId);
     }
 
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        ListView areaCourseList = findViewById(R.id.areaCourseList);
+
+        View emptyView = getLayoutInflater().inflate(R.layout.loading_view, null);
+        requireActivity().addContentView(emptyView, areaCourseList.getLayoutParams());
+        areaCourseList.setEmptyView(emptyView);
+    }
+
     public void onUpdate(ArrayList<AreaCourse> areaCourses) {
 
         this.areaCourses = areaCourses;

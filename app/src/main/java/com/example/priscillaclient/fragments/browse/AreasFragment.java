@@ -39,8 +39,18 @@ public class AreasFragment extends FragmentBase {
         viewModel.fetchData(categoryId);
     }
 
-    public void onUpdate(ArrayList<Area> areas) {
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
+        ListView areaListView = findViewById(R.id.areaListView);
+
+        View emptyView = getLayoutInflater().inflate(R.layout.loading_view, null);
+        requireActivity().addContentView(emptyView, areaListView.getLayoutParams());
+        areaListView.setEmptyView(emptyView);
+    }
+
+    public void onUpdate(ArrayList<Area> areas) {
         this.areas = areas;
         ArrayAdapter<Area> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, areas);
         ListView areaListView = findViewById(R.id.areaListView);

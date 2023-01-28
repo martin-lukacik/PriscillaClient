@@ -10,7 +10,7 @@ import com.example.priscillaclient.viewmodels.ViewModelBase;
 import java.util.ArrayList;
 
 public class AreasViewModel extends ViewModelBase {
-    private final MutableLiveData<ArrayList<Area>> state = new MutableLiveData<>(null);
+    private MutableLiveData<ArrayList<Area>> state = new MutableLiveData<>(null);
 
     public LiveData<ArrayList<Area>> getData() {
         return state;
@@ -20,6 +20,7 @@ public class AreasViewModel extends ViewModelBase {
 
     public void fetchData(int categoryId) {
         if (lastCategoryId != categoryId) {
+            state.setValue(null);
             apiTask.executeAsync(new GetAreas(categoryId), (data, error) -> {
                 setError(error);
                 state.setValue(data);
