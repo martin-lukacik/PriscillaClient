@@ -22,7 +22,6 @@ public class LoginActivity extends ActivityBase {
 
     public static boolean userLoggedIn = false;
     private LoadingDialog dialog;
-    private String refreshToken;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,7 +55,7 @@ public class LoginActivity extends ActivityBase {
                 onUpdate(data);
         });
         String username = settings.getString(Preferences.PREFS_USERNAME, null);
-        refreshToken = settings.getString(Preferences.PREFS_REFRESH_TOKEN, null);
+        String refreshToken = settings.getString(Preferences.PREFS_REFRESH_TOKEN, null);
 
         if (!userLoggedIn) {
             if (username != null && refreshToken != null) {

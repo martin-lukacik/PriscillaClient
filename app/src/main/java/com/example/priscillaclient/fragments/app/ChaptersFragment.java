@@ -4,13 +4,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.ListView;
 
 import com.example.priscillaclient.R;
+import com.example.priscillaclient.adapters.ChapterListAdapter;
+import com.example.priscillaclient.fragments.FragmentBase;
 import com.example.priscillaclient.viewmodels.app.ChaptersViewModel;
 import com.example.priscillaclient.viewmodels.app.models.Chapter;
-import com.example.priscillaclient.fragments.FragmentBase;
-import com.example.priscillaclient.adapters.ChapterListAdapter;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
@@ -47,12 +48,12 @@ public class ChaptersFragment extends FragmentBase {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NotNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         GridView chaptersListView = findViewById(R.id.chapterListView);
 
-        View emptyView = getLayoutInflater().inflate(R.layout.loading_view, null);
+        View emptyView = View.inflate(getContext(), R.layout.loading_view, null);
         requireActivity().addContentView(emptyView, chaptersListView.getLayoutParams());
         chaptersListView.setEmptyView(emptyView);
     }

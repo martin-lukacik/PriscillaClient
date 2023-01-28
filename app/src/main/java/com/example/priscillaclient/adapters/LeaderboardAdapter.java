@@ -49,9 +49,12 @@ public class LeaderboardAdapter extends ArrayAdapter<LeaderboardItem> {
             holder = (ViewHolder) view.getTag();
         }
 
-        holder.position.setText((i + 1) + ".");
+        String pos = (i + 1) + ".";
+        String exp = leaders.get(i).xp + "";
+
+        holder.position.setText(pos);
         holder.name.setText(leaders.get(i).nickname);
-        holder.xp.setText("" + leaders.get(i).xp);
+        holder.xp.setText(exp);
 
         return view;
     }

@@ -68,11 +68,15 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
             holder = (ViewHolder) view.getTag();
         }
 
+        String content = courses.get(i).content_passed + " / " + courses.get(i).content_count;
+        String task = courses.get(i).task_passed + " / " + courses.get(i).task_count;
+        String program = courses.get(i).program_passed + " / " + courses.get(i).program_count;
+
         holder.titleText.setText(courses.get(i).name);
         holder.subtitleText.setText(courses.get(i).description);
-        holder.contentText.setText(courses.get(i).content_passed + " / " + courses.get(i).content_count);
-        holder.taskText.setText(courses.get(i).task_passed + " / " + courses.get(i).task_count);
-        holder.programText.setText(courses.get(i).program_passed + " / " + courses.get(i).program_count);
+        holder.contentText.setText(content);
+        holder.taskText.setText(task);
+        holder.programText.setText(program);
 
         int progress = (int) ((courses.get(i).passed / ((double) courses.get(i).all)) * 100);
         holder.courseProgress.setProgress(progress);

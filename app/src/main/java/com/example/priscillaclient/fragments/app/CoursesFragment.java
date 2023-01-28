@@ -7,14 +7,14 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
-import androidx.lifecycle.ViewModelProviders;
-
 import com.example.priscillaclient.R;
+import com.example.priscillaclient.adapters.CourseListAdapter;
 import com.example.priscillaclient.fragments.FragmentBase;
 import com.example.priscillaclient.util.Preferences;
-import com.example.priscillaclient.viewmodels.app.models.Course;
 import com.example.priscillaclient.viewmodels.app.CoursesViewModel;
-import com.example.priscillaclient.adapters.CourseListAdapter;
+import com.example.priscillaclient.viewmodels.app.models.Course;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
@@ -41,12 +41,12 @@ public class CoursesFragment extends FragmentBase {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NotNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         GridView courseListView = findViewById(R.id.courseListView);
 
-        View emptyView = getLayoutInflater().inflate(R.layout.loading_view, null);
+        View emptyView = View.inflate(getContext(), R.layout.loading_view, null);
         requireActivity().addContentView(emptyView, courseListView.getLayoutParams());
         courseListView.setEmptyView(emptyView);
     }

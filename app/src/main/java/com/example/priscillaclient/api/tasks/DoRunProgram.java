@@ -53,8 +53,8 @@ public class DoRunProgram implements Callable<TaskResult> {
         JSONObject response = new JSONObject(connection.getResponse());
 
         String adminTicket = response.getString("adminticket");
-        String monitorticket = response.getString("monitorticket");
-        String executionticket = response.getString("executionticket");
+        /* String monitorticket = response.getString("monitorticket"); */
+        /* String executionticket = response.getString("executionticket"); */
 
         return getResult(adminTicket);
     }

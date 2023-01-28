@@ -24,13 +24,16 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.api.tasks.DoEvaluateTask;
 import com.example.priscillaclient.api.tasks.DoPassTask;
 import com.example.priscillaclient.api.tasks.DoRunProgram;
+import com.example.priscillaclient.fragments.FragmentBase;
+import com.example.priscillaclient.util.JavascriptInterface;
+import com.example.priscillaclient.util.LoadingDialog;
 import com.example.priscillaclient.util.Preferences;
+import com.example.priscillaclient.util.TaskHelper;
 import com.example.priscillaclient.viewmodels.app.LessonsViewModel;
 import com.example.priscillaclient.viewmodels.app.TaskResultViewModel;
 import com.example.priscillaclient.viewmodels.app.TasksViewModel;
@@ -40,10 +43,6 @@ import com.example.priscillaclient.viewmodels.app.models.TaskResult;
 import com.example.priscillaclient.viewmodels.app.models.TaskType;
 import com.example.priscillaclient.viewmodels.user.UserViewModel;
 import com.example.priscillaclient.viewmodels.user.models.Theme;
-import com.example.priscillaclient.fragments.FragmentBase;
-import com.example.priscillaclient.util.JavascriptInterface;
-import com.example.priscillaclient.util.LoadingDialog;
-import com.example.priscillaclient.util.TaskHelper;
 import com.google.android.material.navigation.NavigationView;
 
 import org.jetbrains.annotations.NotNull;
@@ -461,10 +460,11 @@ public class TaskFragment extends FragmentBase {
 
                 String html = "";
                 if (task.fakes != null) {
-                    html = "<hr>";
+                    StringBuilder htmlBuilder = new StringBuilder("<hr>");
                     for (String fake : task.fakes) {
-                        html += "<button onclick=\"return add(this);\">" + fake + "</button>";
+                        htmlBuilder.append("<button onclick=\"return add(this);\">").append(fake).append("</button>");
                     }
+                    html = htmlBuilder.toString();
                 }
 
                 content += html;
@@ -475,9 +475,11 @@ public class TaskFragment extends FragmentBase {
 
                 content += "<hr><style>pre{display:inline-block;vertical-align:middle}</style>";
                 content += "<div class=\"codes\">";
+                StringBuilder contentBuilder = new StringBuilder(content);
                 for (int i = 0; i < codes.size(); ++i) {
-                    content += "<span><button onclick=\"up(this)\" class=\"arrow-up\">&uarr;</button><button onclick=\"down(this)\" class=\"arrow-down\">&darr;</button><span class=\"code\">" + codes.get(i) + "</span><br></span>";
+                    contentBuilder.append("<span><button onclick=\"up(this)\" class=\"arrow-up\">&uarr;</button><button onclick=\"down(this)\" class=\"arrow-down\">&darr;</button><span class=\"code\">").append(codes.get(i)).append("</span><br></span>");
                 }
+                content = contentBuilder.toString();
                 content += "</div>";
 
                 break;
@@ -502,7 +504,9 @@ public class TaskFragment extends FragmentBase {
         taskLayout.setVisibility(View.GONE);
 
         webView.setVisibility(View.GONE);
-        taskCount.setText((currentTask + 1) + " / " + tasks.size());
+
+        String str = (currentTask + 1) + " / " + tasks.size();
+        taskCount.setText(str);
         stars.removeAllViews();
 
         codeTaskLayout.removeAllViews();

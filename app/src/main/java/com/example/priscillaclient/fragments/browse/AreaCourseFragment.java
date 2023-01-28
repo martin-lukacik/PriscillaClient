@@ -19,6 +19,8 @@ import com.example.priscillaclient.fragments.FragmentBase;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.textview.MaterialTextView;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 
 public class AreaCourseFragment extends FragmentBase {
@@ -48,12 +50,12 @@ public class AreaCourseFragment extends FragmentBase {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NotNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         ListView areaCourseList = findViewById(R.id.areaCourseList);
 
-        View emptyView = getLayoutInflater().inflate(R.layout.loading_view, null);
+        View emptyView = View.inflate(getContext(), R.layout.loading_view, null);
         requireActivity().addContentView(emptyView, areaCourseList.getLayoutParams());
         areaCourseList.setEmptyView(emptyView);
     }

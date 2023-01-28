@@ -1,7 +1,6 @@
 package com.example.priscillaclient.fragments.user;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -10,7 +9,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -243,18 +241,9 @@ public class SettingsFragment extends FragmentBase {
 
                 if (settingsViewModel.getData().getValue() != null) {
                     String shortcut = settingsViewModel.getData().getValue().languages.get(position).shortcut;
-/*
-                    ImageView imageView = ((ImageView) v.findViewById(R.id.spinnerLanguageIcon));
-
-                    Context context = imageView.getContext();
-                    int id = context.getResources().getIdentifier("flag_" + shortcut.toLowerCase(), "drawable", context.getPackageName());
-
-                    imageView.setImageResource(id);*/
-
                     int id = getContext().getResources().getIdentifier("flag_" + shortcut.toLowerCase(), "drawable", getContext().getPackageName());
                     TextView textView = v.findViewById(R.id.spinnerLanguage);
                     textView.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(getContext(), id), null, null, null);
-
                 }
                 return v;
             }
@@ -262,9 +251,7 @@ public class SettingsFragment extends FragmentBase {
             @Override
             public View getDropDownView(int position, View convertView, @NotNull ViewGroup parent) {
                 View v = getView(position, convertView, parent);
-
                 v.setPadding(0, 10, 0, 10);
-
                 return v;
             }
         };

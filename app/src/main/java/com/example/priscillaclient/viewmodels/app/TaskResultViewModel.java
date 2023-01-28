@@ -14,8 +14,8 @@ import java.util.concurrent.Callable;
 
 public class TaskResultViewModel extends ViewModelBase {
     private MutableLiveData<TaskResult> state = new MutableLiveData<>(null);
-    private MutableLiveData<String> saveState = new MutableLiveData<>(null);
-    private MutableLiveData<Pair<ArrayList<String>, ArrayList<String>>> code = new MutableLiveData<>(null);
+    private final MutableLiveData<String> saveState = new MutableLiveData<>(null);
+    private final MutableLiveData<Pair<ArrayList<String>, ArrayList<String>>> code = new MutableLiveData<>(null);
 
     public LiveData<TaskResult> getData() {
         return state;

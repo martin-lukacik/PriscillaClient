@@ -27,7 +27,6 @@ public class GetProgram implements Callable<Pair<ArrayList<String>, ArrayList<St
         connection.sendRequest(json);
 
         if (connection.getErrorStream() != null) {
-            String a = connection.getErrorMessage();
             throw new Exception(connection.getErrorMessage());
         }
 

@@ -5,11 +5,10 @@ import android.view.View;
 import android.widget.ListView;
 
 import com.example.priscillaclient.R;
-import com.example.priscillaclient.fragments.FragmentBase;
-import com.example.priscillaclient.viewmodels.misc.models.LeaderboardItem;
-import com.example.priscillaclient.viewmodels.misc.LeadersViewModel;
-import com.example.priscillaclient.util.LoadingDialog;
 import com.example.priscillaclient.adapters.LeaderboardAdapter;
+import com.example.priscillaclient.fragments.FragmentBase;
+import com.example.priscillaclient.viewmodels.misc.LeadersViewModel;
+import com.example.priscillaclient.viewmodels.misc.models.LeaderboardItem;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -68,7 +67,7 @@ public class LeaderboardFragment extends FragmentBase {
 
         ListView lv = findViewById(R.id.leaderboardList);
 
-        View emptyView = getLayoutInflater().inflate(R.layout.loading_view, null);
+        View emptyView = View.inflate(getContext(), R.layout.loading_view, null);
         requireActivity().addContentView(emptyView, lv.getLayoutParams());
         lv.setEmptyView(emptyView);
     }

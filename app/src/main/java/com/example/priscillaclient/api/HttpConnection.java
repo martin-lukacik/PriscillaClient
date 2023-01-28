@@ -77,15 +77,7 @@ public class HttpConnection {
         return stringBuilder.toString();
     }
 
-    public void disconnect() {
-        connection.disconnect();
-    }
-
     public InputStream getInputStream() throws IOException {
         return connection.getInputStream();
-    }
-
-    public int getResponseCode() throws IOException {
-        return connection.getResponseCode();
     }
 }

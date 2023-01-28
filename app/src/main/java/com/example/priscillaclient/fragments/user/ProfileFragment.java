@@ -1,5 +1,6 @@
 package com.example.priscillaclient.fragments.user;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -78,6 +79,7 @@ public class ProfileFragment extends FragmentBase {
         navigate(R.id.settingsFragment);
     }
 
+    @SuppressLint("SetTextI18n")
     public void onUpdate(User user) {
 
         if (user == null)
@@ -105,8 +107,10 @@ public class ProfileFragment extends FragmentBase {
             }
         }
 
-        usernameShort.setText(firstName + "" + lastName);
-        usernameFull.setText(user.name + " " + user.surname);
+        String fullName = user.name + " " + user.surname;
+        String shortName = firstName + "" + lastName;
+        usernameFull.setText(fullName);
+        usernameShort.setText(shortName);
 
         GradientDrawable drawable = (GradientDrawable) usernameShort.getBackground();
         drawable.mutate();

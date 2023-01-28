@@ -11,6 +11,8 @@ import com.example.priscillaclient.viewmodels.browse.AreasViewModel;
 import com.example.priscillaclient.viewmodels.browse.models.Area;
 import com.example.priscillaclient.fragments.FragmentBase;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 
 public class AreasFragment extends FragmentBase {
@@ -40,12 +42,12 @@ public class AreasFragment extends FragmentBase {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NotNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         ListView areaListView = findViewById(R.id.areaListView);
 
-        View emptyView = getLayoutInflater().inflate(R.layout.loading_view, null);
+        View emptyView = View.inflate(getContext(), R.layout.loading_view, null);
         requireActivity().addContentView(emptyView, areaListView.getLayoutParams());
         areaListView.setEmptyView(emptyView);
     }

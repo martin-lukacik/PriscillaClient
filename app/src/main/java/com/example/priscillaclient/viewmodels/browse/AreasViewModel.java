@@ -10,7 +10,7 @@ import com.example.priscillaclient.viewmodels.ViewModelBase;
 import java.util.ArrayList;
 
 public class AreasViewModel extends ViewModelBase {
-    private MutableLiveData<ArrayList<Area>> state = new MutableLiveData<>(null);
+    private final MutableLiveData<ArrayList<Area>> state = new MutableLiveData<>(null);
 
     public LiveData<ArrayList<Area>> getData() {
         return state;
