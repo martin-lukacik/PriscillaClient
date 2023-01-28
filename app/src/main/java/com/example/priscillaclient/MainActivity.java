@@ -131,7 +131,14 @@ public class MainActivity extends ActivityBase {
     }
 
     public void showError(String error) {
-        if (error != null)
+        if (error != null) {
             Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+
+            if (error.equals("Unauthorized.")) {
+                LoginActivity.userLoggedIn = false;
+                startActivity(new Intent(this, LoginActivity.class));
+                finish();
+            }
+        }
     }
 }

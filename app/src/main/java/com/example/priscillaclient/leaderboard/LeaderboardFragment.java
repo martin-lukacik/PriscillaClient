@@ -49,8 +49,10 @@ public class LeaderboardFragment extends FragmentBase {
 
         LeadersViewModel viewModel = (LeadersViewModel) getViewModel(LeadersViewModel.class);
         viewModel.getData().observe(this, (data) -> {
-            if (viewModel.hasError())
+            if (viewModel.hasError()) {
+                dialog.dismiss();
                 showError(viewModel.getError());
+            }
             else
                 onUpdate(data);
             ListView lv = findViewById(R.id.leaderboardList);

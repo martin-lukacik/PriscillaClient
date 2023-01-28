@@ -538,7 +538,7 @@ public class TaskFragment extends FragmentBase {
             switch (task.type) {
 
                 case TASK_CODE3:
-                    exeType = 1;
+                    //exeType = 1;
                 case TASK_CODE:
                 case TASK_CODE2:
                     codes.set(currentIndex, codeView.getText().toString());
