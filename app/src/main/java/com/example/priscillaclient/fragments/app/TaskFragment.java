@@ -232,6 +232,7 @@ public class TaskFragment extends FragmentBase {
         webView.setLongClickable(false);
         webView.setVerticalScrollBarEnabled(false);
         webView.setHorizontalScrollBarEnabled(false);
+        webView.setHorizontalScrollBarEnabled(false);
 
         buttonTaskHelp.setOnClickListener(this::getTaskHelp);
         buttonTaskNext.setOnClickListener(this::nextTask);

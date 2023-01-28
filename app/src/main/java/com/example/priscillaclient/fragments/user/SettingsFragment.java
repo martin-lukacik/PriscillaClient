@@ -216,7 +216,7 @@ public class SettingsFragment extends FragmentBase {
     }
 
     private void loadProfileStudentType(Profile profile) {
-        String[] items = new String[] { "teen student", "university student" };
+        String[] items = new String[] { "teen student", "university student" }; // TODO hardcored
         loadSelection(profileEditStudentType, items, profile.content_type_id - 1);
     }
 
