@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="nickname">Bijnaam</string>
+    <string name="username_or_email">Gebruikersnaam of e-mail</string>
+    <string name="password">Wachtwoord</string>
+    <string name="remember_login">Onthoud mij</string>
+    <string name="sign_in">Log in</string>
+    <string name="register">Registratie</string>
+    <string name="my_courses">Mijn vakken</string>
+    <string name="lessons">Lessen</string>
+    <string name="chapters">Hoofdstukken</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="browse">Bladeren</string>
+    <string name="leaderboard">Scorebord</string>
+    <string name="profile">Profiel</string>
+    <string name="options">Instellingen</string>
+    <string name="name">Naam</string>
+    <string name="surname">Achternaam</string>
+    <string name="primary_group">Primaire groep</string>
+    <string name="student_type">Soort student</string>
+    <string name="country">Land</string>
+    <string name="language">Taal</string>
+    <string name="theme">Thema</string>
+    <string name="birth_year">Geboortejaar</string>
+    <string name="save_changes">Wijzigingen opslaan</string>
+    <string name="log_out">Uitloggen</string>
+    <string name="help">Helpen</string>
+    <string name="answer" tools:ignore="TypographyEllipsis">Antwoord...</string>
+    <string name="result">Resultaat</string>
+</resources>

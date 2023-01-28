@@ -1,0 +1,29 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="nickname">Becenév</string>
+    <string name="username_or_email">Felhasználónév vagy e-mail</string>
+    <string name="password">Jelszó</string>
+    <string name="remember_login">Emlékezz rám</string>
+    <string name="sign_in">Belépés</string>
+    <string name="register">Regisztráció</string>
+    <string name="my_courses">A tanfolyamaim</string>
+    <string name="lessons">Leckék</string>
+    <string name="chapters">Fejezetek</string>
+    <string name="dashboard">Irányítópult</string>
+    <string name="browse">Tallózás</string>
+    <string name="leaderboard">Ranglista</string>
+    <string name="profile">Profil</string>
+    <string name="options">Beállítások</string>
+    <string name="name">Név</string>
+    <string name="surname">Vezetéknév</string>
+    <string name="primary_group">Elsődleges csoport</string>
+    <string name="student_type">Diák típus</string>
+    <string name="country">Ország</string>
+    <string name="language">Nyelv</string>
+    <string name="theme">Téma</string>
+    <string name="birth_year">Születési év</string>
+    <string name="save_changes">Változtatások mentése</string>
+    <string name="log_out">Kijelentkezés</string>
+    <string name="help">Segítség</string>
+    <string name="answer" tools:ignore="TypographyEllipsis">Válasza...</string>
+    <string name="result">Eredmény</string>
+</resources>
