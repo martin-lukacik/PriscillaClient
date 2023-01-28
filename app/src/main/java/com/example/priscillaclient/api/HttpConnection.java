@@ -1,6 +1,6 @@
 package com.example.priscillaclient.api;
 
-import com.example.priscillaclient.util.Client;
+import com.example.priscillaclient.viewmodels.user.models.Token;
 
 import org.json.JSONObject;
 
@@ -19,18 +19,18 @@ public class HttpConnection {
 
     private final HttpURLConnection connection;
 
-    static Client client = Client.getInstance();
+    private static final String baseUrl = "https://app.priscilla.fitped.eu";
 
-    public HttpConnection(String endpoint, String method) throws Exception {
-        URL url = new URL(Client.baseUrl + endpoint);
+    public HttpConnection(String endPoint, String method) throws Exception {
+        URL url = new URL(baseUrl + endPoint);
 
         connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod(method);
         connection.setRequestProperty("Content-Type", "application/json;charset=UTF-8");
         connection.setRequestProperty("Accept", "application/json");
 
-        if (client.hasValidToken()) {
-            connection.setRequestProperty("Authorization", client.token.token_type + " " + client.token.access_token);
+        if (Token.isValid()) {
+            connection.setRequestProperty("Authorization", Token.get().token_type + " " + Token.get().access_token);
         }
 
         connection.setDoOutput(method.equals("POST"));

@@ -44,6 +44,8 @@ public class GetToken implements Callable<Token> {
 
         JSONObject response = new JSONObject(connection.getResponse());
 
-        return new Token(response);
+        Token.set(response);
+
+        return Token.get();
     }
 }
