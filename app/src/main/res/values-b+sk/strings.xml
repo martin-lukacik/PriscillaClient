@@ -1,8 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name">PriscillaClient</string>
-    <string name="hashtag_sign">#</string>
     <string name="nickname">Prezývka</string>
-    <string name="xp">XP</string>
     <string name="username_or_email">Používateľské meno alebo e-mail</string>
     <string name="password">Heslo</string>
     <string name="remember_login">Zostať prihlásený</string>
@@ -10,9 +7,6 @@
     <string name="register">Registrácia</string>
     <string name="my_courses">Moje kurzy</string>
     <string name="lessons">Lekcie</string>
-    <string name="level">LEVEL</string>
-    <string name="coins">COINS</string>
-    <string name="e_mail">E-MAIL</string>
     <string name="chapters">Kapitoly</string>
     <string name="dashboard">Nástenka</string>
     <string name="browse">Prehľadávať</string>
@@ -29,11 +23,7 @@
     <string name="birth_year">Rok narodenia</string>
     <string name="save_changes">Uložiť zmeny</string>
     <string name="log_out">Odhlásiť sa</string>
-    <string name="priscilla_logo">Priscilla logo</string>
     <string name="help">Pomoc</string>
     <string name="answer" tools:ignore="TypographyEllipsis">Odpoveď...</string>
     <string name="result">Výsledok</string>
-    <string name="task_icon">Task icon</string>
-    <string name="code_icon">Code icon</string>
-    <string name="content_icon">Content icon</string>
 </resources>

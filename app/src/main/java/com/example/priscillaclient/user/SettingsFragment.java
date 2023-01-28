@@ -1,6 +1,8 @@
 package com.example.priscillaclient.user;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -17,6 +19,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import com.example.priscillaclient.ActivityBase;
+import com.example.priscillaclient.LoginActivity;
 import com.example.priscillaclient.MainActivity;
 import com.example.priscillaclient.user.viewmodel.models.Language;
 import com.example.priscillaclient.util.FragmentBase;
@@ -152,6 +155,19 @@ public class SettingsFragment extends FragmentBase {
         });
     }
 
+    public void showLanguageChangeDialog(String shortcut) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Settings");
+        builder.setMessage("Language preferences have changed.\n\nA restart is needed for the changes to take effect.");
+        builder.setPositiveButton("OK", (dialog, id) -> {
+            ((ActivityBase) getContext()).changeLocale(shortcut, MainActivity.class);
+        });
+
+        AlertDialog d = builder.create();
+        d.show();
+    }
+
     public void save(View view) {
         String age = profileEditYear.getYear() + "";
         String content_type_id = profileEditStudentType.getTag().toString();
@@ -179,7 +195,6 @@ public class SettingsFragment extends FragmentBase {
 
         SharedPreferences.Editor editor = settings.edit();
         if (!savedShortcut.equals(shortcut)) {
-            ((ActivityBase) getContext()).changeLocale(shortcut, MainActivity.class);
             editor.putString("language_shortcut", shortcut);
         }
         editor.putInt("theme_id", Integer.parseInt(theme_id));
@@ -189,7 +204,11 @@ public class SettingsFragment extends FragmentBase {
         UserViewModel userViewModel = (UserViewModel) getViewModel(UserViewModel.class);
         userViewModel.update(age, content_type_id, country, group, lang, name, nick, surname, theme_id);
 
-        navigate(R.id.profileFragment, null);
+        if (!savedShortcut.equals(shortcut)) {
+            showLanguageChangeDialog(shortcut);
+        } else {
+            navigate(R.id.profileFragment, null);
+        }
     }
 
     private void loadSelection(Spinner spinner, String[] items, int selectedIndex) {
