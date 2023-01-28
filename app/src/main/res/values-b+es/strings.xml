@@ -26,4 +26,9 @@
     <string name="help">Ayudar</string>
     <string name="answer" tools:ignore="TypographyEllipsis">Respuesta...</string>
     <string name="result">Resultado</string>
+    <string name="done">HECHTO</string>
+    <string name="settings_reset">¡Todas las configuraciones locales se restablecerán!</string>
+    <string name="cancel">Cancelar</string>
+    <string name="ok">Ok</string>
+    <string name="language_changed">Las preferencias de idioma han cambiado. Es necesario reiniciar para que los cambios surtan efecto.</string>
 </resources>

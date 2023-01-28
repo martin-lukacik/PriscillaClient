@@ -49,9 +49,9 @@ public class ProfileFragment extends FragmentBase {
     public void logout(View view) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Log out");
-        builder.setMessage("All local settings will be reset!");
-        builder.setPositiveButton("Log out", (dialog, id) -> {
+        builder.setTitle(R.string.log_out);
+        builder.setMessage(R.string.settings_reset);
+        builder.setPositiveButton(R.string.log_out, (dialog, id) -> {
             // Clear settings
             if (getActivity() != null) {
                 SharedPreferences settings = getActivity().getApplicationContext().getSharedPreferences("settings", 0);
@@ -65,7 +65,7 @@ public class ProfileFragment extends FragmentBase {
             Intent intent = new Intent(getActivity(), LoginActivity.class);
             startActivity(intent);
         });
-        builder.setNegativeButton("Cancel", (dialog, id) -> {
+        builder.setNegativeButton(R.string.cancel, (dialog, id) -> {
         });
 
         AlertDialog d = builder.create();

@@ -321,10 +321,10 @@ public class TaskFragment extends FragmentBase {
         }
 
         if (task.passed == 1) {
-            buttonTaskHelp.setText("PASSED");
+            buttonTaskHelp.setText(R.string.done);
             buttonTaskHelp.setEnabled(false);
         } else {
-            buttonTaskHelp.setText("Help");
+            buttonTaskHelp.setText(R.string.help);
             buttonTaskHelp.setEnabled(true);
         }
     }
@@ -383,7 +383,6 @@ public class TaskFragment extends FragmentBase {
             }
 
             fileNameView.setOnClickListener((e) -> {
-                // TODO Make an answer list
                 codes.set(currentIndex, codeView.getText().toString());
                 currentIndex = finalI;
                 codeView.setText(codes.get(finalI));

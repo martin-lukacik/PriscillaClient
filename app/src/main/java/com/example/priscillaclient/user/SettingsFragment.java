@@ -158,9 +158,9 @@ public class SettingsFragment extends FragmentBase {
     public void showLanguageChangeDialog(String shortcut) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Settings");
-        builder.setMessage("Language preferences have changed.\n\nA restart is needed for the changes to take effect.");
-        builder.setPositiveButton("OK", (dialog, id) -> {
+        builder.setTitle(R.string.options);
+        builder.setMessage(R.string.language_changed);
+        builder.setPositiveButton(R.string.ok, (dialog, id) -> {
             ((ActivityBase) getContext()).changeLocale(shortcut, MainActivity.class);
         });
 

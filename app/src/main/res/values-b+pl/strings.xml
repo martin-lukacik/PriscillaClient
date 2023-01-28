@@ -26,4 +26,9 @@
     <string name="help">Pomoc</string>
     <string name="answer" tools:ignore="TypographyEllipsis">Odpowiedź...</string>
     <string name="result">Wynik</string>
+    <string name="done">GOTOWY</string>
+    <string name="settings_reset">Wszystkie ustawienia lokalne zostaną zresetowane!</string>
+    <string name="cancel">Anuluj</string>
+    <string name="ok">Ok</string>
+    <string name="language_changed">Preferencje językowe uległy zmianie. Aby zmiany odniosły skutek, konieczne jest ponowne uruchomienie.</string>
 </resources>

@@ -27,4 +27,9 @@
     <string name="help">Helpen</string>
     <string name="answer" tools:ignore="TypographyEllipsis">Antwoord...</string>
     <string name="result">Resultaat</string>
+    <string name="done">GEDAAN</string>
+    <string name="settings_reset">Alle lokale instellingen worden gereset!</string>
+    <string name="cancel">Annuleren</string>
+    <string name="ok">Ok</string>
+    <string name="language_changed">Taalvoorkeuren zijn veranderd. Er is een herstart nodig om de wijzigingen door te voeren.</string>
 </resources>

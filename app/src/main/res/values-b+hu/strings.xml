@@ -26,4 +26,9 @@
     <string name="help">Segítség</string>
     <string name="answer" tools:ignore="TypographyEllipsis">Válasza...</string>
     <string name="result">Eredmény</string>
+    <string name="done">KÉSZ</string>
+    <string name="settings_reset">Minden helyi beállítás visszaáll!</string>
+    <string name="cancel">Megszünteti</string>
+    <string name="ok">Rendben</string>
+    <string name="language_changed">A nyelvi beállítások megváltoztak. A változtatások életbe léptetéséhez újra kell indítani.</string>
 </resources>

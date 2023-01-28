@@ -26,4 +26,9 @@
     <string name="help">Pomoc</string>
     <string name="answer" tools:ignore="TypographyEllipsis">Odpověď...</string>
     <string name="result">Výsledek</string>
+    <string name="done">HOTOVO</string>
+    <string name="settings_reset">Lokální nastavení se zmažou!</string>
+    <string name="cancel">Zrušit</string>
+    <string name="ok">Ok</string>
+    <string name="language_changed">Jazykové preference se změnily. Aby se změny projevily, je potřeba restart.</string>
 </resources>

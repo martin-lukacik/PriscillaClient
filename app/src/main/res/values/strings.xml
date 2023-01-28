@@ -37,4 +37,9 @@
     <string name="help">Help</string>
     <string name="answer" tools:ignore="TypographyEllipsis">Answer...</string>
     <string name="result">Result</string>
+    <string name="done">DONE</string>
+    <string name="settings_reset">All local settings will be reset!</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">Ok</string>
+    <string name="language_changed">Language preferences have changed. A restart is needed for the changes to take effect.</string>
 </resources>
