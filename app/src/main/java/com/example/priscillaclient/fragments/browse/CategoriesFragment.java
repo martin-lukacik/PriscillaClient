@@ -37,7 +37,9 @@ public class CategoriesFragment extends FragmentBase {
             }
         });
         viewModel.fetchData();
-        dialog.show();
+
+        if (viewModel.getData().getValue() == null || viewModel.getData().getValue().isEmpty())
+            dialog.show();
     }
 
     public void onUpdate(ArrayList<Category> categories) {
