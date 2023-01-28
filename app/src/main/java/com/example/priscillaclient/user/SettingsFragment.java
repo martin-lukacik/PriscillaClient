@@ -1,12 +1,15 @@
 package com.example.priscillaclient.user;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -196,7 +199,26 @@ public class SettingsFragment extends FragmentBase {
 
     private void loadProfileLanguage(Settings data) {
         Pair<Integer, String[]> selection = data.getLanguageSelection(profile);
-        loadSelection(profileEditLanguage, selection.y, selection.x);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.spinner_row, R.id.spinnerLanguage, selection.y) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View v = super.getView(position, convertView, parent);
+
+                SettingsViewModel settingsViewModel = (SettingsViewModel) getViewModel(SettingsViewModel.class);
+                String shortcut = settingsViewModel.getData().getValue().languages.get(position).shortcut;
+
+                ImageView imageView = ((ImageView) v.findViewById(R.id.spinnerLanguageIcon));
+
+                Context context = imageView.getContext();
+                int id = context.getResources().getIdentifier("flag_" + shortcut.toLowerCase(), "drawable", context.getPackageName());
+
+                imageView.setImageResource(id);
+                return v;
+            }
+        };
+        profileEditLanguage.setAdapter(adapter);
+        profileEditLanguage.setSelection(selection.x);
     }
 
     private void loadProfileTheme(Settings data) {

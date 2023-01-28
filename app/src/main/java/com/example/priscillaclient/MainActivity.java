@@ -1,12 +1,10 @@
 package com.example.priscillaclient;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
@@ -16,7 +14,6 @@ import androidx.navigation.ui.NavigationUI;
 import com.example.priscillaclient.user.viewmodel.ProfileViewModel;
 import com.example.priscillaclient.user.viewmodel.SettingsViewModel;
 import com.example.priscillaclient.user.viewmodel.UserViewModel;
-import com.example.priscillaclient.user.viewmodel.models.Theme;
 import com.example.priscillaclient.user.viewmodel.models.User;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -26,7 +23,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
  * TODO Submit task resets inputs
  * TODO Proper multi-language support based on app setting
  * TODO ViewPager for task navigation
- * TODO Implement TaskType.TASK_CODE
  */
 
 public class MainActivity extends ActivityBase {
