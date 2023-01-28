@@ -1,10 +1,13 @@
 package com.example.priscillaclient.fragments.browse;
 
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.fragments.FragmentBase;
@@ -33,13 +36,21 @@ public class CategoriesFragment extends FragmentBase {
                 showError(viewModel.getError());
             else if (data != null) {
                 onUpdate(data);
-                dialog.dismiss();
             }
         });
-        viewModel.fetchData();
 
-        if (viewModel.getData().getValue() == null || viewModel.getData().getValue().isEmpty())
-            dialog.show();
+        viewModel.fetchData();
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        ListView categoryListView = findViewById(R.id.categoryListView);
+
+        View emptyView = getLayoutInflater().inflate(R.layout.loading_view, null);
+        requireActivity().addContentView(emptyView, categoryListView.getLayoutParams());
+        categoryListView.setEmptyView(emptyView);
     }
 
     public void onUpdate(ArrayList<Category> categories) {

@@ -5,6 +5,9 @@
       <map>
         <entry key="..\:/Users/Martin/AndroidStudioProjects/PriscillaClient/app/src/main/res/drawable/course_border.xml" value="0.2405" />
         <entry key="..\:/Users/Martin/AndroidStudioProjects/PriscillaClient/app/src/main/res/drawable/course_title_border.xml" value="0.2405" />
+        <entry key="..\:/Users/Martin/AndroidStudioProjects/PriscillaClient/app/src/main/res/drawable/edittextc.xml" value="0.1455" />
+        <entry key="..\:/Users/Martin/AndroidStudioProjects/PriscillaClient/app/src/main/res/drawable/edittextc_focused.xml" value="0.1455" />
+        <entry key="..\:/Users/Martin/AndroidStudioProjects/PriscillaClient/app/src/main/res/drawable/edittextc_normal.xml" value="0.1455" />
         <entry key="..\:/Users/Martin/AndroidStudioProjects/PriscillaClient/app/src/main/res/drawable/ic_list.xml" value="0.2405" />
         <entry key="..\:/Users/Martin/AndroidStudioProjects/PriscillaClient/app/src/main/res/drawable/ic_person.xml" value="0.2405" />
         <entry key="..\:/Users/Martin/AndroidStudioProjects/PriscillaClient/app/src/main/res/drawable/ic_push_pin.xml" value="0.1455" />
@@ -14,15 +17,21 @@
         <entry key="..\:/Users/Martin/AndroidStudioProjects/PriscillaClient/app/src/main/res/layout/activity_browse.xml" value="0.151268115942029" />
         <entry key="..\:/Users/Martin/AndroidStudioProjects/PriscillaClient/app/src/main/res/layout/activity_chapter.xml" value="0.18802083333333333" />
         <entry key="..\:/Users/Martin/AndroidStudioProjects/PriscillaClient/app/src/main/res/layout/activity_leaderboard.xml" value="0.17346014492753623" />
-        <entry key="..\:/Users/Martin/AndroidStudioProjects/PriscillaClient/app/src/main/res/layout/activity_login.xml" value="0.18802083333333333" />
+        <entry key="..\:/Users/Martin/AndroidStudioProjects/PriscillaClient/app/src/main/res/layout/activity_login.xml" value="0.25" />
         <entry key="..\:/Users/Martin/AndroidStudioProjects/PriscillaClient/app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="..\:/Users/Martin/AndroidStudioProjects/PriscillaClient/app/src/main/res/layout/activity_profile.xml" value="0.2536231884057971" />
         <entry key="..\:/Users/Martin/AndroidStudioProjects/PriscillaClient/app/src/main/res/layout/activity_task.xml" value="0.18802083333333333" />
         <entry key="..\:/Users/Martin/AndroidStudioProjects/PriscillaClient/app/src/main/res/layout/fragment_area_course.xml" value="0.151268115942029" />
         <entry key="..\:/Users/Martin/AndroidStudioProjects/PriscillaClient/app/src/main/res/layout/fragment_categories.xml" value="0.17831813576494426" />
+        <entry key="..\:/Users/Martin/AndroidStudioProjects/PriscillaClient/app/src/main/res/layout/fragment_leaderboard.xml" value="0.17831813576494426" />
+        <entry key="..\:/Users/Martin/AndroidStudioProjects/PriscillaClient/app/src/main/res/layout/fragment_profile.xml" value="0.33" />
+        <entry key="..\:/Users/Martin/AndroidStudioProjects/PriscillaClient/app/src/main/res/layout/fragment_settings.xml" value="0.22" />
         <entry key="..\:/Users/Martin/AndroidStudioProjects/PriscillaClient/app/src/main/res/layout/fragment_task.xml" value="0.22" />
+        <entry key="..\:/Users/Martin/AndroidStudioProjects/PriscillaClient/app/src/main/res/layout/layout_dialog_taskeval.xml" value="0.33" />
+        <entry key="..\:/Users/Martin/AndroidStudioProjects/PriscillaClient/app/src/main/res/layout/listview_chapter.xml" value="0.11372847011144883" />
         <entry key="..\:/Users/Martin/AndroidStudioProjects/PriscillaClient/app/src/main/res/layout/listview_course.xml" value="0.18" />
         <entry key="..\:/Users/Martin/AndroidStudioProjects/PriscillaClient/app/src/main/res/layout/listview_leaderboard.xml" value="0.17346014492753623" />
+        <entry key="..\:/Users/Martin/AndroidStudioProjects/PriscillaClient/app/src/main/res/layout/loading_view.xml" value="0.22" />
         <entry key="..\:/Users/Martin/AndroidStudioProjects/PriscillaClient/app/src/main/res/menu/menu_language.xml" value="0.35462962962962963" />
         <entry key="..\:/Users/Martin/AndroidStudioProjects/PriscillaClient/app/src/main/res/menu/menu_main.xml" value="0.2947916666666667" />
         <entry key="..\:/Users/Martin/AndroidStudioProjects/PriscillaClient/app/src/main/res/menu/navigation_drawer.xml" value="0.18802083333333333" />
@@ -65,7 +74,6 @@
         <entry key="app/src/main/res/layout/listview_chapter.xml" value="0.1" />
         <entry key="app/src/main/res/layout/listview_course.xml" value="0.1" />
         <entry key="app/src/main/res/layout/listview_leaderboard.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/spinner_row.xml" value="0.25" />
         <entry key="app/src/main/res/menu/menu_language.xml" value="0.14166666666666666" />
         <entry key="app/src/main/res/menu/menu_main.xml" value="0.20462962962962963" />
         <entry key="app/src/main/res/xml/prefs.xml" value="0.1" />

@@ -18,7 +18,6 @@ import java.util.ArrayList;
 public class LeaderboardFragment extends FragmentBase {
 
     LeaderboardAdapter adapter;
-    LoadingDialog dialog;
 
     public LeaderboardFragment() { }
 
@@ -45,23 +44,15 @@ public class LeaderboardFragment extends FragmentBase {
         super.onCreate(savedInstanceState);
         layoutId = R.layout.fragment_leaderboard;
 
-        dialog = new LoadingDialog(getActivity());
-
         LeadersViewModel viewModel = (LeadersViewModel) getViewModel(LeadersViewModel.class);
         viewModel.getData().observe(this, (data) -> {
-            if (viewModel.hasError()) {
-                dialog.dismiss();
+            if (viewModel.hasError())
                 showError(viewModel.getError());
-            }
             else
                 onUpdate(data);
             ListView lv = findViewById(R.id.leaderboardList);
             lv.setSelectionFromTop(index, top);
         });
-
-        if (viewModel.getData().getValue() == null || viewModel.getData().getValue().isEmpty()) {
-            dialog.show();
-        }
 
         viewModel.fetchData();
     }
@@ -74,21 +65,20 @@ public class LeaderboardFragment extends FragmentBase {
             index = savedInstanceState.getInt("index", 0);
             top = savedInstanceState.getInt("top", 0);
         }
+
+        ListView lv = findViewById(R.id.leaderboardList);
+
+        View emptyView = getLayoutInflater().inflate(R.layout.loading_view, null);
+        requireActivity().addContentView(emptyView, lv.getLayoutParams());
+        lv.setEmptyView(emptyView);
     }
 
-    boolean firstCall = true;
     public void onUpdate(ArrayList<LeaderboardItem> response) {
         adapter = new LeaderboardAdapter(getActivity(), response);
         ListView lv = findViewById(R.id.leaderboardList);
 
         if (lv != null)
             lv.setAdapter(adapter);
-
-        if (!firstCall) {
-            dialog.dismiss();
-        } else {
-            firstCall = false;
-        }
 
     }
 }
