@@ -30,6 +30,7 @@ import com.example.priscillaclient.R;
 import com.example.priscillaclient.api.tasks.DoEvaluateTask;
 import com.example.priscillaclient.api.tasks.DoPassTask;
 import com.example.priscillaclient.api.tasks.DoRunProgram;
+import com.example.priscillaclient.util.Preferences;
 import com.example.priscillaclient.viewmodels.app.LessonsViewModel;
 import com.example.priscillaclient.viewmodels.app.TaskResultViewModel;
 import com.example.priscillaclient.viewmodels.app.TasksViewModel;
@@ -141,8 +142,8 @@ public class TaskFragment extends FragmentBase {
         lessonsViewModel.fetchData(chapterId);
 
         if (getActivity() != null) {
-            SharedPreferences settings = getActivity().getSharedPreferences("settings", 0);
-            themeId = settings.getInt("theme_id", 0);
+            SharedPreferences settings = getActivity().getSharedPreferences(Preferences.PREFS, 0);
+            themeId = settings.getInt(Preferences.PREFS_THEME_ID, 0);
         }
     }
 
@@ -252,7 +253,7 @@ public class TaskFragment extends FragmentBase {
         if (response instanceof TaskResult) {
             showRatingDialog(((TaskResult) response));
 
-            UserViewModel userViewModel = ViewModelProviders.of(requireActivity()).get(UserViewModel.class);
+            UserViewModel userViewModel = (UserViewModel) getViewModel(UserViewModel.class);
             userViewModel.fetchData();
         }
     }

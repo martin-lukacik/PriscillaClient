@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.example.priscillaclient.LoginActivity;
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.fragments.FragmentBase;
+import com.example.priscillaclient.util.Preferences;
 import com.example.priscillaclient.viewmodels.user.ProfileViewModel;
 import com.example.priscillaclient.viewmodels.user.models.Profile;
 import com.example.priscillaclient.viewmodels.user.models.User;
@@ -53,7 +54,7 @@ public class ProfileFragment extends FragmentBase {
         builder.setPositiveButton(R.string.log_out, (dialog, id) -> {
             // Clear settings
             if (getActivity() != null) {
-                SharedPreferences settings = getActivity().getApplicationContext().getSharedPreferences("settings", 0);
+                SharedPreferences settings = getActivity().getApplicationContext().getSharedPreferences(Preferences.PREFS, 0);
                 SharedPreferences.Editor editor = settings.edit();
                 editor.clear();
                 editor.apply();

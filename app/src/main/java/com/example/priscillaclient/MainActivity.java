@@ -12,6 +12,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
+import com.example.priscillaclient.util.Preferences;
 import com.example.priscillaclient.viewmodels.user.ProfileViewModel;
 import com.example.priscillaclient.viewmodels.user.SettingsViewModel;
 import com.example.priscillaclient.viewmodels.user.UserViewModel;
@@ -72,7 +73,7 @@ public class MainActivity extends ActivityBase {
                 if (d == null)
                     return;
 
-                String currentShortcut = settings.getString("language_shortcut", "en");
+                String currentShortcut = settings.getString(Preferences.PREFS_LANGUAGE_SHORTCUT, "en");
                 String shortcut = "en";
 
                 for (Language language : data.languages) {
@@ -84,7 +85,7 @@ public class MainActivity extends ActivityBase {
 
                 if (!shortcut.equals(currentShortcut)) {
                     SharedPreferences.Editor editor = settings.edit();
-                    editor.putString("language_shortcut", shortcut);
+                    editor.putString(Preferences.PREFS_LANGUAGE_SHORTCUT, shortcut);
                     editor.apply();
                     // TODO restart activity to take effect
                     changeLocale(shortcut);

@@ -21,6 +21,7 @@ import com.example.priscillaclient.MainActivity;
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.fragments.FragmentBase;
 import com.example.priscillaclient.util.Pair;
+import com.example.priscillaclient.util.Preferences;
 import com.example.priscillaclient.viewmodels.user.ProfileViewModel;
 import com.example.priscillaclient.viewmodels.user.SettingsViewModel;
 import com.example.priscillaclient.viewmodels.user.UserViewModel;
@@ -185,15 +186,15 @@ public class SettingsFragment extends FragmentBase {
 
         String shortcut = ((Language) profileEditLanguage.getTag()).shortcut.toLowerCase();
 
-        SharedPreferences settings = requireActivity().getSharedPreferences("settings", 0);
+        SharedPreferences settings = requireActivity().getSharedPreferences(Preferences.PREFS, 0);
 
-        String savedShortcut = settings.getString("language_shortcut", "en");
+        String savedShortcut = settings.getString(Preferences.PREFS_LANGUAGE_SHORTCUT, "en");
 
         SharedPreferences.Editor editor = settings.edit();
         if (!savedShortcut.equals(shortcut)) {
-            editor.putString("language_shortcut", shortcut);
+            editor.putString(Preferences.PREFS_LANGUAGE_SHORTCUT, shortcut);
         }
-        editor.putInt("theme_id", Integer.parseInt(theme_id));
+        editor.putInt(Preferences.PREFS_THEME_ID, Integer.parseInt(theme_id));
         editor.apply();
 
 

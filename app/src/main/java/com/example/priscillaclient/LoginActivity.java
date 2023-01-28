@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.lifecycle.ViewModelProviders;
 
+import com.example.priscillaclient.util.Preferences;
 import com.example.priscillaclient.viewmodels.user.TokenViewModel;
 import com.example.priscillaclient.viewmodels.user.models.Token;
 import com.example.priscillaclient.util.LoadingDialog;
@@ -54,8 +55,8 @@ public class LoginActivity extends ActivityBase {
             else
                 onUpdate(data);
         });
-        String username = settings.getString("username", null);
-        refreshToken = settings.getString("refresh_token", null);
+        String username = settings.getString(Preferences.PREFS_USERNAME, null);
+        refreshToken = settings.getString(Preferences.PREFS_REFRESH_TOKEN, null);
 
         if (!userLoggedIn) {
             if (username != null && refreshToken != null) {
@@ -94,11 +95,11 @@ public class LoginActivity extends ActivityBase {
         SharedPreferences.Editor editor = settings.edit();
         CheckBox rememberUser = findViewById(R.id.rememberUser);
         if (rememberUser.isChecked()) {
-            editor.putString("username", username);
-            editor.putString("refresh_token", token.refresh_token);
+            editor.putString(Preferences.PREFS_USERNAME, username);
+            editor.putString(Preferences.PREFS_REFRESH_TOKEN, token.refresh_token);
         } else {
-            editor.putString("username", null);
-            editor.putString("refresh_token", null);
+            editor.putString(Preferences.PREFS_USERNAME, null);
+            editor.putString(Preferences.PREFS_REFRESH_TOKEN, null);
         }
         editor.apply();
 

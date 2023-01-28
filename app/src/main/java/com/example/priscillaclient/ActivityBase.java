@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.example.priscillaclient.util.Preferences;
 import com.example.priscillaclient.viewmodels.user.models.Theme;
 
 import java.util.Locale;
@@ -25,12 +26,12 @@ public class ActivityBase extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        settings = getSharedPreferences("settings", 0);
+        settings = getSharedPreferences(Preferences.PREFS, 0);
 
-        themeId = settings.getInt("theme_id", 0);
+        themeId = settings.getInt(Preferences.PREFS_THEME_ID, 0);
         setDarkMode(themeId, false);
 
-        changeLocale(settings.getString("language_shortcut", "en"));
+        changeLocale(settings.getString(Preferences.PREFS_LANGUAGE_SHORTCUT, "en"));
 
         super.onCreate(savedInstanceState);
 
@@ -48,7 +49,7 @@ public class ActivityBase extends AppCompatActivity {
     protected void setDarkMode(int themeId, boolean save) {
         if (save) {
             SharedPreferences.Editor editor = settings.edit();
-            editor.putInt("theme_id", themeId);
+            editor.putInt(Preferences.PREFS_THEME_ID, themeId);
             editor.apply();
         }
 

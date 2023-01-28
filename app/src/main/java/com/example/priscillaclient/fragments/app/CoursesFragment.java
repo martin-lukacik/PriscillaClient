@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.fragments.FragmentBase;
+import com.example.priscillaclient.util.Preferences;
 import com.example.priscillaclient.viewmodels.app.models.Course;
 import com.example.priscillaclient.viewmodels.app.CoursesViewModel;
 import com.example.priscillaclient.adapters.CourseListAdapter;
@@ -21,8 +22,6 @@ public class CoursesFragment extends FragmentBase {
 
     ArrayList<Course> courses;
     CourseListAdapter adapter;
-
-    final String PREF_SET = "settings";
 
     public CoursesFragment() { }
 
@@ -55,8 +54,8 @@ public class CoursesFragment extends FragmentBase {
 
     private boolean coursePinned(AdapterView<?> adapterView, View view, int i, long l) {
 
-        SharedPreferences settings = requireActivity().getApplicationContext().getSharedPreferences(PREF_SET, 0);
-        int savedPinId = settings.getInt("pinnedCourseId", -1);
+        SharedPreferences settings = requireActivity().getApplicationContext().getSharedPreferences(Preferences.PREFS, 0);
+        int savedPinId = settings.getInt(Preferences.PREFS_PINNED_COURSE_ID, -1);
 
         Course course = courses.get(i);
         if (savedPinId == -1) {
@@ -78,9 +77,9 @@ public class CoursesFragment extends FragmentBase {
     }
 
     private void togglePin(int courseId) {
-        SharedPreferences settings = requireActivity().getApplicationContext().getSharedPreferences(PREF_SET, 0);
+        SharedPreferences settings = requireActivity().getApplicationContext().getSharedPreferences(Preferences.PREFS, 0);
         SharedPreferences.Editor editor = settings.edit();
-        editor.putInt("pinnedCourseId", courseId);
+        editor.putInt(Preferences.PREFS_PINNED_COURSE_ID, courseId);
         editor.apply();
         pinCourse(courseId);
     }
@@ -97,8 +96,8 @@ public class CoursesFragment extends FragmentBase {
     public void onUpdate(ArrayList<Course> response) {
         courses = new ArrayList<>(response);
 
-        SharedPreferences settings = requireActivity().getApplicationContext().getSharedPreferences(PREF_SET, 0);
-        int pinnedCourseId = settings.getInt("pinnedCourseId", -1);
+        SharedPreferences settings = requireActivity().getApplicationContext().getSharedPreferences(Preferences.PREFS, 0);
+        int pinnedCourseId = settings.getInt(Preferences.PREFS_PINNED_COURSE_ID, -1);
         pinCourse(pinnedCourseId);
 
         adapter = new CourseListAdapter(getActivity(), courses);
