@@ -1,6 +1,7 @@
 package com.example.priscillaclient.fragments.app;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
@@ -24,6 +25,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.Observer;
 
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.api.tasks.DoEvaluateTask;
@@ -37,6 +39,7 @@ import com.example.priscillaclient.util.TaskHelper;
 import com.example.priscillaclient.viewmodels.app.LessonsViewModel;
 import com.example.priscillaclient.viewmodels.app.TaskResultViewModel;
 import com.example.priscillaclient.viewmodels.app.TasksViewModel;
+import com.example.priscillaclient.viewmodels.app.models.Help;
 import com.example.priscillaclient.viewmodels.app.models.Lesson;
 import com.example.priscillaclient.viewmodels.app.models.Task;
 import com.example.priscillaclient.viewmodels.app.models.TaskResult;
@@ -130,6 +133,7 @@ public class TaskFragment extends FragmentBase {
             else
                 onUpdateTasks(data);
         });
+        tasksViewModel.getHelpState().observe(this, this::onUpdate);
 
         lessonsViewModel = (LessonsViewModel) getViewModel(LessonsViewModel.class);
         lessonsViewModel.getData().observe(this, (data) -> {
@@ -240,27 +244,78 @@ public class TaskFragment extends FragmentBase {
     }
 
     private void getTaskHelp(View view) {
-        // TODO Implement help
+
+        if (tasks.isEmpty())
+            return;
+
+        Task task = tasks.get(currentTask);
+
+        int priceHelp = 10;
+        int priceAnswer = 20;
+
+        if (task.type == TaskType.TASK_CODE
+            || task.type == TaskType.TASK_CODE2
+            || task.type == TaskType.TASK_CODE3) {
+            priceHelp = 20;
+            priceAnswer = 40;
+        }
+
+        String help = getResources().getString(R.string.help);
+        String answer = getResources().getString(R.string.answer);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(R.string.help);
+        builder.setMessage(
+                help +
+                " - " + priceHelp +
+                "\n\n" +
+                answer +
+                " - " + priceAnswer
+        );
+        builder.setPositiveButton(R.string.help, (dialog, id) -> {
+            tasksViewModel.getHelp(task.task_id);
+        });
+        builder.setNegativeButton(R.string.answer, (dialog, id) -> {
+
+        });
+        builder.setNeutralButton(R.string.cancel, null);
+
+        Dialog d = builder.create();
+        d.show();
     }
 
     boolean refreshTask = false;
     public void onUpdate(Object response) {
 
-        refreshTask = true;
-
-        tasksViewModel.fetchData(courseId, chapterId, currentLessonId, true);
+        if (response == null)
+            return;
 
         if (response instanceof TaskResult) {
+            refreshTask = true;
+
+            tasksViewModel.fetchData(courseId, chapterId, currentLessonId, true);
             showRatingDialog(((TaskResult) response));
 
+            UserViewModel userViewModel = (UserViewModel) getViewModel(UserViewModel.class);
+            userViewModel.fetchData();
+        } else if (response instanceof Help) {
+
+            Help help = (Help) response;
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+            builder.setMessage(help.help)
+                    .setTitle(R.string.help);
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
+
+            // update coins, xp, etc.
             UserViewModel userViewModel = (UserViewModel) getViewModel(UserViewModel.class);
             userViewModel.fetchData();
         }
     }
 
     public void showRatingDialog(TaskResult eval) {
-
-        Dialog dialog = new Dialog(getActivity());
 
         View view = View.inflate(getActivity(), R.layout.layout_dialog_taskeval, null);
 
@@ -299,8 +354,9 @@ public class TaskFragment extends FragmentBase {
             stars.addView(star);
         }
 
-        view.findViewById(R.id.dialog_dismiss).setOnClickListener(e -> dialog.dismiss());
+        view.findViewById(R.id.dialog_dismiss).setOnClickListener(e -> { if (dialog != null) dialog.dismiss(); });
 
+        Dialog dialog = new Dialog(getActivity());
         dialog.setCancelable(true);
         dialog.setContentView(view);
         dialog.show();

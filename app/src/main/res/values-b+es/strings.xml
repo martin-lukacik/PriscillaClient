@@ -24,7 +24,7 @@
     <string name="save_changes">Guardar cambios</string>
     <string name="log_out">Cerrar sesión</string>
     <string name="help">Ayudar</string>
-    <string name="answer" tools:ignore="TypographyEllipsis">Respuesta...</string>
+    <string name="answer">Respuesta</string>
     <string name="result">Resultado</string>
     <string name="done">HECHTO</string>
     <string name="settings_reset">¡Todas las configuraciones locales se restablecerán!</string>

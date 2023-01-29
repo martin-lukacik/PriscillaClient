@@ -31,8 +31,43 @@ https://app.priscilla.fitped.eu/get-my-help/{TASK_ID}
 help = String
 
 
+
+ANSWER is ARRAY for
+    CHOICE
+    RADIO,
+
+
 /get-my-answer/{TASK_ID}
-answers = [] { answer, feedback }
+{
+	"answers": [
+		{
+			"answer": "sekvencia",
+			"feedback": ""
+		},
+		{
+			"answer": "vetvenie",
+			"feedback": ""
+		},
+		{
+			"answer": "cyklus",
+			"feedback": ""
+		},
+		{
+			"answer": "zložené podmienky",
+			"feedback": ""
+		},
+		{
+			"answer": "polia",
+			"feedback": ""
+		}
+	],
+	"user": {
+		"xp": 11056,
+		"coins": 365,
+		"level": 1,
+		"badges": []
+	}
+}
 
 answers = {"title":"House (Dom)","assignment":[""],"files":[{"rContent":"public class House {\n\n}","aContent":"public class House {\n    String color;\n    double height;\n    double width = 10.5;\n    int rooms = 5;\n}"},{"rContent":"public class MainApp {\n  \n    public static void main() {\n        \/\/ toto je len príklad použitia, tento kód sa nevykonáva\n        House example = new House(); \/\/ vytvori instanciu\n        example.color = \"green\";\n        example.height = 6.2;\n    \texample.width = 12.5;\n    \texample.rooms = 8;\n    }\n}","aContent":""}],"testCases":"","filesToKeep":[""],"configFiles":[""],"help":"","global":{"files":{"files":["House.java","MainApp.java"],"filesToKeep":["file1.txt"],"configFiles":["vpl_run.sh","vpl_debug.sh","vpl_evaluate.sh","Main.java","Evaluate.java","MySolution.java"]}}}
 */

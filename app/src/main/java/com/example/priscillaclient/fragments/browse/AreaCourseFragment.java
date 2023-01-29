@@ -106,7 +106,7 @@ public class AreaCourseFragment extends FragmentBase implements FragmentAdapter<
                     }
                 });
             });
-            builder.setNegativeButton("Cancel", null);
+            builder.setNegativeButton(R.string.cancel, null);
 
             Dialog d = builder.create();
             d.show();

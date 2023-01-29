@@ -24,7 +24,7 @@
     <string name="save_changes">Uložiť zmeny</string>
     <string name="log_out">Odhlásiť sa</string>
     <string name="help">Pomoc</string>
-    <string name="answer" tools:ignore="TypographyEllipsis">Odpoveď...</string>
+    <string name="answer">Odpoveď</string>
     <string name="result">Výsledok</string>
     <string name="done">HOTOVO</string>
     <string name="settings_reset">Lokálne nastavenia sa vymažú!</string>

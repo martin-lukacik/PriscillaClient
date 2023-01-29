@@ -24,7 +24,7 @@
     <string name="save_changes">Változtatások mentése</string>
     <string name="log_out">Kijelentkezés</string>
     <string name="help">Segítség</string>
-    <string name="answer" tools:ignore="TypographyEllipsis">Válasza...</string>
+    <string name="answer">Válasza</string>
     <string name="result">Eredmény</string>
     <string name="done">KÉSZ</string>
     <string name="settings_reset">Minden helyi beállítás visszaáll!</string>
