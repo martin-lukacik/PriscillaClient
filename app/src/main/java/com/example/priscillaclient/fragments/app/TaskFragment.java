@@ -410,12 +410,19 @@ public class TaskFragment extends FragmentBase {
         if (tasks.isEmpty())
             return;
 
+        stars.removeAllViews();
         Task task = tasks.get(currentTask);
-        clearTaskLayout();
         setButtonsVisibility(task);
 
         if (task.passed == 1 && task.max_score > 0)
             setStarsRating(task);
+
+        if (refreshTask) {
+            refreshTask = false;
+            return;
+        }
+
+        clearTaskLayout();
 
         int taskStyleId = R.raw.task_style;
 
@@ -507,7 +514,6 @@ public class TaskFragment extends FragmentBase {
 
         String str = (currentTask + 1) + " / " + tasks.size();
         taskCount.setText(str);
-        stars.removeAllViews();
 
         codeTaskLayout.removeAllViews();
         codeTaskLayout.setVisibility(View.GONE);
