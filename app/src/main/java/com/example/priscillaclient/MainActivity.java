@@ -20,6 +20,8 @@ import com.example.priscillaclient.viewmodels.user.models.Language;
 import com.example.priscillaclient.viewmodels.user.models.User;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.util.Locale;
+
 /*
  * TODO Loading should show dialogs and/or clear previous state (Courses -> Chapters -> Tasks shows old data while loading)
  * TODO Colorblind mode?
@@ -94,7 +96,7 @@ public class MainActivity extends ActivityBase {
 
                 for (Language language : data.languages) {
                     if (language.id == d.pref_lang_id) {
-                        shortcut = language.shortcut;
+                        shortcut = language.shortcut.toLowerCase();
                         break;
                     }
                 }
@@ -126,11 +128,21 @@ public class MainActivity extends ActivityBase {
         return navController.navigateUp() || super.onNavigateUp();
     }
 
+    boolean initialUpdate = true;
     public void onUpdate(User user) {
         if (user == null)
             return;
 
+        if (!initialUpdate) {
+            return;
+        }
+
         setActionBarTitle(user.performance.xp + " XP | " + user.performance.coins + " ©");
+
+        if (!initialUpdate) {
+            return;
+        }
+        initialUpdate = false;
         setDarkMode(user.theme_id, true);
     }
 

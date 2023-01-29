@@ -12,7 +12,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.ContextCompat;
 
 import com.example.priscillaclient.ActivityBase;
@@ -156,14 +155,20 @@ public class SettingsFragment extends FragmentBase {
         builder.setTitle(R.string.options);
         builder.setMessage(R.string.language_changed);
         builder.setPositiveButton(R.string.ok, (dialog, id) -> {
-            if (getContext() != null)
-                ((ActivityBase) getContext()).changeLocale(shortcut, MainActivity.class);
+            if (!isThemeChanged) {
+                ((ActivityBase) requireActivity()).changeLocale(shortcut, MainActivity.class);
+            } else {
+                ((ActivityBase) requireActivity()).changeLocale(shortcut);
+                ((ActivityBase) requireActivity()).setDarkMode(changedThemeId, false);
+            }
         });
 
         AlertDialog d = builder.create();
         d.show();
     }
 
+    boolean isThemeChanged = false;
+    int changedThemeId = 1;
     public void save(View view) {
         String age = profileEditYear.getYear() + "";
         String content_type_id = profileEditStudentType.getTag().toString();
@@ -173,19 +178,17 @@ public class SettingsFragment extends FragmentBase {
         String name = profileEditName.getText().toString();
         String nick = profileEditNickname.getText().toString();
         String surname = profileEditSurname.getText().toString();
-        String theme_id = profileEditTheme.getTag().toString();
+        int theme_id = (int) profileEditTheme.getTag();
 
-        int mode = AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
-        if (theme_id.equals("1")) {
-            mode = AppCompatDelegate.MODE_NIGHT_NO;
-        } else if (theme_id.equals("2")) {
-            mode = AppCompatDelegate.MODE_NIGHT_YES;
-        }
-        AppCompatDelegate.setDefaultNightMode(mode);
 
         String shortcut = ((Language) profileEditLanguage.getTag()).shortcut.toLowerCase();
 
         SharedPreferences settings = requireActivity().getSharedPreferences(Preferences.PREFS, 0);
+
+        if (settings.getInt(Preferences.PREFS_THEME_ID, 1) != theme_id) {
+            isThemeChanged = true;
+            changedThemeId = theme_id;
+        }
 
         String savedShortcut = settings.getString(Preferences.PREFS_LANGUAGE_SHORTCUT, "en");
 
@@ -193,15 +196,16 @@ public class SettingsFragment extends FragmentBase {
         if (!savedShortcut.equals(shortcut)) {
             editor.putString(Preferences.PREFS_LANGUAGE_SHORTCUT, shortcut);
         }
-        editor.putInt(Preferences.PREFS_THEME_ID, Integer.parseInt(theme_id));
+        editor.putInt(Preferences.PREFS_THEME_ID, theme_id);
         editor.apply();
 
-
         UserViewModel userViewModel = (UserViewModel) getViewModel(UserViewModel.class);
-        userViewModel.update(age, content_type_id, country, group, lang, name, nick, surname, theme_id);
+        userViewModel.update(age, content_type_id, country, group, lang, name, nick, surname, theme_id + "");
 
         if (!savedShortcut.equals(shortcut)) {
             showLanguageChangeDialog(shortcut);
+        } else if (isThemeChanged) {
+            ((MainActivity) requireActivity()).setDarkMode(theme_id, false);
         } else {
             navigate(R.id.profileFragment, null);
         }

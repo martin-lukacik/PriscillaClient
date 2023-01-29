@@ -46,7 +46,7 @@ public class ActivityBase extends AppCompatActivity {
         }
     }
 
-    protected void setDarkMode(int themeId, boolean save) {
+    public void setDarkMode(int themeId, boolean save) {
         if (save) {
             SharedPreferences.Editor editor = settings.edit();
             editor.putInt(Preferences.PREFS_THEME_ID, themeId);
