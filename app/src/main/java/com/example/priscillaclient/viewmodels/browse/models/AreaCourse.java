@@ -19,8 +19,8 @@ public class AreaCourse {
     public final int task_all;
     public final int program_all;
 
-    public final String start_date; // opt
-    public final String finish_date; // opt
+    public final String start_date;
+    public final String finish_date;
 
     public enum CourseStatus {
         NONE,

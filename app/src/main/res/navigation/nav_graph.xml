@@ -61,6 +61,10 @@
             android:name="com.example.priscillaclient.fragments.browse.AreaCourseFragment"
             android:label="fragment_area_course"
             tools:layout="@layout/fragment_area_course">
+            <action
+                android:id="@+id/action_refresh"
+                app:destination="@id/coursesFragment" />
+
         </fragment>
     </navigation>
 

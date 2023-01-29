@@ -116,8 +116,7 @@ public class Task {
 
                 content = j.getString("assignment");
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ignore) {
         }
     }
 }

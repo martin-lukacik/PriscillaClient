@@ -10,6 +10,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import androidx.lifecycle.Observer;
+
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.fragments.FragmentAdapter;
 import com.example.priscillaclient.fragments.app.ChaptersFragment;
@@ -74,42 +76,57 @@ public class AreaCourseFragment extends FragmentBase implements FragmentAdapter<
     }
 
     private void courseSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        CoursesViewModel coursesViewModel = (CoursesViewModel) getViewModel(CoursesViewModel.class);
+        ArrayList<Course> courses = coursesViewModel.getData().getValue();
+
         AreaCourse course = areaCourses.get(i);
         if (course.status == AreaCourse.CourseStatus.OPENED) {
 
             BottomNavigationView navigationView = findViewById(R.id.bottomNavigation);
             navigationView.setSelectedItemId(R.id.menu_dashboard);
 
-            CoursesViewModel coursesViewModel = (CoursesViewModel) getViewModel(CoursesViewModel.class);
-            ArrayList<Course> courses = coursesViewModel.getData().getValue();
-
             if (courses != null) {
-                int courseColor = 0;
-                for (Course c : courses) {
-                    if (c.course_id == course.id) {
-                        courseColor = Color.parseColor(c.area_color);
-                        break;
-                    }
-                }
-
-                Bundle args = new Bundle();
-                args.putInt(ChaptersFragment.ARG_COURSE_ID, course.id);
-                args.putInt(ChaptersFragment.ARG_COURSE_COLOR, courseColor);
-
-                navigate(R.id.coursesFragment); // needed for back stack
-                navigate(R.id.chaptersFragment, args);
+                navigateToCourse(courses, course.id);
             }
         } else {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setTitle(course.title);
             builder.setMessage("Join course " + course.title + " ?");
             builder.setPositiveButton("JOIN", (dialog, id) -> {
-                // TODO join course
+                coursesViewModel.joinCourse(course.id);
+                coursesViewModel.getJoinState().observe(this, new Observer<String>() {
+                    @Override
+                    public void onChanged(String s) {
+                        if (s == null)
+                            return;
+                        navigate(R.id.menu_dashboard);
+                        coursesViewModel.clear();
+                        coursesViewModel.fetchData();
+                        coursesViewModel.getJoinState().removeObserver(this);
+                    }
+                });
             });
             builder.setNegativeButton("Cancel", null);
 
             Dialog d = builder.create();
             d.show();
         }
+    }
+
+    private void navigateToCourse(ArrayList<Course> courses, int courseId) {
+        int courseColor = 0;
+        for (Course c : courses) {
+            if (c.course_id == courseId) {
+                courseColor = Color.parseColor(c.area_color);
+                break;
+            }
+        }
+
+        Bundle args = new Bundle();
+        args.putInt(ChaptersFragment.ARG_COURSE_ID, courseId);
+        args.putInt(ChaptersFragment.ARG_COURSE_COLOR, courseColor);
+
+        navigate(R.id.menu_dashboard); // needed for back stack
+        navigate(R.id.chaptersFragment, args);
     }
 }

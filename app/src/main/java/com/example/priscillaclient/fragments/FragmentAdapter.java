@@ -16,9 +16,11 @@ public interface FragmentAdapter<T> {
     default Observer<T> onResponse(ViewModelBase viewModel) {
         FragmentBase context = (FragmentBase) this;
         return response -> {
-            if (viewModel.hasError())
-                context.showError(viewModel.getError());
-            else if (response != null) {
+            if (viewModel.hasError()) {
+                String error = viewModel.getError();
+                context.showError(error);
+                ((TextView) context.findViewById(R.id.loadingView)).setText(error);
+            } else if (response != null) {
                 if (response instanceof ArrayList && ((ArrayList<?>) response).isEmpty()) {
                     ((TextView) context.findViewById(R.id.loadingView)).setText(R.string.no_results);
                 } else {
