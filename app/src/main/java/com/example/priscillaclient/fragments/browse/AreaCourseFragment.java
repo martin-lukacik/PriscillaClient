@@ -71,7 +71,7 @@ public class AreaCourseFragment extends FragmentBase {
             public View getView(int position, View convertView, ViewGroup parent){
                 View view = super.getView(position, convertView, parent);
                 if (areaCourses.get(position).status == AreaCourse.CourseStatus.OPENED)
-                    ((MaterialTextView) view).setTextColor(Color.parseColor("#008000"));
+                    ((MaterialTextView) view).setTextColor(0xff008000);
                 return view;
             }
         };
