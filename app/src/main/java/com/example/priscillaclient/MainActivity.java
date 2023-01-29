@@ -73,8 +73,10 @@ public class MainActivity extends ActivityBase {
         userViewModel.getData().observe(this, (data) -> {
             if (userViewModel.hasError())
                 showError(userViewModel.getError());
-            else
+            else {
+                initialUpdate = true;
                 onUpdate(data);
+            }
         });
         userViewModel.fetchData();
 
@@ -106,7 +108,7 @@ public class MainActivity extends ActivityBase {
                     editor.putString(Preferences.PREFS_LANGUAGE_SHORTCUT, shortcut);
                     editor.apply();
                     // TODO restart activity to take effect
-                    changeLocale(shortcut);
+                    changeLocale(shortcut, true);
                 }
             });
         });
@@ -139,11 +141,10 @@ public class MainActivity extends ActivityBase {
 
         setActionBarTitle(user.performance.xp + " XP | " + user.performance.coins + " ©");
 
-        if (!initialUpdate) {
-            return;
+        if (initialUpdate) {
+            setDarkMode(user.theme_id, true);
         }
         initialUpdate = false;
-        setDarkMode(user.theme_id, true);
     }
 
     void setActionBarTitle(String title) {

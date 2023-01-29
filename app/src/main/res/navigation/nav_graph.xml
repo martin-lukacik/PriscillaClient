@@ -94,6 +94,12 @@
             android:name="com.example.priscillaclient.fragments.user.SettingsFragment"
             android:label="fragment_settings"
             tools:layout="@layout/fragment_settings">
+            <action
+                android:id="@+id/action_refresh"
+                app:destination="@id/settingsFragment"
+                app:launchSingleTop="true"
+                app:popUpTo="@+id/menu_profile"
+                app:popUpToInclusive="true" />
         </fragment>
     </navigation>
 </navigation>

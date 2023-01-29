@@ -18,16 +18,16 @@ public class DoUpdate implements Callable<String> {
     final String surname;
     final int theme_id;
 
-    public DoUpdate(String age, String content_type_id, String country, String group, String lang, String name, String nick, String surname, String theme_id) {
-        this.age = Integer.parseInt(age);
-        this.content_type_id = Integer.parseInt(content_type_id);
-        this.country = Integer.parseInt(country);
+    public DoUpdate(int age, int content_type_id, int country, String group, int lang, String name, String nick, String surname, int theme_id) {
+        this.age = age;
+        this.content_type_id = content_type_id;
+        this.country = country;
         this.group = group;
-        this.lang = Integer.parseInt(lang);
+        this.lang = lang;
         this.name = name;
         this.nick = nick;
         this.surname = surname;
-        this.theme_id = Integer.parseInt(theme_id);
+        this.theme_id = theme_id;
     }
 
     @Override

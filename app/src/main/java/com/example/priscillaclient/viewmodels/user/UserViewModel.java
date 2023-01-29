@@ -22,10 +22,13 @@ public class UserViewModel extends ViewModelBase {
         });
     }
 
-    public void update(String age, String content_type_id, String country, String group, String lang, String name, String nick, String surname, String theme_id) {
+    public void update(int age, int content_type_id, int country, String group, int lang, String name, String nick, String surname, int theme_id) {
         apiTask.executeAsync(
             new DoUpdate(age, content_type_id, country, group, lang, name, nick, surname, theme_id),
-            (data, error) -> fetchData()
+            (data, error) -> {
+                setError(error);
+                fetchData();
+            }
         );
     }
 }

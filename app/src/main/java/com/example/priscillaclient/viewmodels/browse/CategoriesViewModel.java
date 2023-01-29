@@ -24,4 +24,8 @@ public class CategoriesViewModel extends ViewModelBase {
             });
         }
     }
+
+    public void clear() {
+        state.setValue(null);
+    }
 }

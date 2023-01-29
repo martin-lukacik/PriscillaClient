@@ -15,10 +15,13 @@ public abstract class ViewModelBase extends ViewModel {
     }
 
     public void setError(String message) {
-        error = message;
+        if (message != null && !message.isEmpty())
+            error = message;
     }
 
     public String getError() {
-        return error;
+        String e = error;
+        error = null;
+        return e;
     }
 }

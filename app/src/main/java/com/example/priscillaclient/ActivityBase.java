@@ -31,7 +31,7 @@ public class ActivityBase extends AppCompatActivity {
         themeId = settings.getInt(Preferences.PREFS_THEME_ID, 0);
         setDarkMode(themeId, false);
 
-        changeLocale(settings.getString(Preferences.PREFS_LANGUAGE_SHORTCUT, "en"));
+        changeLocale(settings.getString(Preferences.PREFS_LANGUAGE_SHORTCUT, "en"), false);
 
         super.onCreate(savedInstanceState);
 
@@ -68,19 +68,16 @@ public class ActivityBase extends AppCompatActivity {
             AppCompatDelegate.setDefaultNightMode(themeId);
     }
 
-    public void changeLocale(String lang, Class className) {
-        changeLocale(lang);
-
-        startActivity(new Intent(this, className));
-        finish();
-    }
-
-    public void changeLocale(String lang) {
+    public void changeLocale(String lang, boolean refresh) {
         Locale locale = new Locale(lang);
         Locale.setDefault(locale);
         Configuration config = new Configuration();
         config.locale = locale;
 
         getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
+
+        if (refresh) {
+            recreate();
+        }
     }
 }

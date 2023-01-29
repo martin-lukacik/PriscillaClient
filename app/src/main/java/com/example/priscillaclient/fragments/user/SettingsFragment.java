@@ -20,6 +20,14 @@ import com.example.priscillaclient.R;
 import com.example.priscillaclient.fragments.FragmentBase;
 import com.example.priscillaclient.util.Pair;
 import com.example.priscillaclient.util.Preferences;
+import com.example.priscillaclient.viewmodels.app.ChaptersViewModel;
+import com.example.priscillaclient.viewmodels.app.CoursesViewModel;
+import com.example.priscillaclient.viewmodels.app.LessonsViewModel;
+import com.example.priscillaclient.viewmodels.app.TasksViewModel;
+import com.example.priscillaclient.viewmodels.app.models.Lesson;
+import com.example.priscillaclient.viewmodels.browse.AreaCoursesViewModel;
+import com.example.priscillaclient.viewmodels.browse.AreasViewModel;
+import com.example.priscillaclient.viewmodels.browse.CategoriesViewModel;
 import com.example.priscillaclient.viewmodels.user.ProfileViewModel;
 import com.example.priscillaclient.viewmodels.user.SettingsViewModel;
 import com.example.priscillaclient.viewmodels.user.UserViewModel;
@@ -55,20 +63,14 @@ public class SettingsFragment extends FragmentBase {
         super.onCreate(savedInstanceState);
         layoutId = R.layout.fragment_settings;
 
-        SettingsViewModel settingsViewModel = (SettingsViewModel) getViewModel(SettingsViewModel.class);
-        settingsViewModel.getData().observe(this, this::onUpdateSettings);
-        settingsViewModel.fetchData();
+        this.settings = ((SettingsViewModel) getViewModel(SettingsViewModel.class)).getData().getValue();
 
         ProfileViewModel profileViewModel = (ProfileViewModel) getViewModel(ProfileViewModel.class);
-        profileViewModel.getData().observe(this, this::onUpdateProfile);
-        profileViewModel.fetchData();
+
+        profileViewModel.getData().observe(this, (data) -> onUpdateProfile(savedInstanceState, data));
     }
 
-    private void onUpdateSettings(Settings settings) {
-        this.settings = settings;
-    }
-
-    private void onUpdateProfile(Profile profile) {
+    private void onUpdateProfile(Bundle state, Profile profile) {
 
         this.profile = profile;
 
@@ -83,11 +85,23 @@ public class SettingsFragment extends FragmentBase {
         loadProfileCountry(settings);
         loadProfileLanguage(settings);
         loadProfileTheme(settings);
+
+        if (state != null) {
+            profileEditYear.updateDate(state.getInt("year"), 0, 1);
+            profileEditStudentType.setSelection(state.getInt("student_type"));
+            profileEditCountry.setSelection(state.getInt("country"));
+            profileEditGroup.setSelection(state.getInt("group"));
+            profileEditLanguage.setSelection(state.getInt("lang"));
+            profileEditTheme.setSelection(state.getInt("theme"));
+            profileEditName.setText(state.getString("name"));
+            profileEditNickname.setText(state.getString("nick"));
+            profileEditSurname.setText(state.getString("surname"));
+        }
     }
 
     @Override
-    public void onViewCreated(@NotNull View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onViewCreated(@NotNull View view, Bundle state) {
+        super.onViewCreated(view, state);
 
         profileEditName = findViewById(R.id.profileEditName);
         profileEditSurname = findViewById(R.id.profileEditSurname);
@@ -147,39 +161,53 @@ public class SettingsFragment extends FragmentBase {
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) { }
         });
+
+    }
+
+    @Override
+    public void onSaveInstanceState(@NotNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("year", profileEditYear.getYear());
+        outState.putInt("student_type", profileEditStudentType.getSelectedItemPosition());
+        outState.putInt("country", profileEditCountry.getSelectedItemPosition());
+        outState.putInt("group", profileEditGroup.getSelectedItemPosition());
+        outState.putInt("lang", profileEditLanguage.getSelectedItemPosition());
+        outState.putInt("theme", profileEditTheme.getSelectedItemPosition());
+        outState.putString("name", profileEditName.getText().toString());
+        outState.putString("nick", profileEditNickname.getText().toString());
+        outState.putString("surname", profileEditSurname.getText().toString());
     }
 
     public void showLanguageChangeDialog(String shortcut) {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+       /* AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.options);
         builder.setMessage(R.string.language_changed);
-        builder.setPositiveButton(R.string.ok, (dialog, id) -> {
+        builder.setPositiveButton(R.string.ok, (dialog, id) -> {*/
             if (!isThemeChanged) {
-                ((ActivityBase) requireActivity()).changeLocale(shortcut, MainActivity.class);
+                ((ActivityBase) requireActivity()).changeLocale(shortcut, true);
             } else {
-                ((ActivityBase) requireActivity()).changeLocale(shortcut);
-                ((ActivityBase) requireActivity()).setDarkMode(changedThemeId, false);
+                ((ActivityBase) requireActivity()).changeLocale(shortcut, true);
+                ((ActivityBase) requireActivity()).setDarkMode(changedThemeId, true);
             }
-        });
+        /*});
 
         AlertDialog d = builder.create();
-        d.show();
+        d.show();*/
     }
 
     boolean isThemeChanged = false;
     int changedThemeId = 1;
     public void save(View view) {
-        String age = profileEditYear.getYear() + "";
-        String content_type_id = profileEditStudentType.getTag().toString();
-        String country = profileEditCountry.getTag().toString();
+        int age = profileEditYear.getYear();
+        int content_type_id = (int) profileEditStudentType.getTag();
+        int country = (int) profileEditCountry.getTag();
         String group = profileEditGroup.getTag().toString();
-        String lang = ((Language) profileEditLanguage.getTag()).id + "";
+        int lang = ((Language) profileEditLanguage.getTag()).id;
         String name = profileEditName.getText().toString();
         String nick = profileEditNickname.getText().toString();
         String surname = profileEditSurname.getText().toString();
         int theme_id = (int) profileEditTheme.getTag();
-
 
         String shortcut = ((Language) profileEditLanguage.getTag()).shortcut.toLowerCase();
 
@@ -190,25 +218,57 @@ public class SettingsFragment extends FragmentBase {
             changedThemeId = theme_id;
         }
 
-        String savedShortcut = settings.getString(Preferences.PREFS_LANGUAGE_SHORTCUT, "en");
-
-        SharedPreferences.Editor editor = settings.edit();
-        if (!savedShortcut.equals(shortcut)) {
-            editor.putString(Preferences.PREFS_LANGUAGE_SHORTCUT, shortcut);
+        if (
+                profile.yob != age
+            || profile.content_type_id != content_type_id
+            || profile.country_id != country
+            || !profile.groups.equals(group)
+            || profile.pref_lang_id != lang
+            || !profile.name.equals(name)
+            || !profile.nickname.equals(nick)
+            || !profile.surname.equals(surname)
+            || profile.theme_id != theme_id
+        ) {
+            UserViewModel userViewModel = (UserViewModel) getViewModel(UserViewModel.class);
+            userViewModel.update(age, content_type_id, country, group, lang, name, nick, surname, theme_id);
         }
-        editor.putInt(Preferences.PREFS_THEME_ID, theme_id);
-        editor.apply();
 
-        UserViewModel userViewModel = (UserViewModel) getViewModel(UserViewModel.class);
-        userViewModel.update(age, content_type_id, country, group, lang, name, nick, surname, theme_id + "");
-
+        String savedShortcut = settings.getString(Preferences.PREFS_LANGUAGE_SHORTCUT, "en");
         if (!savedShortcut.equals(shortcut)) {
+
+            clearLocalizedViewModels();
+
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putString(Preferences.PREFS_LANGUAGE_SHORTCUT, shortcut);
+            editor.apply();
+
             showLanguageChangeDialog(shortcut);
         } else if (isThemeChanged) {
-            ((MainActivity) requireActivity()).setDarkMode(theme_id, false);
-        } else {
-            navigate(R.id.profileFragment, null);
+            ((ActivityBase) requireActivity()).setDarkMode(theme_id, true);
         }
+    }
+
+    private void clearLocalizedViewModels() {
+        CoursesViewModel coursesViewModel = (CoursesViewModel) getViewModel(CoursesViewModel.class);
+        coursesViewModel.clear();
+
+        ChaptersViewModel chaptersViewModel = (ChaptersViewModel) getViewModel(ChaptersViewModel.class);
+        chaptersViewModel.clear();
+
+        LessonsViewModel lessonsViewModel = (LessonsViewModel) getViewModel(LessonsViewModel.class);
+        lessonsViewModel.clear();
+
+        TasksViewModel tasksViewModel = (TasksViewModel) getViewModel(TasksViewModel.class);
+        tasksViewModel.clear();
+
+        CategoriesViewModel categoriesViewModel = (CategoriesViewModel) getViewModel(CategoriesViewModel.class);
+        categoriesViewModel.clear();
+
+        AreasViewModel areasViewModel = (AreasViewModel) getViewModel(AreasViewModel.class);
+        areasViewModel.clear();
+
+        AreaCoursesViewModel areaCoursesViewModel = (AreaCoursesViewModel) getViewModel(AreaCoursesViewModel.class);
+        areaCoursesViewModel.clear();
     }
 
     private void loadSelection(Spinner spinner, String[] items, int selectedIndex) {
@@ -268,5 +328,4 @@ public class SettingsFragment extends FragmentBase {
         Pair<Integer, String[]> selection = data.getThemeSelection(profile);
         loadSelection(profileEditTheme, selection.y, selection.x);
     }
-
 }

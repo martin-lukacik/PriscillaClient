@@ -28,4 +28,8 @@ public class TasksViewModel extends ViewModelBase {
             lastLessonId = lessonId;
         }
     }
+
+    public void clear() {
+        state.setValue(new ArrayList<>());
+    }
 }

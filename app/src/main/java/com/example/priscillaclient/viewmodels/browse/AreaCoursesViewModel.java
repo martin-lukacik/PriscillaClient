@@ -28,4 +28,8 @@ public class AreaCoursesViewModel extends ViewModelBase {
             lastAreaId = areaId;
         }
     }
+
+    public void clear() {
+        state.setValue(null);
+    }
 }

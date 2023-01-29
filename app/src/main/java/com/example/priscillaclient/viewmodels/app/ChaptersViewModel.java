@@ -29,4 +29,8 @@ public class ChaptersViewModel extends ViewModelBase {
             lastCourseId = courseId;
         }
     }
+
+    public void clear() {
+        state.setValue(null);
+    }
 }

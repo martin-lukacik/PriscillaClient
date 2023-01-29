@@ -28,4 +28,8 @@ public class AreasViewModel extends ViewModelBase {
             lastCategoryId = categoryId;
         }
     }
+
+    public void clear() {
+        state.setValue(null);
+    }
 }

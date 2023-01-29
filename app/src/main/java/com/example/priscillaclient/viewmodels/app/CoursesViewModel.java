@@ -25,4 +25,8 @@ public class CoursesViewModel extends ViewModelBase {
             });
         }
     }
+
+    public void clear() {
+        state.setValue(new ArrayList<>());
+    }
 }

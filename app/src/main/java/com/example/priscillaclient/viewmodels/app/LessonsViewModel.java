@@ -27,4 +27,8 @@ public class LessonsViewModel extends ViewModelBase {
             lastChapterId = chapterId;
         }
     }
+
+    public void clear() {
+        state.setValue(new ArrayList<>());
+    }
 }
