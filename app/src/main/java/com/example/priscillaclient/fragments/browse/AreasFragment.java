@@ -49,8 +49,7 @@ public class AreasFragment extends FragmentBase {
 
         ListView areaListView = findViewById(R.id.areaListView);
 
-        View emptyView = View.inflate(getContext(), R.layout.loading_view, null);
-        requireActivity().addContentView(emptyView, areaListView.getLayoutParams());
+        View emptyView = findViewById(R.id.loadingView);
         areaListView.setEmptyView(emptyView);
     }
 

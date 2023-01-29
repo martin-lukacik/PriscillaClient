@@ -77,7 +77,7 @@ function add(el) {
     let els = document.getElementsByTagName("span");
 
     for (let i = 0; i < els.length; ++i) {
-        if (els[i].innerText == "") {
+        if (els[i].innerText == " ") {
             els[i].innerText = el.innerText;
             el.disabled = true;
             break;
@@ -93,7 +93,7 @@ function add(el) {
 
 function remove(el) {
 
-    if (el.innerText == "")
+    if (el.innerText == " ")
         return;
 
     let els = document.getElementsByTagName("button");
@@ -105,5 +105,5 @@ function remove(el) {
         }
     }
 
-    el.innerText = "";
+    el.innerText = " ";
 }

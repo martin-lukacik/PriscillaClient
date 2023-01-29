@@ -46,8 +46,7 @@ public class CoursesFragment extends FragmentBase {
 
         GridView courseListView = findViewById(R.id.courseListView);
 
-        View emptyView = View.inflate(getContext(), R.layout.loading_view, null);
-        requireActivity().addContentView(emptyView, courseListView.getLayoutParams());
+        View emptyView = findViewById(R.id.loadingView);
         courseListView.setEmptyView(emptyView);
     }
 

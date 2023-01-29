@@ -2,7 +2,7 @@
     -webkit-user-select: none;
 }
 .answer {
-    max-width:4em
+    max-width:4em;
 }
 pre {
     background:lightgrey;

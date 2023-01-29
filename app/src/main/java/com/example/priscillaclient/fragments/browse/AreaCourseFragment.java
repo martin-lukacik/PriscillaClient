@@ -58,8 +58,7 @@ public class AreaCourseFragment extends FragmentBase {
 
         ListView areaCourseList = findViewById(R.id.areaCourseList);
 
-        View emptyView = View.inflate(getContext(), R.layout.loading_view, null);
-        requireActivity().addContentView(emptyView, areaCourseList.getLayoutParams());
+        View emptyView = findViewById(R.id.loadingView);
         areaCourseList.setEmptyView(emptyView);
     }
 

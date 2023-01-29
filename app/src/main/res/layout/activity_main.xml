@@ -9,6 +9,7 @@
     tools:context=".MainActivity">
 
     <include layout="@layout/actionbar" />
+    <include layout="@layout/loading_view" />
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainer"

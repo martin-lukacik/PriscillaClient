@@ -456,7 +456,7 @@ public class TaskFragment extends FragmentBase {
                 break;
             case TASK_DRAG:
 
-                content = task.content.replaceAll("§§_§§", "<span onclick=\"return remove(this);\" class=\"drag\" style=\"text-align:center; color:white; display:inline-block; background:black; width:4em\"></span>");
+                content = task.content.replaceAll("§§_§§", "<span onclick=\"return remove(this);\" class=\"drag\" style=\"text-align:center; color:white; display:inline-block; background:grey; width:4em\"> </span>");
 
                 String html = "";
                 if (task.fakes != null) {

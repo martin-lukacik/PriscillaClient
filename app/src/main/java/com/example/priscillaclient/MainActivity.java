@@ -27,6 +27,20 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
  * TODO Proper multi-language support based on app setting
  * TODO ViewPager for task navigation
  */
+/*help 10
+answer 20
+
+code 20, 40
+
+https://app.priscilla.fitped.eu/get-my-help/{TASK_ID}
+help = String
+
+
+/get-my-answer/{TASK_ID}
+answers = [] { answer, feedback }
+
+answers = {"title":"House (Dom)","assignment":[""],"files":[{"rContent":"public class House {\n\n}","aContent":"public class House {\n    String color;\n    double height;\n    double width = 10.5;\n    int rooms = 5;\n}"},{"rContent":"public class MainApp {\n  \n    public static void main() {\n        \/\/ toto je len príklad použitia, tento kód sa nevykonáva\n        House example = new House(); \/\/ vytvori instanciu\n        example.color = \"green\";\n        example.height = 6.2;\n    \texample.width = 12.5;\n    \texample.rooms = 8;\n    }\n}","aContent":""}],"testCases":"","filesToKeep":[""],"configFiles":[""],"help":"","global":{"files":{"files":["House.java","MainApp.java"],"filesToKeep":["file1.txt"],"configFiles":["vpl_run.sh","vpl_debug.sh","vpl_evaluate.sh","Main.java","Evaluate.java","MySolution.java"]}}}
+*/
 
 public class MainActivity extends ActivityBase {
 

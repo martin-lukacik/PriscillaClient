@@ -66,9 +66,7 @@ public class LeaderboardFragment extends FragmentBase {
         }
 
         ListView lv = findViewById(R.id.leaderboardList);
-
-        View emptyView = View.inflate(getContext(), R.layout.loading_view, null);
-        requireActivity().addContentView(emptyView, lv.getLayoutParams());
+        View emptyView = findViewById(R.id.loadingView);
         lv.setEmptyView(emptyView);
     }
 

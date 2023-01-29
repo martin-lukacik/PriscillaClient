@@ -53,8 +53,7 @@ public class ChaptersFragment extends FragmentBase {
 
         GridView chaptersListView = findViewById(R.id.chapterListView);
 
-        View emptyView = View.inflate(getContext(), R.layout.loading_view, null);
-        requireActivity().addContentView(emptyView, chaptersListView.getLayoutParams());
+        View emptyView = findViewById(R.id.loadingView);
         chaptersListView.setEmptyView(emptyView);
     }
 

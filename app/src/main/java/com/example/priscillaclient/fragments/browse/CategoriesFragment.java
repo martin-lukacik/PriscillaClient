@@ -47,8 +47,7 @@ public class CategoriesFragment extends FragmentBase {
 
         ListView categoryListView = findViewById(R.id.categoryListView);
 
-        View emptyView = View.inflate(getContext(), R.layout.loading_view, null);
-        requireActivity().addContentView(emptyView, categoryListView.getLayoutParams());
+        View emptyView = findViewById(R.id.loadingView);
         categoryListView.setEmptyView(emptyView);
     }
 
