@@ -1,6 +1,6 @@
 package com.example.priscillaclient.util;
 
-public abstract class Preferences {
+public final class Preferences {
     // Preferences group
     public static final String PREFS = "settings";
 
