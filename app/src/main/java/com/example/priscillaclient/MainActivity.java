@@ -88,6 +88,9 @@ public class MainActivity extends ActivityBase {
         SettingsViewModel settingsViewModel = ViewModelProviders.of(this).get(SettingsViewModel.class);
         settingsViewModel.fetchData();
         settingsViewModel.getData().observe(this, (data) -> {
+            if (data == null || data.isEmpty())
+                return;
+
             profileViewModel.getData().observe(this, (d) -> {
 
                 if (d == null)
@@ -107,7 +110,6 @@ public class MainActivity extends ActivityBase {
                     SharedPreferences.Editor editor = settings.edit();
                     editor.putString(Preferences.PREFS_LANGUAGE_SHORTCUT, shortcut);
                     editor.apply();
-                    // TODO restart activity to take effect
                     changeLocale(shortcut, true);
                 }
             });
