@@ -23,6 +23,7 @@ public class UserViewModel extends ViewModelBase {
     }
 
     public void update(int age, int content_type_id, int country, String group, int lang, String name, String nick, String surname, int theme_id) {
+        state.setValue(null);
         apiTask.executeAsync(
             new DoUpdate(age, content_type_id, country, group, lang, name, nick, surname, theme_id),
             (data, error) -> {

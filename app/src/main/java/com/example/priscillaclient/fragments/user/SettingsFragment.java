@@ -66,11 +66,13 @@ public class SettingsFragment extends FragmentBase {
         this.settings = ((SettingsViewModel) getViewModel(SettingsViewModel.class)).getData().getValue();
 
         ProfileViewModel profileViewModel = (ProfileViewModel) getViewModel(ProfileViewModel.class);
-
         profileViewModel.getData().observe(this, (data) -> onUpdateProfile(savedInstanceState, data));
     }
 
     private void onUpdateProfile(Bundle state, Profile profile) {
+
+        if (profile == null)
+            return;
 
         this.profile = profile;
 

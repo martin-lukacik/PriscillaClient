@@ -17,6 +17,7 @@ public class ProfileViewModel extends ViewModelBase {
     }
 
     public void fetchData() {
+        state.setValue(null);
         apiTask.executeAsync(new GetProfile(), (data, error) -> {
             setError(error);
             state.setValue(data);

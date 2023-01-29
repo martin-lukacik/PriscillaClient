@@ -81,7 +81,6 @@ public class MainActivity extends ActivityBase {
         userViewModel.fetchData();
 
 
-        // TODO synchronize with registration data
         ProfileViewModel profileViewModel = ViewModelProviders.of(this).get(ProfileViewModel.class);
         profileViewModel.fetchData();
 
