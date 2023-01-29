@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.priscillaclient.api.browse.GetTasks;
 import com.example.priscillaclient.api.tasks.GetHelp;
-import com.example.priscillaclient.viewmodels.app.models.Help;
+import com.example.priscillaclient.viewmodels.app.models.Answer;
 import com.example.priscillaclient.viewmodels.app.models.Task;
 import com.example.priscillaclient.viewmodels.ViewModelBase;
 
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public class TasksViewModel extends ViewModelBase {
 
     private final MutableLiveData<ArrayList<Task>> state = new MutableLiveData<>(new ArrayList<>());
-    private final MutableLiveData<Help> helpState = new MutableLiveData<>(null);
+    private final MutableLiveData<Answer> helpState = new MutableLiveData<>(null);
 
     private int lastLessonId = -1;
 
@@ -22,7 +22,7 @@ public class TasksViewModel extends ViewModelBase {
         return state;
     }
 
-    public LiveData<Help> getHelpState() {
+    public LiveData<Answer> getHelpState() {
         return helpState;
     }
 

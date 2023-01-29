@@ -3,7 +3,7 @@ package com.example.priscillaclient.viewmodels.misc.models;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class LeaderboardItem {
+public class Leader {
     public final int id;
     public final String nickname;
     public final String groups;
@@ -11,7 +11,7 @@ public class LeaderboardItem {
     public final int level_id;
     public final String country;
 
-    public LeaderboardItem(JSONObject json) throws JSONException {
+    public Leader(JSONObject json) throws JSONException {
         id = json.getInt("id");
         nickname = json.getString("nickname");
         groups = json.getString("groups");

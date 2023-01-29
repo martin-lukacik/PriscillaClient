@@ -35,8 +35,8 @@ public class Task {
     public ArrayList<String> fileNames = null;
     public ArrayList<String> files = null;
 
-    public TaskType type;
-    static TaskType[] taskTypes = TaskType.values();
+    public Type type;
+    static Type[] taskTypes = Type.values();
 
     public Task(JSONObject json) throws JSONException {
 
@@ -95,7 +95,7 @@ public class Task {
             }
 
 
-            if (type == TaskType.TASK_CODE || type == TaskType.TASK_CODE2 || type == TaskType.TASK_CODE3) {
+            if (type == Type.TASK_CODE || type == Type.TASK_CODE2 || type == Type.TASK_CODE3) {
 
                 JSONObject g = new JSONObject(globals);
                 if (g.has("files")) {
@@ -118,5 +118,19 @@ public class Task {
             }
         } catch (Exception ignore) {
         }
+    }
+
+    public enum Type {
+        NULL,               // 0
+        TASK_READ,          // 1
+        TASK_INPUT,         // 2
+        TASK_CHOICE,        // 3
+        TASK_MULTI,         // 4
+        TASK_FILL,          // 5
+        TASK_DRAG,          // 6
+        TASK_ORDER,         // 7
+        TASK_CODE,          // 8
+        TASK_CODE2,         // 9
+        TASK_CODE3,         // 10
     }
 }

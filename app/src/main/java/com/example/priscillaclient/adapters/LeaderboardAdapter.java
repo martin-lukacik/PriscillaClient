@@ -9,16 +9,16 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.example.priscillaclient.R;
-import com.example.priscillaclient.viewmodels.misc.models.LeaderboardItem;
+import com.example.priscillaclient.viewmodels.misc.models.Leader;
 
 import java.util.ArrayList;
 
-public class LeaderboardAdapter extends ArrayAdapter<LeaderboardItem> {
+public class LeaderboardAdapter extends ArrayAdapter<Leader> {
 
     final Activity context;
-    final ArrayList<LeaderboardItem> leaders;
+    final ArrayList<Leader> leaders;
 
-    public LeaderboardAdapter(Activity context, ArrayList<LeaderboardItem> leaders) {
+    public LeaderboardAdapter(Activity context, ArrayList<Leader> leaders) {
         super(context, R.layout.listview_leaderboard, leaders);
         this.context = context;
         this.leaders = leaders;

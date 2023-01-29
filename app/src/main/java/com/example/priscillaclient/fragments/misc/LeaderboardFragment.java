@@ -9,13 +9,13 @@ import com.example.priscillaclient.adapters.LeaderboardAdapter;
 import com.example.priscillaclient.fragments.FragmentAdapter;
 import com.example.priscillaclient.fragments.FragmentBase;
 import com.example.priscillaclient.viewmodels.misc.LeadersViewModel;
-import com.example.priscillaclient.viewmodels.misc.models.LeaderboardItem;
+import com.example.priscillaclient.viewmodels.misc.models.Leader;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
-public class LeaderboardFragment extends FragmentBase implements FragmentAdapter<ArrayList<LeaderboardItem>> {
+public class LeaderboardFragment extends FragmentBase implements FragmentAdapter<ArrayList<Leader>> {
 
     LeaderboardAdapter adapter;
 
@@ -61,7 +61,7 @@ public class LeaderboardFragment extends FragmentBase implements FragmentAdapter
         setEmptyView(findViewById(R.id.leaderboardList));
     }
 
-    public void onUpdate(ArrayList<LeaderboardItem> response) {
+    public void onUpdate(ArrayList<Leader> response) {
         adapter = new LeaderboardAdapter(getActivity(), response);
         ListView lv = findViewById(R.id.leaderboardList);
 

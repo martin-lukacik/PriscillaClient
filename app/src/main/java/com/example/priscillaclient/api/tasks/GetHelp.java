@@ -1,13 +1,13 @@
 package com.example.priscillaclient.api.tasks;
 
 import com.example.priscillaclient.api.HttpConnection;
-import com.example.priscillaclient.viewmodels.app.models.Help;
+import com.example.priscillaclient.viewmodels.app.models.Answer;
 
 import org.json.JSONObject;
 
 import java.util.concurrent.Callable;
 
-public class GetHelp implements Callable<Help> {
+public class GetHelp implements Callable<Answer> {
 
     private final int taskId;
 
@@ -16,7 +16,7 @@ public class GetHelp implements Callable<Help> {
     }
 
     @Override
-    public Help call() throws Exception {
+    public Answer call() throws Exception {
         HttpConnection connection = new HttpConnection("/get-my-help/" + taskId, "GET");
 
         if (connection.getErrorStream() != null) {
@@ -25,6 +25,6 @@ public class GetHelp implements Callable<Help> {
 
         JSONObject json = new JSONObject(connection.getResponse());
 
-        return new Help(json);
+        return new Answer(json);
     }
 }

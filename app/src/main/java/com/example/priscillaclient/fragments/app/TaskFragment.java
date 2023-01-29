@@ -25,7 +25,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.lifecycle.Observer;
 
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.api.tasks.DoEvaluateTask;
@@ -39,11 +38,10 @@ import com.example.priscillaclient.util.TaskHelper;
 import com.example.priscillaclient.viewmodels.app.LessonsViewModel;
 import com.example.priscillaclient.viewmodels.app.TaskResultViewModel;
 import com.example.priscillaclient.viewmodels.app.TasksViewModel;
-import com.example.priscillaclient.viewmodels.app.models.Help;
+import com.example.priscillaclient.viewmodels.app.models.Answer;
 import com.example.priscillaclient.viewmodels.app.models.Lesson;
 import com.example.priscillaclient.viewmodels.app.models.Task;
 import com.example.priscillaclient.viewmodels.app.models.TaskResult;
-import com.example.priscillaclient.viewmodels.app.models.TaskType;
 import com.example.priscillaclient.viewmodels.user.UserViewModel;
 import com.example.priscillaclient.viewmodels.user.models.Theme;
 import com.google.android.material.navigation.NavigationView;
@@ -253,9 +251,9 @@ public class TaskFragment extends FragmentBase {
         int priceHelp = 10;
         int priceAnswer = 20;
 
-        if (task.type == TaskType.TASK_CODE
-            || task.type == TaskType.TASK_CODE2
-            || task.type == TaskType.TASK_CODE3) {
+        if (task.type == Task.Type.TASK_CODE
+            || task.type == Task.Type.TASK_CODE2
+            || task.type == Task.Type.TASK_CODE3) {
             priceHelp = 20;
             priceAnswer = 40;
         }
@@ -298,20 +296,23 @@ public class TaskFragment extends FragmentBase {
 
             UserViewModel userViewModel = (UserViewModel) getViewModel(UserViewModel.class);
             userViewModel.fetchData();
-        } else if (response instanceof Help) {
+        } else if (response instanceof Answer) {
 
-            Help help = (Help) response;
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            Answer help = (Answer) response;
 
-            builder.setMessage(help.help)
-                    .setTitle(R.string.help);
+            if (help.type == Answer.AnswerType.HELP) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-            AlertDialog dialog = builder.create();
-            dialog.show();
+                builder.setMessage(help.answer)
+                        .setTitle(R.string.help);
 
-            // update coins, xp, etc.
-            UserViewModel userViewModel = (UserViewModel) getViewModel(UserViewModel.class);
-            userViewModel.fetchData();
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
+                // update coins, xp, etc.
+                UserViewModel userViewModel = (UserViewModel) getViewModel(UserViewModel.class);
+                userViewModel.fetchData();
+            }
         }
     }
 
@@ -369,7 +370,7 @@ public class TaskFragment extends FragmentBase {
             buttonTaskHelp.setVisibility(View.VISIBLE);
         }
 
-        if (task.type != TaskType.TASK_READ || task.passed == 0) {
+        if (task.type != Task.Type.TASK_READ || task.passed == 0) {
             buttonTaskSubmit.setVisibility(View.VISIBLE);
         } else {
             buttonTaskSubmit.setVisibility(View.GONE);

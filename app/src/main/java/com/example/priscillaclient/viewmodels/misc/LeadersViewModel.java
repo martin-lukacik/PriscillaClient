@@ -4,15 +4,15 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.priscillaclient.api.misc.GetLeaders;
-import com.example.priscillaclient.viewmodels.misc.models.LeaderboardItem;
+import com.example.priscillaclient.viewmodels.misc.models.Leader;
 import com.example.priscillaclient.viewmodels.ViewModelBase;
 
 import java.util.ArrayList;
 
 public class LeadersViewModel extends ViewModelBase {
-    private final MutableLiveData<ArrayList<LeaderboardItem>> state = new MutableLiveData<>(null);
+    private final MutableLiveData<ArrayList<Leader>> state = new MutableLiveData<>(null);
 
-    public LiveData<ArrayList<LeaderboardItem>> getData() {
+    public LiveData<ArrayList<Leader>> getData() {
         return state;
     }
 

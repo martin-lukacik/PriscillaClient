@@ -1,7 +1,7 @@
 package com.example.priscillaclient.api.misc;
 
 import com.example.priscillaclient.api.HttpConnection;
-import com.example.priscillaclient.viewmodels.misc.models.LeaderboardItem;
+import com.example.priscillaclient.viewmodels.misc.models.Leader;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -10,10 +10,10 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
 
-public class GetLeaders implements Callable<ArrayList<LeaderboardItem>> {
+public class GetLeaders implements Callable<ArrayList<Leader>> {
 
     @Override
-    public ArrayList<LeaderboardItem> call() throws Exception {
+    public ArrayList<Leader> call() throws Exception {
 
         HttpConnection connection = new HttpConnection("/get-leaders2", "POST");
 
@@ -27,9 +27,9 @@ public class GetLeaders implements Callable<ArrayList<LeaderboardItem>> {
 
         JSONArray response = new JSONObject(connection.getResponse()).getJSONArray("list");
 
-        ArrayList<LeaderboardItem> leaderboard = new ArrayList<>();
+        ArrayList<Leader> leaderboard = new ArrayList<>();
         for (int i = 0; i < response.length(); ++i) {
-            leaderboard.add(new LeaderboardItem(response.getJSONObject(i)));
+            leaderboard.add(new Leader(response.getJSONObject(i)));
         }
 
         return leaderboard;
