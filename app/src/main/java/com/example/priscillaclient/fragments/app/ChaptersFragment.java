@@ -7,6 +7,7 @@ import android.widget.GridView;
 
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.adapters.ChapterListAdapter;
+import com.example.priscillaclient.fragments.FragmentAdapter;
 import com.example.priscillaclient.fragments.FragmentBase;
 import com.example.priscillaclient.viewmodels.app.ChaptersViewModel;
 import com.example.priscillaclient.viewmodels.app.models.Chapter;
@@ -15,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
-public class ChaptersFragment extends FragmentBase {
+public class ChaptersFragment extends FragmentBase implements FragmentAdapter<ArrayList<Chapter>> {
 
     public static final String ARG_COURSE_ID = "courseId";
     public static final String ARG_COURSE_COLOR = "courseColor";
@@ -38,12 +39,7 @@ public class ChaptersFragment extends FragmentBase {
         }
 
         ChaptersViewModel viewModel = (ChaptersViewModel) getViewModel(ChaptersViewModel.class);
-        viewModel.getData().observe(this, (data) -> {
-            if (viewModel.hasError())
-                showError(viewModel.getError());
-            else if (data != null)
-                onUpdate(data);
-        });
+        viewModel.getData().observe(this, onResponse(viewModel));
         viewModel.fetchData(courseId);
     }
 
@@ -51,15 +47,13 @@ public class ChaptersFragment extends FragmentBase {
     public void onViewCreated(@NotNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        GridView chaptersListView = findViewById(R.id.chapterListView);
-
-        View emptyView = findViewById(R.id.loadingView);
-        chaptersListView.setEmptyView(emptyView);
+        setEmptyView(findViewById(R.id.chapterListView));
     }
 
+    @Override
     public void onUpdate(ArrayList<Chapter> response) {
 
-        chapters = response;
+        chapters = (ArrayList<Chapter>) response;
 
         GridView chaptersListView = findViewById(R.id.chapterListView);
         adapter = new ChapterListAdapter(getActivity(), chapters, courseColor);

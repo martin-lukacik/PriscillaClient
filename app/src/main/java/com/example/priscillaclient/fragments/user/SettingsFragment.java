@@ -8,12 +8,14 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
 
 import com.example.priscillaclient.ActivityBase;
 import com.example.priscillaclient.R;
+import com.example.priscillaclient.fragments.FragmentAdapter;
 import com.example.priscillaclient.fragments.FragmentBase;
 import com.example.priscillaclient.util.Pair;
 import com.example.priscillaclient.util.Preferences;
@@ -36,7 +38,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Calendar;
 
-public class SettingsFragment extends FragmentBase {
+public class SettingsFragment extends FragmentBase implements FragmentAdapter<Profile> {
 
     Profile profile;
     Settings settings;
@@ -66,13 +68,10 @@ public class SettingsFragment extends FragmentBase {
 
         state = savedInstanceState;
         ProfileViewModel profileViewModel = (ProfileViewModel) getViewModel(ProfileViewModel.class);
-        profileViewModel.getData().observe(this, (data) -> onUpdateProfile(data));
+        profileViewModel.getData().observe(this, onResponse(profileViewModel));
     }
 
-    private void onUpdateProfile(Profile profile) {
-
-        if (profile == null)
-            return;
+    public void onUpdate(Profile profile) {
 
         this.profile = profile;
 
@@ -188,20 +187,23 @@ public class SettingsFragment extends FragmentBase {
             };
             userViewModel.getData().observe(this, observer);
 
-        }
 
-        String savedShortcut = settings.getString(Preferences.PREFS_LANGUAGE_SHORTCUT, "en");
-        if (!savedShortcut.equals(shortcut)) {
+            String savedShortcut = settings.getString(Preferences.PREFS_LANGUAGE_SHORTCUT, "en");
+            if (!savedShortcut.equals(shortcut)) {
 
-            clearLocalizedViewModels();
+                clearLocalizedViewModels();
 
-            SharedPreferences.Editor editor = settings.edit();
-            editor.putString(Preferences.PREFS_LANGUAGE_SHORTCUT, shortcut);
-            editor.apply();
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putString(Preferences.PREFS_LANGUAGE_SHORTCUT, shortcut);
+                editor.apply();
 
-            showLanguageChangeDialog(shortcut);
-        } else if (isThemeChanged) {
-            ((ActivityBase) requireActivity()).setDarkMode(theme_id, true);
+                showLanguageChangeDialog(shortcut);
+            } else if (isThemeChanged) {
+                ((ActivityBase) requireActivity()).setDarkMode(theme_id, true);
+            }
+        } else {
+            String msg = getResources().getString(R.string.settings_no_changes);
+            Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -239,7 +241,7 @@ public class SettingsFragment extends FragmentBase {
         loadSelection(profileEditStudentType, items, profile.content_type_id - 1);
     }
 
-    private final static int startingYear = 1900;
+    private final static int startingYear = 1940;
     private void loadProfileYear(Profile profile) {
         int year = Calendar.getInstance().get(Calendar.YEAR);
 

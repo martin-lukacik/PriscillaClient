@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.example.priscillaclient.LoginActivity;
 import com.example.priscillaclient.R;
+import com.example.priscillaclient.fragments.FragmentAdapter;
 import com.example.priscillaclient.fragments.FragmentBase;
 import com.example.priscillaclient.util.Preferences;
 import com.example.priscillaclient.viewmodels.user.ProfileViewModel;
@@ -19,9 +20,11 @@ import com.example.priscillaclient.viewmodels.user.models.Profile;
 import com.example.priscillaclient.viewmodels.user.models.User;
 import com.example.priscillaclient.viewmodels.user.UserViewModel;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Random;
 
-public class ProfileFragment extends FragmentBase {
+public class ProfileFragment extends FragmentBase implements FragmentAdapter<User> {
 
     Profile profile;
 
@@ -41,10 +44,17 @@ public class ProfileFragment extends FragmentBase {
         color = Color.argb(255, r, g, b);
 
         UserViewModel userViewModel = (UserViewModel) getViewModel(UserViewModel.class);
-        userViewModel.getData().observe(this, this::onUpdate);
+        userViewModel.getData().observe(this, onResponse(userViewModel));
 
         ProfileViewModel profileViewModel = (ProfileViewModel) getViewModel(ProfileViewModel.class);
         profile = profileViewModel.getData().getValue();
+    }
+
+    @Override
+    public void onViewCreated(@NotNull View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        View v = findViewById(R.id.loadingView);
+        v.setVisibility(View.GONE);
     }
 
     public void logout(View view) {
@@ -81,9 +91,6 @@ public class ProfileFragment extends FragmentBase {
 
     @SuppressLint("SetTextI18n")
     public void onUpdate(User user) {
-
-        if (user == null)
-            return;
 
         TextView profileLogout = findViewById(R.id.profileLogoutButton);
         profileLogout.setOnClickListener(this::logout);

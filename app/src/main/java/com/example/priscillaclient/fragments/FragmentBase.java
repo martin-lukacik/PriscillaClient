@@ -5,12 +5,16 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.priscillaclient.MainActivity;
+import com.example.priscillaclient.R;
 import com.example.priscillaclient.util.LoadingDialog;
 
 import org.jetbrains.annotations.NotNull;
@@ -29,10 +33,7 @@ public abstract class FragmentBase extends Fragment {
     }
 
     public void navigate(int layoutId, Bundle args) {
-        if (getActivity() == null)
-            return;
-
-        ((MainActivity) getActivity()).navigate(layoutId, args);
+        ((MainActivity) requireActivity()).navigate(layoutId, args);
     }
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedState) {
@@ -41,10 +42,14 @@ public abstract class FragmentBase extends Fragment {
         return layout;
     }
 
+    public void setEmptyView(AbsListView view) {
+        TextView emptyView = findViewById(R.id.loadingView);
+        emptyView.setText(R.string.loading);
+        view.setEmptyView(emptyView);
+    }
+
     public <T extends View> T findViewById(int id) {
-        if (getActivity() == null)
-            return null;
-        return getActivity().findViewById(id);
+        return requireActivity().findViewById(id);
     }
 
     public String readFile(int id) {
@@ -62,13 +67,10 @@ public abstract class FragmentBase extends Fragment {
     }
 
     public void showError(String error) {
-        if (getActivity() != null)
-            ((MainActivity) getActivity()).showError(error);
+            ((MainActivity) requireActivity()).showError(error);
     }
 
     protected ViewModel getViewModel(Class c) {
-        if (getActivity() != null)
-            return ViewModelProviders.of(getActivity()).get(c);
-        return null;
+        return ViewModelProviders.of(requireActivity()).get(c);
     }
 }

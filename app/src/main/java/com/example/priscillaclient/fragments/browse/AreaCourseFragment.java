@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.priscillaclient.R;
+import com.example.priscillaclient.fragments.FragmentAdapter;
 import com.example.priscillaclient.fragments.app.ChaptersFragment;
 import com.example.priscillaclient.viewmodels.app.CoursesViewModel;
 import com.example.priscillaclient.viewmodels.app.models.Course;
@@ -24,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
-public class AreaCourseFragment extends FragmentBase {
+public class AreaCourseFragment extends FragmentBase implements FragmentAdapter<ArrayList<AreaCourse>> {
 
     public static final String ARG_AREA_ID = "areaId";
 
@@ -43,12 +44,7 @@ public class AreaCourseFragment extends FragmentBase {
         }
 
         AreaCoursesViewModel viewModel = (AreaCoursesViewModel) getViewModel(AreaCoursesViewModel.class);
-        viewModel.getData().observe(this, (data) -> {
-            if (viewModel.hasError())
-                showError(viewModel.getError());
-            else if (data != null)
-                onUpdate(data);
-        });
+        viewModel.getData().observe(this, onResponse(viewModel));
         viewModel.fetchData(areaId);
     }
 
@@ -56,10 +52,7 @@ public class AreaCourseFragment extends FragmentBase {
     public void onViewCreated(@NotNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ListView areaCourseList = findViewById(R.id.areaCourseList);
-
-        View emptyView = findViewById(R.id.loadingView);
-        areaCourseList.setEmptyView(emptyView);
+        setEmptyView(findViewById(R.id.areaCourseList));
     }
 
     public void onUpdate(ArrayList<AreaCourse> areaCourses) {

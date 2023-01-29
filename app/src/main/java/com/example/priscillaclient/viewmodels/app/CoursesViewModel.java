@@ -10,7 +10,7 @@ import com.example.priscillaclient.viewmodels.ViewModelBase;
 import java.util.ArrayList;
 
 public class CoursesViewModel extends ViewModelBase {
-    private final MutableLiveData<ArrayList<Course>> state = new MutableLiveData<>(new ArrayList<>());
+    private final MutableLiveData<ArrayList<Course>> state = new MutableLiveData<>(null);
 
     public LiveData<ArrayList<Course>> getData() {
         return state;
@@ -23,10 +23,12 @@ public class CoursesViewModel extends ViewModelBase {
                 setError(error);
                 state.setValue(data);
             });
+        } else {
+            clear();
         }
     }
 
     public void clear() {
-        state.setValue(new ArrayList<>());
+        state.setValue(null);
     }
 }

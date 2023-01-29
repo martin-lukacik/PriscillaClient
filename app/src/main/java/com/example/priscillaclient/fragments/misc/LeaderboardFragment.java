@@ -6,6 +6,7 @@ import android.widget.ListView;
 
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.adapters.LeaderboardAdapter;
+import com.example.priscillaclient.fragments.FragmentAdapter;
 import com.example.priscillaclient.fragments.FragmentBase;
 import com.example.priscillaclient.viewmodels.misc.LeadersViewModel;
 import com.example.priscillaclient.viewmodels.misc.models.LeaderboardItem;
@@ -14,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
-public class LeaderboardFragment extends FragmentBase {
+public class LeaderboardFragment extends FragmentBase implements FragmentAdapter<ArrayList<LeaderboardItem>> {
 
     LeaderboardAdapter adapter;
 
@@ -44,15 +45,7 @@ public class LeaderboardFragment extends FragmentBase {
         layoutId = R.layout.fragment_leaderboard;
 
         LeadersViewModel viewModel = (LeadersViewModel) getViewModel(LeadersViewModel.class);
-        viewModel.getData().observe(this, (data) -> {
-            if (viewModel.hasError())
-                showError(viewModel.getError());
-            else
-                onUpdate(data);
-            ListView lv = findViewById(R.id.leaderboardList);
-            lv.setSelectionFromTop(index, top);
-        });
-
+        viewModel.getData().observe(this, onResponse(viewModel));
         viewModel.fetchData();
     }
 
@@ -65,9 +58,7 @@ public class LeaderboardFragment extends FragmentBase {
             top = savedInstanceState.getInt("top", 0);
         }
 
-        ListView lv = findViewById(R.id.leaderboardList);
-        View emptyView = findViewById(R.id.loadingView);
-        lv.setEmptyView(emptyView);
+        setEmptyView(findViewById(R.id.leaderboardList));
     }
 
     public void onUpdate(ArrayList<LeaderboardItem> response) {

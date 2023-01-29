@@ -43,4 +43,6 @@
     <string name="ok">Ok</string>
     <string name="language_changed">Language preferences have changed. A restart is needed for the changes to take effect.</string>
     <string name="loading" tools:ignore="TypographyEllipsis">Loading...</string>
+    <string name="no_results">No results</string>
+    <string name="settings_no_changes">No changes</string>
 </resources>

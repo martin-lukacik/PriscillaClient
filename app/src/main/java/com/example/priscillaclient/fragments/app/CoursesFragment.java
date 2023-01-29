@@ -9,6 +9,7 @@ import android.widget.GridView;
 
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.adapters.CourseListAdapter;
+import com.example.priscillaclient.fragments.FragmentAdapter;
 import com.example.priscillaclient.fragments.FragmentBase;
 import com.example.priscillaclient.util.Preferences;
 import com.example.priscillaclient.viewmodels.app.CoursesViewModel;
@@ -18,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
-public class CoursesFragment extends FragmentBase {
+public class CoursesFragment extends FragmentBase implements FragmentAdapter<ArrayList<Course>> {
 
     ArrayList<Course> courses;
     CourseListAdapter adapter;
@@ -29,25 +30,17 @@ public class CoursesFragment extends FragmentBase {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         layoutId = R.layout.fragment_courses;
-
-        CoursesViewModel viewModel = (CoursesViewModel) getViewModel(CoursesViewModel.class);
-        viewModel.getData().observe(this, (data) -> {
-            if (viewModel.hasError())
-                showError(viewModel.getError());
-            else
-                onUpdate(data);
-        });
-        viewModel.fetchData();
     }
 
     @Override
     public void onViewCreated(@NotNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        GridView courseListView = findViewById(R.id.courseListView);
+        CoursesViewModel viewModel = (CoursesViewModel) getViewModel(CoursesViewModel.class);
+        viewModel.getData().observe(this, onResponse(viewModel));
+        viewModel.fetchData();
 
-        View emptyView = findViewById(R.id.loadingView);
-        courseListView.setEmptyView(emptyView);
+        setEmptyView(findViewById(R.id.courseListView));
     }
 
     void pinCourse(int courseId) {
