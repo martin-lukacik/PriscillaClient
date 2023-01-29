@@ -37,7 +37,7 @@ public class DoSaveProgram implements Callable<String> {
 
         json.put("files", files.toString().replaceAll("\\\\", "\\\\\\\\"));
         json.put("task_id", taskId);
-        json.put("activity_type", "chapter"); // TODO hardcoded value "chapter"
+        json.put("activity_type", "chapter"); // TODO hardcoded
 
         connection.sendRequest(json);
 

@@ -22,7 +22,7 @@ public class GetProgram implements Callable<Pair<ArrayList<String>, ArrayList<St
         HttpConnection connection = new HttpConnection("/load-program3/" + taskId, "POST");
 
         JSONObject json = new JSONObject();
-        json.put("activity_type", "chapter"); // TODO hardcoded value "chapter"
+        json.put("activity_type", "chapter"); // TODO hardcoded
 
         connection.sendRequest(json);
 

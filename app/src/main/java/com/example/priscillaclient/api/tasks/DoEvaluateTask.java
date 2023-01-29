@@ -26,7 +26,7 @@ public class DoEvaluateTask implements Callable<TaskResult> {
 
         JSONObject json = new JSONObject();
         json.put("answer_list", answersJson);
-        json.put("activity_type", "chapter"); // TODO hardcoded value "chapter"
+        json.put("activity_type", "chapter"); // TODO hardcoded
         json.put("task_id", task.task_id);
         json.put("task_type_id", task.task_type_id);
         json.put("time_length", timeLength);

@@ -29,7 +29,16 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textSize="16sp"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:text="10000 XP / 384" />
+        <ImageView
+            android:paddingTop="1dp"
+            android:paddingStart="2dp"
+            android:paddingEnd="2dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_tonality" />
 
     </LinearLayout>
 

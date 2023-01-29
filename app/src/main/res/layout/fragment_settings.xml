@@ -152,14 +152,14 @@
                 android:layout_height="wrap_content"
                 android:text="@string/birth_year"
                 android:textSize="18sp" />
-            <DatePicker
-                android:layout_marginTop="10dp"
-                android:layout_marginStart="15dp"
-                android:layout_marginEnd="15dp"
+            <Spinner
+                android:layout_marginStart="25dp"
+                android:layout_marginEnd="25dp"
+                android:padding="10dp"
                 android:id="@+id/profileEditYear"
-                android:layout_width="wrap_content"
-                android:layout_gravity="center"
-                android:layout_height="wrap_content" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:spinnerMode="dropdown" />
 
             <TextView
                 android:id="@+id/settingsSaveButton"

@@ -550,7 +550,6 @@ public class TaskFragment extends FragmentBase {
                 case TASK_CODE:
                 case TASK_CODE2:
                     codes.set(currentIndex, codeView.getText().toString());
-                    // TODO implement save button for code tasks only
                     taskResultViewModel.saveCode(task.task_id, task.fileNames, codes);
                     dialog = new LoadingDialog(getActivity());
                     dialog.show();

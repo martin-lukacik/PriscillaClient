@@ -51,6 +51,6 @@ public class DoUpdate implements Callable<String> {
             throw new Exception(connection.getErrorMessage());
         }
 
-        return connection.getResponse();
+        throw new Exception(connection.getResponse());
     }
 }

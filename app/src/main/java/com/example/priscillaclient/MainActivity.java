@@ -22,13 +22,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.Locale;
 
-/*
- * TODO Loading should show dialogs and/or clear previous state (Courses -> Chapters -> Tasks shows old data while loading)
- * TODO Colorblind mode?
- * TODO Submit task resets inputs
- * TODO Proper multi-language support based on app setting
- * TODO ViewPager for task navigation
- */
 /*help 10
 answer 20
 
@@ -140,7 +133,7 @@ public class MainActivity extends ActivityBase {
             return;
         }
 
-        setActionBarTitle(user.performance.xp + " XP | " + user.performance.coins + " ©");
+        setActionBarTitle(user.performance.xp + " XP | " + user.performance.coins);
 
         if (initialUpdate) {
             setDarkMode(user.theme_id, true);

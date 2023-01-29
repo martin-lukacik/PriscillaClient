@@ -113,8 +113,7 @@ public class AreaCourseFragment extends FragmentBase {
             builder.setPositiveButton("JOIN", (dialog, id) -> {
                 // TODO join course
             });
-            builder.setNegativeButton("Cancel", (dialog, id) -> {
-            });
+            builder.setNegativeButton("Cancel", null);
 
             Dialog d = builder.create();
             d.show();
