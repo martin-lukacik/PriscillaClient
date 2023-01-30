@@ -58,6 +58,7 @@ import java.util.TimerTask;
 
 import io.github.rosemoe.sora.langs.java.JavaLanguage;
 import io.github.rosemoe.sora.widget.CodeEditor;
+import io.github.rosemoe.sora.widget.schemes.EditorColorScheme;
 
 public class TaskFragment extends FragmentBase {
 
@@ -279,6 +280,14 @@ public class TaskFragment extends FragmentBase {
         codeEditor.setHighlightBracketPair(true);
         codeEditor.setEditorLanguage(new JavaLanguage());
         codeEditor.setTypefaceText(Typeface.MONOSPACE);
+
+        EditorColorScheme scheme = new EditorColorScheme(isDarkModeEnabled()) { };
+        scheme.setColor(EditorColorScheme.WHOLE_BACKGROUND, isDarkModeEnabled() ? 0xFF333333 : 0xffffffff);
+        scheme.setColor(EditorColorScheme.TEXT_NORMAL, isDarkModeEnabled() ? 0xffffffff : 0xFF333333);
+        scheme.setColor(EditorColorScheme.LINE_NUMBER_BACKGROUND, isDarkModeEnabled() ? 0xFF333333 : 0xffffffff);
+        scheme.setColor(EditorColorScheme.LINE_NUMBER, isDarkModeEnabled() ? 0xfff1f1f1 : 0xFF333333);
+        scheme.setColor(EditorColorScheme.LINE_NUMBER_CURRENT, isDarkModeEnabled() ? 0xffffffff : 0xFF333333);
+        codeEditor.setColorScheme(scheme);
 
         codeEditor.setOnTouchListener((v, event) -> {
             if (codeEditor.hasFocus()) {
