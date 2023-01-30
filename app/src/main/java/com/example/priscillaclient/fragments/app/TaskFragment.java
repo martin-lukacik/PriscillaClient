@@ -237,7 +237,7 @@ public class TaskFragment extends FragmentBase {
         return true;
     }
 
-    @SuppressLint("SetJavaScriptEnabled")
+    @SuppressLint({"SetJavaScriptEnabled", "ClickableViewAccessibility"})
     @Override
     public void onViewCreated(@NotNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -291,7 +291,7 @@ public class TaskFragment extends FragmentBase {
 
         codeEditor.setOnTouchListener((v, event) -> {
             if (codeEditor.hasFocus()) {
-                int eventMask = (event.getAction() & MotionEvent.ACTION_MASK);
+                 int eventMask = (event.getAction() & MotionEvent.ACTION_MASK);
                 v.getParent().requestDisallowInterceptTouchEvent(true);
                 if (eventMask == MotionEvent.ACTION_SCROLL) {
                     v.getParent().requestDisallowInterceptTouchEvent(false);
