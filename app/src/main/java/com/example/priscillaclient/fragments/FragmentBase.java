@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.example.priscillaclient.ActivityBase;
 import com.example.priscillaclient.MainActivity;
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.util.LoadingDialog;
@@ -50,6 +51,10 @@ public abstract class FragmentBase extends Fragment {
 
     public <T extends View> T findViewById(int id) {
         return requireActivity().findViewById(id);
+    }
+
+    public boolean isDarkModeEnabled() {
+        return ((ActivityBase) requireActivity()).isDarkModeEnabled();
     }
 
     public String readFile(int id) {

@@ -80,4 +80,10 @@ public class ActivityBase extends AppCompatActivity {
             recreate();
         }
     }
+
+    public boolean isDarkModeEnabled() {
+        int uiMode = getResources().getConfiguration().uiMode;
+        int nightModeFlags = uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        return nightModeFlags == Configuration.UI_MODE_NIGHT_YES;
+    }
 }

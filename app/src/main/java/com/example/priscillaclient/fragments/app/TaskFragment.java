@@ -6,15 +6,12 @@ import android.app.Dialog;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Button;
@@ -37,7 +34,6 @@ import com.example.priscillaclient.fragments.FragmentBase;
 import com.example.priscillaclient.util.JavascriptInterface;
 import com.example.priscillaclient.util.LoadingDialog;
 import com.example.priscillaclient.util.Preferences;
-import com.example.priscillaclient.util.TaskHelper;
 import com.example.priscillaclient.viewmodels.app.ChaptersViewModel;
 import com.example.priscillaclient.viewmodels.app.LessonsViewModel;
 import com.example.priscillaclient.viewmodels.app.TaskResultViewModel;
@@ -191,6 +187,7 @@ public class TaskFragment extends FragmentBase {
         Menu menu = navigationView.getMenu();
         menu.clear();
 
+        // Set menu title
         if (chapters != null && !chapters.isEmpty()) {
             for (Chapter c : chapters) {
                 if (c.id == chapterId) {
@@ -201,12 +198,9 @@ public class TaskFragment extends FragmentBase {
         } else {
             menu.add(R.string.lessons);
         }
-
         menu.getItem(0).setEnabled(false);
 
-        DrawerLayout drawer = findViewById(R.id.drawerLayout);
-        drawer.open();
-
+        // Set menu items
         boolean initialChecked = false;
         for (Lesson lesson : lessons) {
             MenuItem menuItem = menu.add(lesson.name);
@@ -219,6 +213,9 @@ public class TaskFragment extends FragmentBase {
         }
 
         navigationView.invalidate();
+
+        DrawerLayout drawer = findViewById(R.id.drawerLayout);
+        drawer.open();
     }
 
     private boolean onSelectLesson(MenuItem item, int lessonId) {
@@ -265,7 +262,8 @@ public class TaskFragment extends FragmentBase {
         webView.setVerticalScrollBarEnabled(false);
         webView.setHorizontalScrollBarEnabled(false);
         webView.setHorizontalScrollBarEnabled(false);
-        String html = css + javascript + "<div id=\"task-content\"></div>";
+        String loadingContent = "<div style=\"display:block;width:99%;position:absolute;top:50%;text-align:center;font-size:36px\">" +  getResources().getString(R.string.loading) + "</div>";
+        String html = css + javascript + "<div id=\"task-content\">" + loadingContent + "</div>";
         webView.loadDataWithBaseURL(null, html, "text/html; charset=utf-8", "UTF-8", null);
 
         buttonTaskHelp.setOnClickListener(this::getTaskHelp);
@@ -273,26 +271,29 @@ public class TaskFragment extends FragmentBase {
         buttonTaskPrevious.setOnClickListener(this::previousTask);
         buttonTaskSubmit.setOnClickListener(this::submit);
 
-        codeView = new CodeEditor(getActivity());
+        codeEditor = new CodeEditor(getActivity());
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         params.setMargins(0, 36, 0, 0);
-        codeView.setLayoutParams(params);
-        codeView.setHighlightCurrentLine(true);
-        codeView.setHighlightBracketPair(true);
-        codeView.setEditorLanguage(new JavaLanguage());
-        codeView.setTypefaceText(Typeface.MONOSPACE);
+        codeEditor.setLayoutParams(params);
+        codeEditor.setHighlightCurrentLine(true);
+        codeEditor.setHighlightBracketPair(true);
+        codeEditor.setEditorLanguage(new JavaLanguage());
+        codeEditor.setTypefaceText(Typeface.MONOSPACE);
 
-        codeView.setOnTouchListener((v, event) -> {
-            if (codeView.hasFocus()) {
+        codeEditor.setOnTouchListener((v, event) -> {
+            if (codeEditor.hasFocus()) {
+                int eventMask = (event.getAction() & MotionEvent.ACTION_MASK);
                 v.getParent().requestDisallowInterceptTouchEvent(true);
-                if ((event.getAction() & MotionEvent.ACTION_MASK)
-                        == MotionEvent.ACTION_SCROLL) {
+                if (eventMask == MotionEvent.ACTION_SCROLL) {
                     v.getParent().requestDisallowInterceptTouchEvent(false);
                     return true;
                 }
             }
             return false;
         });
+
+        ScrollView taskScrollView = findViewById(R.id.taskScrollView);
+        taskScrollView.scrollTo(0, 0);
     }
 
     private void getTaskHelp(View view) {
@@ -349,20 +350,18 @@ public class TaskFragment extends FragmentBase {
     }
 
     boolean refreshTask = false;
-    public void onUpdate(Object response) {
+    public void onUpdate(TaskResult result) {
 
-        if (response == null)
+        if (result == null)
             return;
 
-        if (response instanceof TaskResult) {
-            refreshTask = true;
+        refreshTask = true;
 
-            tasksViewModel.fetchData(courseId, chapterId, currentLessonId, true);
-            showRatingDialog(((TaskResult) response));
+        tasksViewModel.fetchData(courseId, chapterId, currentLessonId, true);
+        showRatingDialog(result);
 
-            UserViewModel userViewModel = (UserViewModel) getViewModel(UserViewModel.class);
-            userViewModel.fetchData();
-        }
+        UserViewModel userViewModel = (UserViewModel) getViewModel(UserViewModel.class);
+        userViewModel.fetchData();
     }
 
     public void onUpdateAnswer(Answer answer) {
@@ -521,15 +520,19 @@ public class TaskFragment extends FragmentBase {
 
     private void setButtonsVisibility(Task task) {
         if (task.max_score == 0 && task.passed != 1) {
-            buttonTaskHelp.setVisibility(View.GONE);
+            buttonTaskHelp.setEnabled(false);
+            buttonTaskHelp.setVisibility(View.INVISIBLE);
         } else {
+            buttonTaskHelp.setEnabled(true);
             buttonTaskHelp.setVisibility(View.VISIBLE);
         }
 
         if (task.type != Task.Type.TASK_READ || task.passed == 0) {
+            buttonTaskSubmit.setEnabled(true);
             buttonTaskSubmit.setVisibility(View.VISIBLE);
         } else {
-            buttonTaskSubmit.setVisibility(View.GONE);
+            buttonTaskSubmit.setEnabled(false);
+            buttonTaskSubmit.setVisibility(View.INVISIBLE);
         }
 
         if (task.passed == 1 && task.max_score == 0) {
@@ -555,7 +558,7 @@ public class TaskFragment extends FragmentBase {
             stars.addView(star);
         }
     }
-    CodeEditor codeView;
+    CodeEditor codeEditor;
     @SuppressLint("ClickableViewAccessibility")
     public void updateTaskCode(Task task) {
 
@@ -578,9 +581,9 @@ public class TaskFragment extends FragmentBase {
 
             fileNameView.setPadding(25, 0, 0, 0);
             fileNameView.setOnClickListener((e) -> {
-                codes.set(currentIndex, codeView.getText().toString());
+                codes.set(currentIndex, codeEditor.getText().toString());
                 currentIndex = finalI;
-                codeView.setText(codes.get(finalI));
+                codeEditor.setText(codes.get(finalI));
 
                 for (int j = 0; j < codeTaskLayout.getChildCount(); ++j) {
                     View v = codeTaskLayout.getChildAt(j);
@@ -595,8 +598,8 @@ public class TaskFragment extends FragmentBase {
             codeTaskLayout.addView(fileNameView);
         }
 
-        codeView.setText(codes.get(0));
-        codeTaskLayout.addView(codeView);
+        codeEditor.setText(codes.get(0));
+        codeTaskLayout.addView(codeEditor);
     }
 
     int currentIndex = 0;
@@ -622,66 +625,52 @@ public class TaskFragment extends FragmentBase {
         String content = task.content;
 
 
+        boolean dark = isDarkModeEnabled();
         codeTaskLayout.setVisibility(View.GONE);
         switch (task.type) {
 
             case TASK_CODE:
             case TASK_CODE2:
             case TASK_CODE3:
-
                 taskResultViewModel.loadCode(task.task_id);
                 codeTaskLayout.setVisibility(View.VISIBLE);
-
                 break;
 
             case TASK_CHOICE:
                 if (task.answers != null)
-                    TaskHelper.initializeRadioGroup(getActivity(), taskLayout, themeId, task.answers);
+                    TaskHelper.initializeTaskChoice(getActivity(), taskLayout, dark, task.answers);
                 break;
+
             case TASK_FILL:
                 content = task.content.replaceAll("§§_§§", "<input class=\"answer\" type=\"text\" oninput=\"process();\">");
                 break;
+
             case TASK_INPUT:
                 inputEditText.setVisibility(View.VISIBLE);
                 break;
+
             case TASK_MULTI:
                 if (task.answers != null)
-                    TaskHelper.initializeCheckBoxes(getActivity(), taskLayout, themeId, task.answers);
+                    TaskHelper.initializeTaskMulti(getActivity(), taskLayout, dark, task.answers);
                 break;
+
             case TASK_DRAG:
-
-                content = task.content.replaceAll("§§_§§", "<span onclick=\"return remove(this);\" class=\"drag\" style=\"text-align:center; color:white; display:inline-block; background:grey; width:4em\"> </span>");
-
-                String html = "";
-                if (task.fakes != null) {
-                    StringBuilder htmlBuilder = new StringBuilder("<hr>");
-                    for (String fake : task.fakes) {
-                        htmlBuilder.append("<button onclick=\"return add(this);\">").append(fake).append("</button>");
-                    }
-                    html = htmlBuilder.toString();
-                }
-
-                content += html;
-
+                String dragInputHtml = "<span onclick=\"return remove(this);\" class=\"drag\" style=\"text-align:center; color:white; display:inline-block; background:grey; width:4em\"> </span>";
+                content = task.content.replaceAll("§§_§§", dragInputHtml);
+                content += TaskHelper.initializeTaskDrag(task);
                 break;
+
             case TASK_ORDER:
-                ArrayList<String> codes = task.codes;
-
-                content += "<hr><style>pre{display:inline-block;vertical-align:middle}</style>";
-                content += "<div class=\"codes\">";
-                StringBuilder contentBuilder = new StringBuilder(content);
-                for (int i = 0; i < codes.size(); ++i) {
-                    contentBuilder.append("<span><button onclick=\"up(this)\" class=\"arrow-up\">&uarr;</button><button onclick=\"down(this)\" class=\"arrow-down\">&darr;</button><span class=\"code\">").append(codes.get(i)).append("</span><br></span>");
-                }
-                content = contentBuilder.toString();
-                content += "</div>";
-
+                content += TaskHelper.initializeTaskOrder(task);
                 break;
         }
 
         webView.evaluateJavascript("loadData('" + content.replaceAll("\n", "<br>") + "')", null);
 
         taskLayout.setVisibility(View.VISIBLE);
+
+        ScrollView taskScrollView = findViewById(R.id.taskScrollView);
+        taskScrollView.scrollTo(0, 0);
     }
 
     private void clearTaskLayout() {
@@ -700,7 +689,7 @@ public class TaskFragment extends FragmentBase {
         timer.scheduleAtFixedRate(timerTask, 1000, 1000);
 
 
-        taskLayout.setVisibility(View.GONE);
+        taskLayout.setVisibility(View.INVISIBLE);
 
         //webView.setVisibility(View.GONE);
 
@@ -749,7 +738,7 @@ public class TaskFragment extends FragmentBase {
                     //exeType = 1;
                 case TASK_CODE:
                 case TASK_CODE2:
-                    codes.set(currentIndex, codeView.getText().toString());
+                    codes.set(currentIndex, codeEditor.getText().toString());
                     taskResultViewModel.saveCode(task.task_id, task.fileNames, codes);
                     dialog = new LoadingDialog(getActivity());
                     dialog.show();
