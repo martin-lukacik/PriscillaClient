@@ -56,6 +56,7 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -313,19 +314,23 @@ public class TaskFragment extends FragmentBase {
 
         String help = getResources().getString(R.string.help);
         String answer = getResources().getString(R.string.answer);
+        String balance = getResources().getString(R.string.balance);
+        String coins = getResources().getString(R.string.coins).toLowerCase(Locale.ROOT);
 
         UserViewModel userViewModel = (UserViewModel) getViewModel(UserViewModel.class);
         User user = userViewModel.getData().getValue();
 
-        int balance = (user != null ? user.performance.coins : 0);
+        int currentBalance = (user != null ? user.performance.coins : 0);
 
         String message =
-                help +
-                ": " + "<b>" + priceHelp + " coins</b>" +
+                help + ": " +
+                "<b>" + priceHelp + " " + coins + "</b>" +
                 "<br><br>" +
-                answer +
-                ": " + "<b>" + priceAnswer + " coins</b>" +
-                "<br><br><br>" + "Current balance: <b>" + balance + " coins</b>";
+                answer + ": " +
+                "<b>" + priceAnswer + " " + coins + "</b>" +
+                "<br><br><br>" +
+                balance + ": " +
+                "<b>" + currentBalance+ " " + coins + "</b></b>";
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.help);

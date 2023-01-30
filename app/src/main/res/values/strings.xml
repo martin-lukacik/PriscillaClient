@@ -45,4 +45,5 @@
     <string name="loading" tools:ignore="TypographyEllipsis">Loading...</string>
     <string name="no_results">No results</string>
     <string name="settings_no_changes">No changes</string>
+    <string name="balance">Current balance</string>
 </resources>
