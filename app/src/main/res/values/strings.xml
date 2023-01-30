@@ -3,13 +3,13 @@
     <string name="hashtag_sign" translatable="false">#</string>
     <string name="level" translatable="false">LEVEL</string>
     <string name="coins" translatable="false">COINS</string>
-    <string name="e_mail" translatable="false">E-MAIL</string>
     <string name="priscilla_logo" translatable="false">Priscilla logo</string>
     <string name="task_icon" translatable="false">Task icon</string>
     <string name="code_icon" translatable="false">Code icon</string>
     <string name="content_icon" translatable="false">Content icon</string>
     <string name="xp" translatable="false">XP</string>
 
+    <string name="e_mail">E-mail</string>
     <string name="nickname">Nickname</string>
     <string name="username_or_email">Username or e-mail</string>
     <string name="password">Password</string>

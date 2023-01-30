@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.priscillaclient.LoginActivity;
@@ -16,7 +17,10 @@ import com.example.priscillaclient.fragments.FragmentAdapter;
 import com.example.priscillaclient.fragments.FragmentBase;
 import com.example.priscillaclient.util.Preferences;
 import com.example.priscillaclient.viewmodels.user.ProfileViewModel;
+import com.example.priscillaclient.viewmodels.user.SettingsViewModel;
+import com.example.priscillaclient.viewmodels.user.models.Country;
 import com.example.priscillaclient.viewmodels.user.models.Profile;
+import com.example.priscillaclient.viewmodels.user.models.Settings;
 import com.example.priscillaclient.viewmodels.user.models.User;
 import com.example.priscillaclient.viewmodels.user.UserViewModel;
 
@@ -27,6 +31,7 @@ import java.util.Random;
 public class ProfileFragment extends FragmentBase implements FragmentAdapter<User> {
 
     Profile profile;
+    Settings settings;
 
     public ProfileFragment() { }
 
@@ -38,16 +43,20 @@ public class ProfileFragment extends FragmentBase implements FragmentAdapter<Use
         layoutId = R.layout.fragment_profile;
 
         Random rand = new Random();
-        int r = rand.nextInt(255);
-        int g = rand.nextInt(255);
-        int b = rand.nextInt(255);
-        color = Color.argb(255, r, g, b);
+        color = Color.parseColor(colors[rand.nextInt(colors.length)]);
 
         UserViewModel userViewModel = (UserViewModel) getViewModel(UserViewModel.class);
         userViewModel.getData().observe(this, onResponse(userViewModel));
 
         ProfileViewModel profileViewModel = (ProfileViewModel) getViewModel(ProfileViewModel.class);
         profile = profileViewModel.getData().getValue();
+        profileViewModel.getData().observe(this, (data) -> {
+            profile = data;
+            onUpdateProfile();
+        });
+
+        SettingsViewModel settingsViewModel = (SettingsViewModel) getViewModel(SettingsViewModel.class);
+        settings = settingsViewModel.getData().getValue();
     }
 
     @Override
@@ -55,6 +64,11 @@ public class ProfileFragment extends FragmentBase implements FragmentAdapter<Use
         super.onViewCreated(view, savedInstanceState);
         View v = findViewById(R.id.loadingView);
         v.setVisibility(View.GONE);
+
+        onUpdateProfile();
+
+        LinearLayout profileHeader = findViewById(R.id.profileHeader);
+        profileHeader.setBackgroundColor(color);
     }
 
     public void logout(View view) {
@@ -89,6 +103,13 @@ public class ProfileFragment extends FragmentBase implements FragmentAdapter<Use
         navigate(R.id.settingsFragment);
     }
 
+    String[] colors = new String[] {
+        "#0085FF",
+        "#008A34",
+        "#F98600",
+        "#E92C2C",
+    };
+
     @SuppressLint("SetTextI18n")
     public void onUpdate(User user) {
 
@@ -119,10 +140,17 @@ public class ProfileFragment extends FragmentBase implements FragmentAdapter<Use
         usernameFull.setText(fullName);
         usernameShort.setText(shortName);
 
+        // Color the text
+        //usernameShort.setTextColor(color);
+
+        /*usernameShort.setBackgroundColor(color);*/
+        usernameShort.setTextColor(0xffffffff);
+        // Color the circle
         GradientDrawable drawable = (GradientDrawable) usernameShort.getBackground();
         drawable.mutate();
-        drawable.setStroke(5, color);
-        usernameShort.setTextColor(color);
+        drawable.setStroke(5, 0xffffffff);
+
+        usernameFull.setTextColor(0xffffffff);
 
         TextView profileLevel = findViewById(R.id.profileLevel);
         TextView profileXP = findViewById(R.id.profileXP);
@@ -133,5 +161,24 @@ public class ProfileFragment extends FragmentBase implements FragmentAdapter<Use
         profileXP.setText(user.performance.xp + "");
         profileCoins.setText(user.performance.coins + "");
         profileEmail.setText(user.email);
+
+
+        LinearLayout alternateRow = findViewById(R.id.alternateRow);
+        alternateRow.setBackgroundColor(0xfff1f1f1);
+    }
+
+    public void onUpdateProfile() {
+        TextView profileYear = findViewById(R.id.profileYear);
+        profileYear.setText(profile.yob + "");
+
+        TextView profileGroup = findViewById(R.id.profileGroup);
+        profileGroup.setText(profile.groups + "");
+
+        TextView profileNick = findViewById(R.id.profileNick);
+        profileNick.setTextColor(0xffffffff);
+        profileNick.setText(profile.nickname + "");
+
+        TextView profileCountry = findViewById(R.id.profileCountry);
+        profileCountry.setText(settings.getCountryFromId(profile.country_id).country_name + "");
     }
 }

@@ -32,6 +32,14 @@ public class Settings {
 
     }
 
+    public Country getCountryFromId(int id) {
+        for (Country country : countries) {
+            if (country.id == id)
+                return country;
+        }
+        return null;
+    }
+
     public boolean isEmpty() {
         return (languages.isEmpty() && countries.isEmpty() && groups.isEmpty() && themes.isEmpty());
     }

@@ -2,4 +2,5 @@
 <resources>
     <attr name="colorCourse" format="reference|color" />
     <attr name="colorSpinner" format="reference|color" />
+    <attr name="colorSlate" format="reference|color" />
 </resources>
