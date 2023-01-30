@@ -3,6 +3,24 @@ function loadData(data) {
     el.innerHTML = data;
 }
 
+// TASK_ORDER
+
+function loadTaskOrder(content, json) {
+    let arr = JSON.parse(json);
+
+    content += "<hr><style>pre{display:inline-block;vertical-align:middle}</style>";
+    content += "<div class=\"codes\">";
+    for (let i = 0; i < arr.length; ++i) {
+        content += "<span><button onclick=\"up(this)\" class=\"arrow-up\">&uarr;</button><button onclick=\"down(this)\" class=\"arrow-down\">&darr;</button><span class=\"code\">";
+        content += arr[i];
+        content += "</span><br></span>";
+    }
+    content += "</div>";
+
+    loadData(content);
+    Android.sendData(json);
+}
+
 function up(button) {
     let buttons = document.querySelectorAll(".arrow-up");
     let codes = document.querySelectorAll(".code");

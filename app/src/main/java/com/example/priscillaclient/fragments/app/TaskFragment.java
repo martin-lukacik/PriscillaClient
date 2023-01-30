@@ -377,8 +377,10 @@ public class TaskFragment extends FragmentBase {
                 case TASK_CODE:
                 case TASK_CODE2:
                 case TASK_CODE3:
+                    break;
+
                 case TASK_ORDER:
-                    // TODO implement
+                    webView.evaluateJavascript("loadTaskOrder('" + task.content.replaceAll("\n", "<br>") + "', '" + new JSONArray(answerList) + "')", null);
                     break;
 
                 case TASK_INPUT:
