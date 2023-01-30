@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import com.example.priscillaclient.viewmodels.user.models.Profile;
 import com.example.priscillaclient.viewmodels.user.models.Settings;
 import com.example.priscillaclient.viewmodels.user.models.User;
 import com.example.priscillaclient.viewmodels.user.UserViewModel;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -116,8 +118,6 @@ public class ProfileFragment extends FragmentBase implements FragmentAdapter<Use
         TextView profileLogout = findViewById(R.id.profileLogoutButton);
         profileLogout.setOnClickListener(this::logout);
 
-        TextView profileSettings = findViewById(R.id.profileSettingsButton);
-        profileSettings.setOnClickListener(this::showProfileSettings);
 
         TextView usernameShort = findViewById(R.id.usernameShort);
         TextView usernameFull = findViewById(R.id.usernameFull);
@@ -165,6 +165,10 @@ public class ProfileFragment extends FragmentBase implements FragmentAdapter<Use
 
         LinearLayout alternateRow = findViewById(R.id.alternateRow);
         alternateRow.setBackgroundColor(0xfff1f1f1);
+
+        FloatingActionButton profileSettings = findViewById(R.id.profileSettingsButton);
+        profileSettings.setOnClickListener(this::showProfileSettings);
+        profileSettings.setBackgroundTintList(ColorStateList.valueOf(color));
     }
 
     public void onUpdateProfile() {
