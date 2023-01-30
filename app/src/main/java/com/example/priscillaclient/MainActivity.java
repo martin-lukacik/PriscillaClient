@@ -21,6 +21,7 @@ import com.example.priscillaclient.viewmodels.user.models.User;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.Locale;
+import java.util.Random;
 
 /*help 10
 answer 20
@@ -80,6 +81,16 @@ public class MainActivity extends ActivityBase {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        int[] styles = new int[] {
+            R.style.Purple,
+            R.style.Blue,
+            R.style.Green,
+            R.style.Red,
+            R.style.Orange,
+        };
+        setTheme(styles[new Random().nextInt(styles.length)]);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 

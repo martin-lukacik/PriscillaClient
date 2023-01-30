@@ -16,4 +16,21 @@
         <item name="colorSpinner">#2D3033</item>
         <item name="colorSlate">#FFFFFF</item>
     </style>
+
+    <style name="Blue" parent="Theme.PriscillaClient">
+        <item name="colorPrimary">#72BCFF</item>
+        <item name="colorPrimaryVariant">#004f99</item>
+    </style>
+    <style name="Green" parent="Theme.PriscillaClient">
+        <item name="colorPrimary">#74E092</item>
+        <item name="colorPrimaryVariant">#017020</item>
+    </style>
+    <style name="Orange" parent="Theme.PriscillaClient">
+        <item name="colorPrimary">#FFC681</item>
+        <item name="colorPrimaryVariant">#955001</item>
+    </style>
+    <style name="Red" parent="Theme.PriscillaClient">
+        <item name="colorPrimary">#FA8D8D</item>
+        <item name="colorPrimaryVariant">#8c1b1a</item>
+    </style>
 </resources>

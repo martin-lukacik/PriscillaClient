@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.View;
@@ -19,16 +18,13 @@ import com.example.priscillaclient.fragments.FragmentBase;
 import com.example.priscillaclient.util.Preferences;
 import com.example.priscillaclient.viewmodels.user.ProfileViewModel;
 import com.example.priscillaclient.viewmodels.user.SettingsViewModel;
-import com.example.priscillaclient.viewmodels.user.models.Country;
+import com.example.priscillaclient.viewmodels.user.UserViewModel;
 import com.example.priscillaclient.viewmodels.user.models.Profile;
 import com.example.priscillaclient.viewmodels.user.models.Settings;
 import com.example.priscillaclient.viewmodels.user.models.User;
-import com.example.priscillaclient.viewmodels.user.UserViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Random;
 
 public class ProfileFragment extends FragmentBase implements FragmentAdapter<User> {
 
@@ -37,15 +33,10 @@ public class ProfileFragment extends FragmentBase implements FragmentAdapter<Use
 
     public ProfileFragment() { }
 
-    int color = 0;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         layoutId = R.layout.fragment_profile;
-
-        Random rand = new Random();
-        color = Color.parseColor(colors[rand.nextInt(colors.length)]);
 
         UserViewModel userViewModel = (UserViewModel) getViewModel(UserViewModel.class);
         userViewModel.getData().observe(this, onResponse(userViewModel));
@@ -68,9 +59,6 @@ public class ProfileFragment extends FragmentBase implements FragmentAdapter<Use
         v.setVisibility(View.GONE);
 
         onUpdateProfile();
-
-        LinearLayout profileHeader = findViewById(R.id.profileHeader);
-        profileHeader.setBackgroundColor(color);
     }
 
     public void logout(View view) {
@@ -164,10 +152,12 @@ public class ProfileFragment extends FragmentBase implements FragmentAdapter<Use
 
         FloatingActionButton profileSettings = findViewById(R.id.profileSettingsButton);
         profileSettings.setOnClickListener(this::showProfileSettings);
-        profileSettings.setBackgroundTintList(ColorStateList.valueOf(color));
     }
 
     public void onUpdateProfile() {
+        if (profile == null)
+            return;
+
         TextView profileYear = findViewById(R.id.profileYear);
         profileYear.setText(profile.yob + "");
 
