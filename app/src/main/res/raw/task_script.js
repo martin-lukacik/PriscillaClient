@@ -1,3 +1,8 @@
+function loadData(data) {
+    let el = document.querySelector("#task-content");
+    el.innerHTML = data;
+}
+
 function up(button) {
     let buttons = document.querySelectorAll(".arrow-up");
     let codes = document.querySelectorAll(".code");
@@ -58,6 +63,19 @@ function down(button) {
     Android.sendData(JSON.stringify(arr));
 }
 
+// TASK_FILL
+
+function loadTaskFill(json) {
+    let arr = JSON.parse(json);
+    let els = document.querySelectorAll(".answer");
+
+    for (let i = 0; i < els.length; ++i) {
+        els[i].value = arr[i];
+    }
+
+    process();
+}
+
 function process() {
     let arr = [];
     let els = document.querySelectorAll(".answer");
@@ -65,6 +83,40 @@ function process() {
     for (let i = 0; i < els.length; ++i) {
         arr.push(els[i].value);
     }
+
+    Android.sendData(JSON.stringify(arr));
+}
+
+// TASK_DRAG
+
+function loadTaskDrag(json) {
+    let arr = JSON.parse(json);
+    let els = document.getElementsByTagName("span");
+
+    for (let i = 0; i < els.length; ++i) {
+        els[i].innerText = arr[i];
+    }
+
+    els = document.getElementsByTagName("button");
+    for (let i = 0; i < els.length; ++i) {
+        els[i].disabled = false;
+        for (let j = arr.length - 1; j >= 0; --j) {
+            if (els[i].innerText == arr[j]) {
+                els[i].disabled = true;
+                arr.splice(0, 1);
+                break;
+            }
+        }
+    }
+
+    Android.sendData(json);
+}
+
+function collectDrag() {
+    let els = document.getElementsByTagName("span");
+    let arr = [];
+    for (let i = 0; i < els.length; ++i)
+        arr.push(els[i].innerText);
 
     Android.sendData(JSON.stringify(arr));
 }
@@ -84,11 +136,7 @@ function add(el) {
         }
     }
 
-    let arr = [];
-    for (let i = 0; i < els.length; ++i)
-        arr.push(els[i].innerText);
-
-    Android.sendData(JSON.stringify(arr));
+    collectDrag();
 }
 
 function remove(el) {

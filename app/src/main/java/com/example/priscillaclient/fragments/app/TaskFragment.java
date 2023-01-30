@@ -6,6 +6,8 @@ import android.app.Dialog;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -24,8 +26,6 @@ import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import androidx.core.content.ContextCompat;
-import androidx.core.widget.CompoundButtonCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.priscillaclient.R;
@@ -38,13 +38,11 @@ import com.example.priscillaclient.util.LoadingDialog;
 import com.example.priscillaclient.util.Preferences;
 import com.example.priscillaclient.util.TaskHelper;
 import com.example.priscillaclient.viewmodels.app.ChaptersViewModel;
-import com.example.priscillaclient.viewmodels.app.CoursesViewModel;
 import com.example.priscillaclient.viewmodels.app.LessonsViewModel;
 import com.example.priscillaclient.viewmodels.app.TaskResultViewModel;
 import com.example.priscillaclient.viewmodels.app.TasksViewModel;
 import com.example.priscillaclient.viewmodels.app.models.Answer;
 import com.example.priscillaclient.viewmodels.app.models.Chapter;
-import com.example.priscillaclient.viewmodels.app.models.Course;
 import com.example.priscillaclient.viewmodels.app.models.Lesson;
 import com.example.priscillaclient.viewmodels.app.models.Task;
 import com.example.priscillaclient.viewmodels.app.models.TaskResult;
@@ -56,6 +54,8 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import io.github.rosemoe.sora.langs.java.JavaLanguage;
 import io.github.rosemoe.sora.widget.CodeEditor;
@@ -90,7 +90,10 @@ public class TaskFragment extends FragmentBase {
     EditText inputEditText;
     LinearLayout stars;
 
-    JavascriptInterface javascriptInterface = new JavascriptInterface(getActivity());
+
+    String css;
+    String javascript;
+    final JavascriptInterface javascriptInterface = new JavascriptInterface(getActivity());
 
     public TaskFragment() { }
 
@@ -153,6 +156,10 @@ public class TaskFragment extends FragmentBase {
             SharedPreferences settings = getActivity().getSharedPreferences(Preferences.PREFS, 0);
             themeId = settings.getInt(Preferences.PREFS_THEME_ID, 0);
         }
+
+        String darkCss = (themeId != 1 && themeId != 3 ? readFile(R.raw.task_style_dark) : "");
+        css = "<style>" + readFile(R.raw.task_style) + darkCss + "</style>";
+        javascript = "<script>" + readFile(R.raw.task_script) + "</script>";
     }
 
     private void onUpdateTasks(ArrayList<Task> tasks) {
@@ -255,11 +262,36 @@ public class TaskFragment extends FragmentBase {
         webView.setVerticalScrollBarEnabled(false);
         webView.setHorizontalScrollBarEnabled(false);
         webView.setHorizontalScrollBarEnabled(false);
+        String html = css + javascript + "<div id=\"task-content\"></div>";
+        webView.loadDataWithBaseURL(null, html, "text/html; charset=utf-8", "UTF-8", null);
 
         buttonTaskHelp.setOnClickListener(this::getTaskHelp);
         buttonTaskNext.setOnClickListener(this::nextTask);
         buttonTaskPrevious.setOnClickListener(this::previousTask);
         buttonTaskSubmit.setOnClickListener(this::submit);
+
+        codeView = new CodeEditor(getActivity());
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        params.setMargins(0, 36, 0, 0);
+        codeView.setLayoutParams(params);
+        codeView.setHighlightCurrentLine(true);
+        codeView.setHighlightBracketPair(true);
+        codeView.setEditorLanguage(new JavaLanguage());
+        codeView.setTypefaceText(Typeface.MONOSPACE);
+
+        codeView.setOnTouchListener((v, event) -> {
+            if (codeView.hasFocus()) {
+                if (event.getY() < 10)
+                    return true;
+                v.getParent().requestDisallowInterceptTouchEvent(true);
+                if ((event.getAction() & MotionEvent.ACTION_MASK)
+                        == MotionEvent.ACTION_SCROLL) {
+                    v.getParent().requestDisallowInterceptTouchEvent(false);
+                    return true;
+                }
+            }
+            return false;
+        });
     }
 
     private void getTaskHelp(View view) {
@@ -337,6 +369,8 @@ public class TaskFragment extends FragmentBase {
                 case TASK_CODE:
                 case TASK_CODE2:
                 case TASK_CODE3:
+                case TASK_ORDER:
+                    // TODO implement
                     break;
 
                 case TASK_INPUT:
@@ -377,12 +411,21 @@ public class TaskFragment extends FragmentBase {
                     }
                     break;
 
+                case TASK_FILL:
+                    webView.evaluateJavascript("loadTaskFill('" + new JSONArray(answerList) + "')", null);
+                    break;
+
+                case TASK_DRAG:
+                    webView.evaluateJavascript("loadTaskDrag('" + new JSONArray(answerList) + "')", null);
+                    break;
+
                 default:
                 {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-                    builder.setMessage(answer.answer)
-                            .setTitle(R.string.help);
+                    builder.setMessage(answer.answer);
+                    builder.setTitle(R.string.help);
+                    builder.setPositiveButton(R.string.ok, null);
 
                     AlertDialog dialog = builder.create();
                     dialog.show();
@@ -403,8 +446,9 @@ public class TaskFragment extends FragmentBase {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-        builder.setMessage(help.answer)
-                .setTitle(R.string.help);
+        builder.setMessage(help.answer);
+        builder.setTitle(R.string.help);
+        builder.setPositiveButton(R.string.ok, null);
 
         AlertDialog dialog = builder.create();
         dialog.show();
@@ -453,12 +497,11 @@ public class TaskFragment extends FragmentBase {
             stars.addView(star);
         }
 
-        view.findViewById(R.id.dialog_dismiss).setOnClickListener(e -> { if (dialog != null) dialog.dismiss(); });
-
         Dialog dialog = new Dialog(getActivity());
         dialog.setCancelable(true);
         dialog.setContentView(view);
         dialog.show();
+        view.findViewById(R.id.dialog_dismiss).setOnClickListener(e -> { dialog.dismiss(); });
     }
 
     private void setButtonsVisibility(Task task) {
@@ -501,25 +544,6 @@ public class TaskFragment extends FragmentBase {
     @SuppressLint("ClickableViewAccessibility")
     public void updateTaskCode(Task task) {
 
-        codeView = new CodeEditor(getActivity());
-        codeView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        codeView.setHighlightCurrentLine(true);
-        codeView.setHighlightBracketPair(true);
-        codeView.setEditorLanguage(new JavaLanguage());
-        codeView.setTypefaceText(Typeface.MONOSPACE);
-
-        codeView.setOnTouchListener((v, event) -> {
-            if (codeView.hasFocus()) {
-                v.getParent().requestDisallowInterceptTouchEvent(true);
-                if ((event.getAction() & MotionEvent.ACTION_MASK)
-                    == MotionEvent.ACTION_SCROLL) {
-                        v.getParent().requestDisallowInterceptTouchEvent(false);
-                        return true;
-                }
-            }
-            return false;
-        });
-
         if (codes.isEmpty()) {
             codes = new ArrayList<>(task.files);
         }
@@ -537,6 +561,7 @@ public class TaskFragment extends FragmentBase {
                 fileNameView.setTextColor(0xff008000);
             }
 
+            fileNameView.setPadding(25, 0, 0, 0);
             fileNameView.setOnClickListener((e) -> {
                 codes.set(currentIndex, codeView.getText().toString());
                 currentIndex = finalI;
@@ -578,14 +603,6 @@ public class TaskFragment extends FragmentBase {
         }
 
         clearTaskLayout();
-
-        int taskStyleId = R.raw.task_style;
-
-        if (themeId == 2)
-            taskStyleId = R.raw.task_style_dark;
-
-        String css = "<style>" + readFile(taskStyleId) + "</style>";
-        String javascript = "<script>" + readFile(R.raw.task_script) + "</script>";
 
         String content = task.content;
 
@@ -647,25 +664,30 @@ public class TaskFragment extends FragmentBase {
                 break;
         }
 
-        webView.loadDataWithBaseURL(null, css + javascript + content, "text/html; charset=utf-8", "UTF-8", null);
+        webView.evaluateJavascript("loadData('" + content.replaceAll("\n", "<br>") + "')", null);
 
-        webView.setWebChromeClient(new WebChromeClient() {
-            @Override
-            public void onProgressChanged(WebView view, int progress) {
-                if (progress == 100) {
-                    webView.setVisibility(View.VISIBLE);
-
-                    taskLayout.setVisibility(View.VISIBLE);
-                }
-            }
-        });
+        taskLayout.setVisibility(View.VISIBLE);
     }
 
     private void clearTaskLayout() {
 
+        Timer timer = new Timer();
+        if (timerTask != null) {
+            currentTaskClock = 0;
+            timerTask.cancel();
+        }
+        timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                ++currentTaskClock;
+            }
+        };
+        timer.scheduleAtFixedRate(timerTask, 1000, 1000);
+
+
         taskLayout.setVisibility(View.GONE);
 
-        webView.setVisibility(View.GONE);
+        //webView.setVisibility(View.GONE);
 
         String str = (currentTask + 1) + " / " + tasks.size();
         taskCount.setText(str);
@@ -697,6 +719,8 @@ public class TaskFragment extends FragmentBase {
 
     ArrayList<String> codes = new ArrayList<>();
 
+    TimerTask timerTask;
+    int currentTaskClock = 0;
     public void submit(View view) {
         if (!tasks.isEmpty()) {
             Task task = tasks.get(currentTask);
@@ -714,7 +738,7 @@ public class TaskFragment extends FragmentBase {
                     taskResultViewModel.saveCode(task.task_id, task.fileNames, codes);
                     dialog = new LoadingDialog(getActivity());
                     dialog.show();
-                    taskResultViewModel.postData(new DoRunProgram(exeType, task, task.fileNames, codes, 60));
+                    taskResultViewModel.postData(new DoRunProgram(exeType, task, task.fileNames, codes, currentTaskClock));
                     return;
 
                 case TASK_READ:
@@ -766,7 +790,7 @@ public class TaskFragment extends FragmentBase {
                     break;
             }
 
-            taskResultViewModel.postData(new DoEvaluateTask(task, answer, 10));
+            taskResultViewModel.postData(new DoEvaluateTask(task, answer, currentTaskClock));
         }
     }
 

@@ -25,7 +25,7 @@ public class CoursesViewModel extends ViewModelBase {
 
     public void fetchData() {
         if (getData().getValue() == null || getData().getValue().isEmpty()) {
-            state.setValue(new ArrayList<>());
+            state.setValue(null);
             apiTask.executeAsync(new GetCourses(), (data, error) -> {
                 setError(error);
                 state.setValue(data);

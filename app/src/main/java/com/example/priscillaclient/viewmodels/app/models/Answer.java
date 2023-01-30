@@ -44,6 +44,15 @@ public class Answer {
             }
         } catch (Exception ignore) { }
 
+        if (answers.isEmpty()) {
+            try {
+                JSONArray json = new JSONArray(answer);
+                for (int i = 0; i < json.length(); ++i) {
+                    answers.add(json.getString(i));
+                }
+            } catch (Exception ignore) { }
+        }
+
         return answers;
     }
 }
