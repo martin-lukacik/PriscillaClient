@@ -162,10 +162,6 @@ public class ProfileFragment extends FragmentBase implements FragmentAdapter<Use
         profileCoins.setText(user.performance.coins + "");
         profileEmail.setText(user.email);
 
-
-        LinearLayout alternateRow = findViewById(R.id.alternateRow);
-        alternateRow.setBackgroundColor(0xfff1f1f1);
-
         FloatingActionButton profileSettings = findViewById(R.id.profileSettingsButton);
         profileSettings.setOnClickListener(this::showProfileSettings);
         profileSettings.setBackgroundTintList(ColorStateList.valueOf(color));
