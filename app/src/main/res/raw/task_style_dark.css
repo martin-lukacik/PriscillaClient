@@ -14,3 +14,9 @@ pre{
 img {
     max-width:100%;
 }
+
+button:disabled,
+button[disabled] {
+    background:lightgrey;
+    color:black !important;
+}

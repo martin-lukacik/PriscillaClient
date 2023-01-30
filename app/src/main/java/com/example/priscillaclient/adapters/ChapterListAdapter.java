@@ -2,9 +2,13 @@ package com.example.priscillaclient.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -89,6 +93,19 @@ public class ChapterListAdapter extends ArrayAdapter<Chapter> {
         if (progressDrawable != null)
             progressDrawable.mutate().setColorFilter(color, PorterDuff.Mode.MULTIPLY);
         holder.codeProgress.setProgressDrawable(progressDrawable);
+
+
+        try {
+            int dataEnd = chapters.get(i).icon.indexOf(",");
+
+            String svg = chapters.get(i).icon.substring(dataEnd + 1);
+            byte[] bytes = Base64.decode(svg, Base64.URL_SAFE);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            Drawable d = new BitmapDrawable(context.getResources(), bitmap);
+            holder.chapterTitle.setCompoundDrawablesWithIntrinsicBounds(d, null, null, null);
+        } catch (Exception ignore) {
+            holder.chapterTitle.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+        }
 
         return view;
     }

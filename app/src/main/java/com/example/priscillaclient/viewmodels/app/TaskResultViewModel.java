@@ -36,6 +36,7 @@ public class TaskResultViewModel extends ViewModelBase {
         apiTask.executeAsync(new DoSaveProgram(taskId, fileNames, fileContents), (data, error) -> {
             setError(error);
             saveState.setValue(data);
+            saveState.setValue(null); // no longer needed
         });
     }
 

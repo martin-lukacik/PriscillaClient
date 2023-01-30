@@ -24,6 +24,8 @@ import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
+import androidx.core.widget.CompoundButtonCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.priscillaclient.R;
@@ -35,10 +37,14 @@ import com.example.priscillaclient.util.JavascriptInterface;
 import com.example.priscillaclient.util.LoadingDialog;
 import com.example.priscillaclient.util.Preferences;
 import com.example.priscillaclient.util.TaskHelper;
+import com.example.priscillaclient.viewmodels.app.ChaptersViewModel;
+import com.example.priscillaclient.viewmodels.app.CoursesViewModel;
 import com.example.priscillaclient.viewmodels.app.LessonsViewModel;
 import com.example.priscillaclient.viewmodels.app.TaskResultViewModel;
 import com.example.priscillaclient.viewmodels.app.TasksViewModel;
 import com.example.priscillaclient.viewmodels.app.models.Answer;
+import com.example.priscillaclient.viewmodels.app.models.Chapter;
+import com.example.priscillaclient.viewmodels.app.models.Course;
 import com.example.priscillaclient.viewmodels.app.models.Lesson;
 import com.example.priscillaclient.viewmodels.app.models.Task;
 import com.example.priscillaclient.viewmodels.app.models.TaskResult;
@@ -131,7 +137,8 @@ public class TaskFragment extends FragmentBase {
             else
                 onUpdateTasks(data);
         });
-        tasksViewModel.getHelpState().observe(this, this::onUpdate);
+        tasksViewModel.getHelpState().observe(this, this::onUpdateHelp);
+        tasksViewModel.getAnswerState().observe(this, this::onUpdateAnswer);
 
         lessonsViewModel = (LessonsViewModel) getViewModel(LessonsViewModel.class);
         lessonsViewModel.getData().observe(this, (data) -> {
@@ -166,11 +173,25 @@ public class TaskFragment extends FragmentBase {
 
         tasksViewModel.fetchData(courseId, chapterId, currentLessonId, false);
 
+        ChaptersViewModel chaptersViewModel = (ChaptersViewModel) getViewModel(ChaptersViewModel.class);
+        ArrayList<Chapter> chapters = chaptersViewModel.getData().getValue();
+
         NavigationView navigationView = findViewById(R.id.navigationView);
         navigationView.bringToFront();
         Menu menu = navigationView.getMenu();
         menu.clear();
-        menu.add(R.string.lessons);
+
+        if (chapters != null && !chapters.isEmpty()) {
+            for (Chapter c : chapters) {
+                if (c.id == chapterId) {
+                    menu.add(c.name);
+                    break;
+                }
+            }
+        } else {
+            menu.add(R.string.lessons);
+        }
+
         menu.getItem(0).setEnabled(false);
 
         DrawerLayout drawer = findViewById(R.id.drawerLayout);
@@ -274,7 +295,7 @@ public class TaskFragment extends FragmentBase {
             tasksViewModel.getHelp(task.task_id);
         });
         builder.setNegativeButton(R.string.answer, (dialog, id) -> {
-
+            tasksViewModel.getAnswer(task.task_id);
         });
         builder.setNeutralButton(R.string.cancel, null);
 
@@ -296,24 +317,101 @@ public class TaskFragment extends FragmentBase {
 
             UserViewModel userViewModel = (UserViewModel) getViewModel(UserViewModel.class);
             userViewModel.fetchData();
-        } else if (response instanceof Answer) {
+        }
+    }
 
-            Answer help = (Answer) response;
+    public void onUpdateAnswer(Answer answer) {
 
-            if (help.type == Answer.AnswerType.HELP) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        if (answer == null)
+            return;
 
-                builder.setMessage(help.answer)
-                        .setTitle(R.string.help);
 
-                AlertDialog dialog = builder.create();
-                dialog.show();
+        if (tasks.isEmpty())
+            return;
 
-                // update coins, xp, etc.
-                UserViewModel userViewModel = (UserViewModel) getViewModel(UserViewModel.class);
-                userViewModel.fetchData();
+        ArrayList<String> answerList = answer.getAnswerList();
+        Task task = tasks.get(currentTask);
+
+        if (answerList.size() > 0) {
+            switch (task.type) {
+                case TASK_CODE:
+                case TASK_CODE2:
+                case TASK_CODE3:
+                    break;
+
+                case TASK_INPUT:
+                    inputEditText.setText(answerList.get(0));
+                    break;
+
+                case TASK_CHOICE:
+                    RadioGroup radioGroup = null;
+
+                    for (int i = 0; i < taskLayout.getChildCount(); ++i) {
+                        if (taskLayout.getChildAt(i) instanceof RadioGroup) {
+                            radioGroup = (RadioGroup) taskLayout.getChildAt(i);
+                        }
+                    }
+
+                    if (radioGroup != null) {
+                        for (int i = 0; i < radioGroup.getChildCount(); ++i) {
+                            RadioButton radioButton = (RadioButton) radioGroup.getChildAt(i);
+                            if (answerList.get(0).equals(radioButton.getText().toString())) {
+                                radioButton.setChecked(true);
+                                break;
+                            }
+                        }
+                    }
+                    break;
+
+                case TASK_MULTI:
+                    for (int i = 0; i < taskLayout.getChildCount(); ++i) {
+                        if (taskLayout.getChildAt(i) instanceof CheckBox) {
+                            CheckBox checkBox = (CheckBox) taskLayout.getChildAt(i);
+
+                            for (String a : answerList) {
+                                if (checkBox.getText().toString().equals(a)) {
+                                    checkBox.setChecked(true);
+                                }
+                            }
+                        }
+                    }
+                    break;
+
+                default:
+                {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+                    builder.setMessage(answer.answer)
+                            .setTitle(R.string.help);
+
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
             }
         }
+
+
+        // update coins, xp, etc.
+        UserViewModel userViewModel = (UserViewModel) getViewModel(UserViewModel.class);
+        userViewModel.fetchData();
+    }
+
+    public void onUpdateHelp(Answer help) {
+
+        if (help == null)
+            return;
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+        builder.setMessage(help.answer)
+                .setTitle(R.string.help);
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+        // update coins, xp, etc.
+        UserViewModel userViewModel = (UserViewModel) getViewModel(UserViewModel.class);
+        userViewModel.fetchData();
     }
 
     public void showRatingDialog(TaskResult eval) {
@@ -376,7 +474,7 @@ public class TaskFragment extends FragmentBase {
             buttonTaskSubmit.setVisibility(View.GONE);
         }
 
-        if (task.passed == 1) {
+        if (task.passed == 1 && task.max_score == 0) {
             buttonTaskHelp.setText(R.string.done);
             buttonTaskHelp.setEnabled(false);
         } else {
@@ -467,8 +565,8 @@ public class TaskFragment extends FragmentBase {
         if (tasks.isEmpty())
             return;
 
-        stars.removeAllViews();
         Task task = tasks.get(currentTask);
+        stars.removeAllViews();
         setButtonsVisibility(task);
 
         if (task.passed == 1 && task.max_score > 0)

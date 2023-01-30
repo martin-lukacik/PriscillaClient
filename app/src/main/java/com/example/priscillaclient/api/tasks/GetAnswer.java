@@ -7,17 +7,23 @@ import org.json.JSONObject;
 
 import java.util.concurrent.Callable;
 
-public class GetHelp implements Callable<Answer> {
+public class GetAnswer implements Callable<Answer> {
 
     private final int taskId;
+    private final Answer.AnswerType type;
 
-    public GetHelp(int taskId) {
+    public GetAnswer(int taskId, Answer.AnswerType type) {
         this.taskId = taskId;
+        this.type = type;
     }
 
     @Override
     public Answer call() throws Exception {
-        HttpConnection connection = new HttpConnection("/get-my-help/" + taskId, "GET");
+        String endPoint = "/get-my-help/";
+        if (type == Answer.AnswerType.ANSWER)
+            endPoint = "/get-my-answer/";
+
+        HttpConnection connection = new HttpConnection(endPoint + taskId, "GET");
 
         if (connection.getErrorStream() != null) {
             throw new Exception(connection.getErrorMessage());
