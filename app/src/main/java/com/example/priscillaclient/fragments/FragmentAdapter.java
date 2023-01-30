@@ -5,7 +5,6 @@ import android.widget.TextView;
 import androidx.lifecycle.Observer;
 
 import com.example.priscillaclient.R;
-import com.example.priscillaclient.viewmodels.ViewModelBase;
 
 import java.util.ArrayList;
 
@@ -13,11 +12,10 @@ public interface FragmentAdapter<T> {
 
     void onUpdate(T response);
 
-    default Observer<T> onResponse(ViewModelBase viewModel) {
+    default Observer<T> onResponse(String error) {
         FragmentBase context = (FragmentBase) this;
         return response -> {
-            if (viewModel.hasError()) {
-                String error = viewModel.getError();
+            if (error != null) {
                 context.showError(error);
                 ((TextView) context.findViewById(R.id.loadingView)).setText(error);
             } else if (response != null) {

@@ -14,7 +14,6 @@
         <!-- Customize your theme here. -->
         <item name="colorCourse">#FFFFFF</item>
         <item name="colorSpinner">#808080</item>
-        <item name="colorSlate">#121212</item>
     </style>
 
 

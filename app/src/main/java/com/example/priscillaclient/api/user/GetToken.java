@@ -9,8 +9,8 @@ import java.util.concurrent.Callable;
 
 public class GetToken implements Callable<Token> {
 
-    public static final int client_id = 2;
-    public static final String client_secret = "iQuGUAzqc187j7IKQ94tTVJAywHCAzYBGAMTxEtr";
+    private static final int client_id = 2;
+    private static final String client_secret = "iQuGUAzqc187j7IKQ94tTVJAywHCAzYBGAMTxEtr";
 
     private final String username;
     private final String password;

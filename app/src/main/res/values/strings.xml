@@ -46,4 +46,6 @@
     <string name="no_results">No results</string>
     <string name="settings_no_changes">No changes</string>
     <string name="balance">Current balance</string>
+    <string name="execution">Execution</string>
+    <string name="compilation">Compilation</string>
 </resources>

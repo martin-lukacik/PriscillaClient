@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -17,6 +16,7 @@ import com.example.priscillaclient.ActivityBase;
 import com.example.priscillaclient.MainActivity;
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.util.LoadingDialog;
+import com.example.priscillaclient.viewmodels.ViewModelBase;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -27,7 +27,7 @@ public abstract class FragmentBase extends Fragment {
     protected int layoutId = 0;
     private View layout;
 
-    protected LoadingDialog dialog;
+    public FragmentBase() { }
 
     public void navigate(int layoutId) {
         navigate(layoutId, null);
@@ -75,7 +75,7 @@ public abstract class FragmentBase extends Fragment {
             ((MainActivity) requireActivity()).showError(error);
     }
 
-    protected ViewModel getViewModel(Class c) {
+    protected <T extends ViewModelBase> T getViewModel(Class<T> c) {
         return ViewModelProviders.of(requireActivity()).get(c);
     }
 }

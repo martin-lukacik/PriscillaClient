@@ -18,15 +18,14 @@ import java.util.ArrayList;
 
 public class ChaptersFragment extends FragmentBase implements FragmentAdapter<ArrayList<Chapter>> {
 
+    // Arguments
     public static final String ARG_COURSE_ID = "courseId";
     public static final String ARG_COURSE_COLOR = "courseColor";
 
-    ChapterListAdapter adapter;
-    private ArrayList<Chapter> chapters = new ArrayList<>();
+    // Members
     private int courseId;
     private int courseColor;
-
-    public ChaptersFragment() { }
+    private ArrayList<Chapter> chapters = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -38,34 +37,32 @@ public class ChaptersFragment extends FragmentBase implements FragmentAdapter<Ar
             courseColor = getArguments().getInt(ARG_COURSE_COLOR);
         }
 
-        ChaptersViewModel viewModel = (ChaptersViewModel) getViewModel(ChaptersViewModel.class);
-        viewModel.getData().observe(this, onResponse(viewModel));
+        ChaptersViewModel viewModel = getViewModel(ChaptersViewModel.class);
+        viewModel.getData().observe(this, onResponse(viewModel.getError()));
         viewModel.fetchData(courseId);
     }
 
     @Override
     public void onViewCreated(@NotNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         setEmptyView(findViewById(R.id.chapterListView));
     }
 
     @Override
     public void onUpdate(ArrayList<Chapter> response) {
-
         chapters = (ArrayList<Chapter>) response;
 
+        ChapterListAdapter adapter = new ChapterListAdapter(getActivity(), chapters, courseColor);
         GridView chaptersListView = findViewById(R.id.chapterListView);
-        adapter = new ChapterListAdapter(getActivity(), chapters, courseColor);
         chaptersListView.setAdapter(adapter);
-        chaptersListView.setOnItemClickListener(this::onItemClick);
+        chaptersListView.setOnItemClickListener(this::onChapterSelected);
     }
 
-    private void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        int chapterId = chapters.get(i).id;
+    private void onChapterSelected(AdapterView<?> adapterView, View view, int i, long l) {
         Bundle args = new Bundle();
         args.putInt(TaskFragment.ARG_COURSE_ID, courseId);
-        args.putInt(TaskFragment.ARG_CHAPTER_ID, chapterId);
+        args.putInt(TaskFragment.ARG_CHAPTER_ID, chapters.get(i).id);
+
         navigate(R.id.taskFragment, args);
     }
 }

@@ -9,7 +9,6 @@ import android.widget.ListView;
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.fragments.FragmentAdapter;
 import com.example.priscillaclient.fragments.FragmentBase;
-import com.example.priscillaclient.util.LoadingDialog;
 import com.example.priscillaclient.viewmodels.browse.CategoriesViewModel;
 import com.example.priscillaclient.viewmodels.browse.models.Category;
 
@@ -19,19 +18,15 @@ import java.util.ArrayList;
 
 public class CategoriesFragment extends FragmentBase implements FragmentAdapter<ArrayList<Category>> {
 
-    ArrayList<Category> categories;
-
-    public CategoriesFragment() { }
+    private ArrayList<Category> categories;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         layoutId = R.layout.fragment_categories;
 
-        dialog = new LoadingDialog(getActivity());
-
         CategoriesViewModel viewModel = (CategoriesViewModel) getViewModel(CategoriesViewModel.class);
-        viewModel.getData().observe(this, onResponse(viewModel));
+        viewModel.getData().observe(this, onResponse(viewModel.getError()));
         viewModel.fetchData();
     }
 

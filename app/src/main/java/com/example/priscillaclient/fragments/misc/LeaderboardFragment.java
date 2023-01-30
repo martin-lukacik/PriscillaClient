@@ -45,8 +45,8 @@ public class LeaderboardFragment extends FragmentBase implements FragmentAdapter
         super.onCreate(savedInstanceState);
         layoutId = R.layout.fragment_leaderboard;
 
-        LeadersViewModel viewModel = (LeadersViewModel) getViewModel(LeadersViewModel.class);
-        viewModel.getData().observe(this, onResponse(viewModel));
+        LeadersViewModel viewModel = getViewModel(LeadersViewModel.class);
+        viewModel.getData().observe(this, onResponse(viewModel.getError()));
         viewModel.fetchData();
     }
 
@@ -62,9 +62,10 @@ public class LeaderboardFragment extends FragmentBase implements FragmentAdapter
         setEmptyView(findViewById(R.id.leaderboardList));
     }
 
+    @Override
     public void onUpdate(ArrayList<Leader> response) {
 
-        SettingsViewModel viewModel = (SettingsViewModel) getViewModel(SettingsViewModel.class);
+        SettingsViewModel viewModel = getViewModel(SettingsViewModel.class);
 
         ListView lv = findViewById(R.id.leaderboardList);
 

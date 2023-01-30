@@ -75,6 +75,7 @@ public class TaskFragment extends FragmentBase {
     ArrayList<Lesson> lessons;
     ArrayList<Task> tasks;
 
+    UserViewModel userViewModel;
     LessonsViewModel lessonsViewModel;
     TasksViewModel tasksViewModel;
     TaskResultViewModel taskResultViewModel;
@@ -90,12 +91,11 @@ public class TaskFragment extends FragmentBase {
     EditText inputEditText;
     LinearLayout stars;
 
+    LoadingDialog dialog;
 
     String css;
     String javascript;
     final JavascriptInterface javascriptInterface = new JavascriptInterface(getActivity());
-
-    public TaskFragment() { }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -107,13 +107,11 @@ public class TaskFragment extends FragmentBase {
             chapterId = getArguments().getInt(ARG_CHAPTER_ID);
         }
 
-        taskResultViewModel = (TaskResultViewModel) getViewModel(TaskResultViewModel.class);
+        taskResultViewModel = getViewModel(TaskResultViewModel.class);
         taskResultViewModel.clear();
         taskResultViewModel.getData().observe(this, (data) -> {
-            if (taskResultViewModel.hasError())
-                showError(taskResultViewModel.getError());
-            else
-                onUpdate(data);
+            showError(taskResultViewModel.getError());
+            onUpdate(data);
             if (dialog != null)
                 dialog.dismiss();
         });
@@ -124,26 +122,22 @@ public class TaskFragment extends FragmentBase {
                 showError(data);
         });
         taskResultViewModel.getLoadedCode().observe(this, (data) -> {
-            if (taskResultViewModel.hasError())
-                showError(taskResultViewModel.getError());
-            else if (tasks != null && !tasks.isEmpty()) {
-                codes = new ArrayList<>(data.y);//tasks.get(currentTask).files = data.y;
-
+            showError(taskResultViewModel.getError());
+            if (tasks != null && !tasks.isEmpty()) {
+                codes = new ArrayList<>(data.y);
                 updateTaskCode(tasks.get(currentTask));
             }
         });
 
-        tasksViewModel = (TasksViewModel) getViewModel(TasksViewModel.class);
+        tasksViewModel = getViewModel(TasksViewModel.class);
         tasksViewModel.getData().observe(this, (data) -> {
-            if (tasksViewModel.hasError())
-                showError(tasksViewModel.getError());
-            else
-                onUpdateTasks(data);
+            showError(tasksViewModel.getError());
+            onUpdateTasks(data);
         });
         tasksViewModel.getHelpState().observe(this, this::onUpdateHelp);
         tasksViewModel.getAnswerState().observe(this, this::onUpdateAnswer);
 
-        lessonsViewModel = (LessonsViewModel) getViewModel(LessonsViewModel.class);
+        lessonsViewModel = getViewModel(LessonsViewModel.class);
         lessonsViewModel.getData().observe(this, (data) -> {
             if (lessonsViewModel.hasError())
                 showError(lessonsViewModel.getError());
@@ -180,7 +174,7 @@ public class TaskFragment extends FragmentBase {
 
         tasksViewModel.fetchData(courseId, chapterId, currentLessonId, false);
 
-        ChaptersViewModel chaptersViewModel = (ChaptersViewModel) getViewModel(ChaptersViewModel.class);
+        ChaptersViewModel chaptersViewModel = getViewModel(ChaptersViewModel.class);
         ArrayList<Chapter> chapters = chaptersViewModel.getData().getValue();
 
         NavigationView navigationView = findViewById(R.id.navigationView);
@@ -263,7 +257,7 @@ public class TaskFragment extends FragmentBase {
         webView.setVerticalScrollBarEnabled(false);
         webView.setHorizontalScrollBarEnabled(false);
         webView.setHorizontalScrollBarEnabled(false);
-        String loadingContent = "<div style=\"display:block;width:99%;position:absolute;top:50%;text-align:center;font-size:36px\">" +  getResources().getString(R.string.loading) + "</div>";
+        String loadingContent = "<div style=\"display:block;width:99%;position:absolute;top:50%;text-align:center;font-size:36px\">" +  getString(R.string.loading) + "</div>";
         String html = css + javascript + "<div id=\"task-content\">" + loadingContent + "</div>";
         webView.loadDataWithBaseURL(null, html, "text/html; charset=utf-8", "UTF-8", null);
 
@@ -322,12 +316,11 @@ public class TaskFragment extends FragmentBase {
             priceAnswer = 40;
         }
 
-        String help = getResources().getString(R.string.help);
-        String answer = getResources().getString(R.string.answer);
-        String balance = getResources().getString(R.string.balance);
-        String coins = getResources().getString(R.string.coins).toLowerCase(Locale.ROOT);
+        String help = getString(R.string.help);
+        String answer = getString(R.string.answer);
+        String balance = getString(R.string.balance);
+        String coins = getString(R.string.coins).toLowerCase(Locale.ROOT);
 
-        UserViewModel userViewModel = (UserViewModel) getViewModel(UserViewModel.class);
         User user = userViewModel.getData().getValue();
 
         int currentBalance = (user != null ? user.performance.coins : 0);
@@ -346,12 +339,8 @@ public class TaskFragment extends FragmentBase {
         builder.setTitle(R.string.help);
         builder.setMessage(Html.fromHtml(message));
 
-        builder.setPositiveButton(R.string.help, (dialog, id) -> {
-            tasksViewModel.getHelp(task.task_id);
-        });
-        builder.setNegativeButton(R.string.answer, (dialog, id) -> {
-            tasksViewModel.getAnswer(task.task_id);
-        });
+        builder.setPositiveButton(R.string.help, (dialog, id) -> tasksViewModel.getHelp(task.task_id));
+        builder.setNegativeButton(R.string.answer, (dialog, id) -> tasksViewModel.getAnswer(task.task_id));
         builder.setNeutralButton(R.string.cancel, null);
 
         Dialog d = builder.create();
@@ -369,7 +358,6 @@ public class TaskFragment extends FragmentBase {
         tasksViewModel.fetchData(courseId, chapterId, currentLessonId, true);
         showRatingDialog(result);
 
-        UserViewModel userViewModel = (UserViewModel) getViewModel(UserViewModel.class);
         userViewModel.fetchData();
     }
 
@@ -458,7 +446,6 @@ public class TaskFragment extends FragmentBase {
 
 
         // update coins, xp, etc.
-        UserViewModel userViewModel = (UserViewModel) getViewModel(UserViewModel.class);
         userViewModel.fetchData();
     }
 
@@ -477,7 +464,6 @@ public class TaskFragment extends FragmentBase {
         dialog.show();
 
         // update coins, xp, etc.
-        UserViewModel userViewModel = (UserViewModel) getViewModel(UserViewModel.class);
         userViewModel.fetchData();
     }
 
@@ -491,12 +477,12 @@ public class TaskFragment extends FragmentBase {
 
         boolean limitScrollView = false;
         if (eval.execution != null && !eval.execution.isEmpty()) {
-            execution.setText("Execution:\n\n" + eval.execution);
+            execution.setText(getString(R.string.execution) + "\n\n" + eval.execution);
             execution.setVisibility(View.VISIBLE);
             limitScrollView = true;
         }
         if (eval.compilation != null && !eval.compilation.isEmpty()) {
-            compilation.setText("Compilation:\n\n" + eval.compilation);
+            compilation.setText(getString(R.string.compilation) + "\n\n" + eval.compilation);
             compilation.setVisibility(View.VISIBLE);
             limitScrollView = true;
         }
@@ -524,7 +510,7 @@ public class TaskFragment extends FragmentBase {
         dialog.setCancelable(true);
         dialog.setContentView(view);
         dialog.show();
-        view.findViewById(R.id.dialog_dismiss).setOnClickListener(e -> { dialog.dismiss(); });
+        view.findViewById(R.id.dialog_dismiss).setOnClickListener(e -> dialog.dismiss());
     }
 
     private void setButtonsVisibility(Task task) {

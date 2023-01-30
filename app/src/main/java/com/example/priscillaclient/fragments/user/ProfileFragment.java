@@ -4,11 +4,9 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.ColorStateList;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.priscillaclient.LoginActivity;
@@ -39,7 +37,7 @@ public class ProfileFragment extends FragmentBase implements FragmentAdapter<Use
         layoutId = R.layout.fragment_profile;
 
         UserViewModel userViewModel = (UserViewModel) getViewModel(UserViewModel.class);
-        userViewModel.getData().observe(this, onResponse(userViewModel));
+        userViewModel.getData().observe(this, onResponse(userViewModel.getError()));
 
         ProfileViewModel profileViewModel = (ProfileViewModel) getViewModel(ProfileViewModel.class);
         profile = profileViewModel.getData().getValue();
@@ -92,13 +90,6 @@ public class ProfileFragment extends FragmentBase implements FragmentAdapter<Use
     public void showProfileSettings(View view) {
         navigate(R.id.settingsFragment);
     }
-
-    String[] colors = new String[] {
-        "#0085FF",
-        "#008A34",
-        "#F98600",
-        "#E92C2C",
-    };
 
     @SuppressLint("SetTextI18n")
     public void onUpdate(User user) {
@@ -159,16 +150,16 @@ public class ProfileFragment extends FragmentBase implements FragmentAdapter<Use
             return;
 
         TextView profileYear = findViewById(R.id.profileYear);
-        profileYear.setText(profile.yob + "");
+        profileYear.setText(String.valueOf(profile.yob));
 
         TextView profileGroup = findViewById(R.id.profileGroup);
-        profileGroup.setText(profile.groups + "");
+        profileGroup.setText(profile.groups);
 
         TextView profileNick = findViewById(R.id.profileNick);
         profileNick.setTextColor(0xffffffff);
-        profileNick.setText(profile.nickname + "");
+        profileNick.setText(profile.nickname);
 
         TextView profileCountry = findViewById(R.id.profileCountry);
-        profileCountry.setText(settings.getCountryFromId(profile.country_id).country_name + "");
+        profileCountry.setText(settings.getCountryFromId(profile.country_id).country_name);
     }
 }

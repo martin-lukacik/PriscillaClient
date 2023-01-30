@@ -29,7 +29,6 @@ import com.example.priscillaclient.viewmodels.browse.CategoriesViewModel;
 import com.example.priscillaclient.viewmodels.user.ProfileViewModel;
 import com.example.priscillaclient.viewmodels.user.SettingsViewModel;
 import com.example.priscillaclient.viewmodels.user.UserViewModel;
-import com.example.priscillaclient.viewmodels.user.models.Language;
 import com.example.priscillaclient.viewmodels.user.models.Profile;
 import com.example.priscillaclient.viewmodels.user.models.Settings;
 import com.example.priscillaclient.viewmodels.user.models.User;
@@ -39,6 +38,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Calendar;
 
 public class SettingsFragment extends FragmentBase implements FragmentAdapter<Profile> {
+
+    ProfileViewModel profileViewModel;
 
     Profile profile;
     Settings settings;
@@ -67,8 +68,8 @@ public class SettingsFragment extends FragmentBase implements FragmentAdapter<Pr
         this.settings = ((SettingsViewModel) getViewModel(SettingsViewModel.class)).getData().getValue();
 
         state = savedInstanceState;
-        ProfileViewModel profileViewModel = (ProfileViewModel) getViewModel(ProfileViewModel.class);
-        profileViewModel.getData().observe(this, onResponse(profileViewModel));
+        profileViewModel = getViewModel(ProfileViewModel.class);
+        profileViewModel.getData().observe(this, onResponse(profileViewModel.getError()));
     }
 
     public void onUpdate(Profile profile) {
@@ -180,7 +181,6 @@ public class SettingsFragment extends FragmentBase implements FragmentAdapter<Pr
                 public void onChanged(User user) {
                     if (user == null)
                         return;
-                    ProfileViewModel profileViewModel = (ProfileViewModel) getViewModel(ProfileViewModel.class);
                     profileViewModel.fetchData();
                     userViewModel.getData().removeObserver(this);
                 }

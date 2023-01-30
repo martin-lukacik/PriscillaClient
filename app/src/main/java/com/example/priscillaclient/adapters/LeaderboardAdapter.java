@@ -2,8 +2,6 @@ package com.example.priscillaclient.adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,9 +57,9 @@ public class LeaderboardAdapter extends ArrayAdapter<Leader> {
 
         Leader leader = leaders.get(i);
 
-        holder.position.setText("" + (i + 1));
+        holder.position.setText(String.valueOf(i + 1));
         holder.name.setText(leader.nickname);
-        holder.xp.setText(leader.xp + " XP");
+        holder.xp.setText(leader.xp + " " + R.string.xp);
 
         for (Country c : countries) {
             if (c.country_name.equals(leader.country)) {
@@ -70,17 +68,7 @@ public class LeaderboardAdapter extends ArrayAdapter<Leader> {
                 break;
             }
         }
-/*
-        int color = 0;
-        if (i == 0) {
-            color = Color.parseColor("#de9700");
-        } else if (i == 1) {
-            color = Color.parseColor("#6e6d6a");
-        } else if (i == 2) {
-            color = Color.parseColor("#78552b");
-        }
-        view.setBackgroundColor(color);
-*/
+
         return view;
     }
 }

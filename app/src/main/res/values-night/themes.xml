@@ -14,7 +14,6 @@
         <!-- Customize your theme here. -->
         <item name="colorCourse">#2D3033</item>
         <item name="colorSpinner">#2D3033</item>
-        <item name="colorSlate">#FFFFFF</item>
     </style>
 
     <style name="Purple" parent="Theme.PriscillaClient">

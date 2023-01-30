@@ -21,93 +21,107 @@ import java.util.ArrayList;
 
 public class CoursesFragment extends FragmentBase implements FragmentAdapter<ArrayList<Course>> {
 
-    ArrayList<Course> courses;
-    CourseListAdapter adapter;
+    // Members
+    private CourseListAdapter adapter;
+    private ArrayList<Course> courses;
 
-    public CoursesFragment() { }
+    // View models
+    private CoursesViewModel viewModel;
+
+    // Views
+    private GridView courseListView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         layoutId = R.layout.fragment_courses;
+
+        viewModel = getViewModel(CoursesViewModel.class);
+        viewModel.getData().observe(this, onResponse(viewModel.getError()));
+        viewModel.fetchData();
     }
 
     @Override
     public void onViewCreated(@NotNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        CoursesViewModel viewModel = (CoursesViewModel) getViewModel(CoursesViewModel.class);
-        viewModel.getData().observe(this, onResponse(viewModel));
-        viewModel.fetchData();
-
         setEmptyView(findViewById(R.id.courseListView));
+
+        GridView courseListView = findViewById(R.id.courseListView);
+        courseListView.setOnItemClickListener(this::onCourseSelected);
+        courseListView.setOnItemLongClickListener(this::onCoursePinned);
     }
 
-    void pinCourse(int courseId) {
+    @Override
+    public void onUpdate(ArrayList<Course> response) {
+        onUpdateCourses(response);
+
+        SharedPreferences settings = requireActivity().getApplicationContext().getSharedPreferences(Preferences.PREFS, 0);
+        int pinnedCourseId = settings.getInt(Preferences.PREFS_PINNED_COURSE_ID, -1);
+
+        setPinnedCourse(pinnedCourseId);
+    }
+
+    private void setPinnedCourse(int courseId) {
+        int courseIndex = -1;
+
         for (int i = 0; i < courses.size(); ++i) {
-            courses.get(i).isPinned = false;
+            Course course = courses.get(i);
+            course.isPinned = false;
 
             if (courseId == courses.get(i).course_id) {
-                courses.get(i).isPinned = true;
-                Course c = courses.remove(i);
-                courses.add(0, c);
+                course.isPinned = true;
+                courseIndex = i;
             }
+        }
+
+        if (courseIndex != -1) {
+            Course c = courses.remove(courseIndex);
+            courses.add(0, c);
         }
     }
 
-    private boolean coursePinned(AdapterView<?> adapterView, View view, int i, long l) {
+    private boolean onCoursePinned(AdapterView<?> adapterView, View view, int i, long l) {
+        int courseId = courses.get(i).course_id;
 
         SharedPreferences settings = requireActivity().getApplicationContext().getSharedPreferences(Preferences.PREFS, 0);
         int savedPinId = settings.getInt(Preferences.PREFS_PINNED_COURSE_ID, -1);
 
-        Course course = courses.get(i);
         if (savedPinId == -1) {
-            togglePin(course.course_id);
+            savePinnedCourse(courseId);
+            setPinnedCourse(courseId);
             adapter.notifyDataSetChanged();
-        } else if (course.course_id == savedPinId) {
-            togglePin(-1);
-            CoursesViewModel viewModel = (CoursesViewModel) getViewModel(CoursesViewModel.class);
+        } else if (courseId == savedPinId) {
+            savePinnedCourse(-1);
+            setPinnedCourse(-1);
 
-            if (viewModel.getData().getValue() != null) {
-                courses = new ArrayList<>(viewModel.getData().getValue());
-                adapter = new CourseListAdapter(getActivity(), courses);
-                GridView courseListView = requireActivity().findViewById(R.id.courseListView);
-                courseListView.setAdapter(adapter);
-            }
+            onUpdateCourses(viewModel.getData().getValue());
         }
 
         return true;
     }
 
-    private void togglePin(int courseId) {
+    private void onUpdateCourses(ArrayList<Course> courses) {
+        if (courses != null) {
+            this.courses = new ArrayList<>(courses);
+            adapter = new CourseListAdapter(getActivity(), this.courses);
+            GridView courseListView = requireActivity().findViewById(R.id.courseListView);
+            courseListView.setAdapter(adapter);
+        }
+    }
+
+    private void savePinnedCourse(int courseId) {
         SharedPreferences settings = requireActivity().getApplicationContext().getSharedPreferences(Preferences.PREFS, 0);
         SharedPreferences.Editor editor = settings.edit();
         editor.putInt(Preferences.PREFS_PINNED_COURSE_ID, courseId);
         editor.apply();
-        pinCourse(courseId);
     }
 
-    private void courseSelected(AdapterView<?> adapterView, View view, int i, long l){
-        int courseId = courses.get(i).course_id;
-        int courseColor = Color.parseColor(courses.get(i).area_color);
+    private void onCourseSelected(AdapterView<?> adapterView, View view, int i, long l){
+        Course course = courses.get(i);
         Bundle args = new Bundle();
-        args.putInt(ChaptersFragment.ARG_COURSE_ID, courseId);
-        args.putInt(ChaptersFragment.ARG_COURSE_COLOR, courseColor);
+        args.putInt(ChaptersFragment.ARG_COURSE_ID, course.course_id);
+        args.putInt(ChaptersFragment.ARG_COURSE_COLOR, Color.parseColor(course.area_color));
+
         navigate(R.id.chaptersFragment, args);
-    }
-
-    public void onUpdate(ArrayList<Course> response) {
-        courses = new ArrayList<>(response);
-
-        SharedPreferences settings = requireActivity().getApplicationContext().getSharedPreferences(Preferences.PREFS, 0);
-        int pinnedCourseId = settings.getInt(Preferences.PREFS_PINNED_COURSE_ID, -1);
-        pinCourse(pinnedCourseId);
-
-        adapter = new CourseListAdapter(getActivity(), courses);
-
-        GridView courseListView = requireActivity().findViewById(R.id.courseListView);
-        courseListView.setAdapter(adapter);
-        courseListView.setOnItemClickListener(this::courseSelected);
-        courseListView.setOnItemLongClickListener(this::coursePinned);
     }
 }
