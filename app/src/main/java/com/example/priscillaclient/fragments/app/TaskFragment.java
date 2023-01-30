@@ -8,6 +8,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -48,6 +49,7 @@ import com.example.priscillaclient.viewmodels.app.models.Task;
 import com.example.priscillaclient.viewmodels.app.models.TaskResult;
 import com.example.priscillaclient.viewmodels.user.UserViewModel;
 import com.example.priscillaclient.viewmodels.user.models.Theme;
+import com.example.priscillaclient.viewmodels.user.models.User;
 import com.google.android.material.navigation.NavigationView;
 
 import org.jetbrains.annotations.NotNull;
@@ -281,8 +283,6 @@ public class TaskFragment extends FragmentBase {
 
         codeView.setOnTouchListener((v, event) -> {
             if (codeView.hasFocus()) {
-                if (event.getY() < 10)
-                    return true;
                 v.getParent().requestDisallowInterceptTouchEvent(true);
                 if ((event.getAction() & MotionEvent.ACTION_MASK)
                         == MotionEvent.ACTION_SCROLL) {
@@ -314,15 +314,23 @@ public class TaskFragment extends FragmentBase {
         String help = getResources().getString(R.string.help);
         String answer = getResources().getString(R.string.answer);
 
+        UserViewModel userViewModel = (UserViewModel) getViewModel(UserViewModel.class);
+        User user = userViewModel.getData().getValue();
+
+        int balance = (user != null ? user.performance.coins : 0);
+
+        String message =
+                help +
+                ": " + "<b>" + priceHelp + " coins</b>" +
+                "<br><br>" +
+                answer +
+                ": " + "<b>" + priceAnswer + " coins</b>" +
+                "<br><br><br>" + "Current balance: <b>" + balance + " coins</b>";
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.help);
-        builder.setMessage(
-                help +
-                " - " + priceHelp +
-                "\n\n" +
-                answer +
-                " - " + priceAnswer
-        );
+        builder.setMessage(Html.fromHtml(message));
+
         builder.setPositiveButton(R.string.help, (dialog, id) -> {
             tasksViewModel.getHelp(task.task_id);
         });
