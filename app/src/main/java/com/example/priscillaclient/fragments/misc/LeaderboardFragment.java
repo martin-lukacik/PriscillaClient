@@ -10,6 +10,7 @@ import com.example.priscillaclient.fragments.FragmentAdapter;
 import com.example.priscillaclient.fragments.FragmentBase;
 import com.example.priscillaclient.viewmodels.misc.LeadersViewModel;
 import com.example.priscillaclient.viewmodels.misc.models.Leader;
+import com.example.priscillaclient.viewmodels.user.SettingsViewModel;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -62,11 +63,14 @@ public class LeaderboardFragment extends FragmentBase implements FragmentAdapter
     }
 
     public void onUpdate(ArrayList<Leader> response) {
-        adapter = new LeaderboardAdapter(getActivity(), response);
+
+        SettingsViewModel viewModel = (SettingsViewModel) getViewModel(SettingsViewModel.class);
+
         ListView lv = findViewById(R.id.leaderboardList);
 
-        if (lv != null)
+        if (viewModel.getData().getValue() != null && lv != null) {
+            adapter = new LeaderboardAdapter(getActivity(), response, viewModel.getData().getValue().countries);
             lv.setAdapter(adapter);
-
+        }
     }
 }

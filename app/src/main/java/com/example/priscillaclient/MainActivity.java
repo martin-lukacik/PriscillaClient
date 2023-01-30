@@ -3,6 +3,7 @@ package com.example.priscillaclient;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -93,6 +94,9 @@ public class MainActivity extends ActivityBase {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ImageView actionBarCoins = findViewById(R.id.actionBarCoins);
+        actionBarCoins.setColorFilter(0xffffffff);
 
         int courseId = getIntent().getIntExtra(INTENT_COURSE_ID, -1);
 

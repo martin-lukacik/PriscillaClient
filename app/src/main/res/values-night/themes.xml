@@ -17,6 +17,10 @@
         <item name="colorSlate">#FFFFFF</item>
     </style>
 
+    <style name="Purple" parent="Theme.PriscillaClient">
+        <item name="colorPrimary">@color/purple_200</item>
+        <item name="colorPrimaryVariant">@color/purple_700</item>
+    </style>
     <style name="Blue" parent="Theme.PriscillaClient">
         <item name="colorPrimary">#72BCFF</item>
         <item name="colorPrimaryVariant">#004f99</item>
