@@ -231,5 +231,6 @@
             android:layout_marginBottom="16dp"
             app:borderWidth="0dp"
             android:contentDescription="@string/options"
+            app:tint="?colorPrimary"
             android:src="@android:drawable/ic_menu_edit" />
 </androidx.constraintlayout.widget.ConstraintLayout>
