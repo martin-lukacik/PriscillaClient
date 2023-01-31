@@ -29,7 +29,7 @@ public final class TaskHelper {
             radioButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
             TypedValue typedValue = new TypedValue();
-            context.getTheme().resolveAttribute(R.attr.colorPrimaryVariant, typedValue, true);
+            context.getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
             int color = typedValue.data;
             CompoundButtonCompat.setButtonTintList(radioButton, ColorStateList.valueOf(color));
 
@@ -47,7 +47,7 @@ public final class TaskHelper {
             checkBox.setText(answer);
 
             TypedValue typedValue = new TypedValue();
-            context.getTheme().resolveAttribute(R.attr.colorPrimaryVariant, typedValue, true);
+            context.getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
             int color = typedValue.data;
             CompoundButtonCompat.setButtonTintList(checkBox, ColorStateList.valueOf(color));
 

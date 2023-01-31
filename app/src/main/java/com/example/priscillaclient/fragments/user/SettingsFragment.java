@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
 
 import com.example.priscillaclient.ActivityBase;
+import com.example.priscillaclient.MainActivity;
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.fragments.FragmentAdapter;
 import com.example.priscillaclient.fragments.FragmentBase;
@@ -65,7 +66,7 @@ public class SettingsFragment extends FragmentBase implements FragmentAdapter<Pr
         super.onCreate(savedInstanceState);
         layoutId = R.layout.fragment_settings;
 
-        this.settings = ((SettingsViewModel) getViewModel(SettingsViewModel.class)).getData().getValue();
+        this.settings = (getViewModel(SettingsViewModel.class)).getData().getValue();
 
         state = savedInstanceState;
         profileViewModel = getViewModel(ProfileViewModel.class);
@@ -173,7 +174,7 @@ public class SettingsFragment extends FragmentBase implements FragmentAdapter<Pr
             || !profile.surname.equals(surname)
             || profile.theme_id != theme_id
         ) {
-            UserViewModel userViewModel = (UserViewModel) getViewModel(UserViewModel.class);
+            UserViewModel userViewModel = getViewModel(UserViewModel.class);
             userViewModel.update(age, content_type_id, country, group, lang, name, nick, surname, theme_id);
 
             Observer<User> observer = new Observer<User>() {
@@ -185,8 +186,8 @@ public class SettingsFragment extends FragmentBase implements FragmentAdapter<Pr
                     userViewModel.getData().removeObserver(this);
                 }
             };
-            userViewModel.getData().observe(this, observer);
 
+            userViewModel.getData().observe(this, observer);
 
             String savedShortcut = settings.getString(Preferences.PREFS_LANGUAGE_SHORTCUT, "en");
             if (!savedShortcut.equals(shortcut)) {
@@ -201,6 +202,8 @@ public class SettingsFragment extends FragmentBase implements FragmentAdapter<Pr
             } else if (isThemeChanged) {
                 ((ActivityBase) requireActivity()).setDarkMode(theme_id, true);
             }
+
+            requireActivity().onBackPressed(); // navigate back to profile
         } else {
             String msg = getResources().getString(R.string.settings_no_changes);
             Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
@@ -208,25 +211,25 @@ public class SettingsFragment extends FragmentBase implements FragmentAdapter<Pr
     }
 
     private void clearLocalizedViewModels() {
-        CoursesViewModel coursesViewModel = (CoursesViewModel) getViewModel(CoursesViewModel.class);
+        CoursesViewModel coursesViewModel = getViewModel(CoursesViewModel.class);
         coursesViewModel.clear();
 
-        ChaptersViewModel chaptersViewModel = (ChaptersViewModel) getViewModel(ChaptersViewModel.class);
+        ChaptersViewModel chaptersViewModel = getViewModel(ChaptersViewModel.class);
         chaptersViewModel.clear();
 
-        LessonsViewModel lessonsViewModel = (LessonsViewModel) getViewModel(LessonsViewModel.class);
+        LessonsViewModel lessonsViewModel = getViewModel(LessonsViewModel.class);
         lessonsViewModel.clear();
 
-        TasksViewModel tasksViewModel = (TasksViewModel) getViewModel(TasksViewModel.class);
+        TasksViewModel tasksViewModel = getViewModel(TasksViewModel.class);
         tasksViewModel.clear();
 
-        CategoriesViewModel categoriesViewModel = (CategoriesViewModel) getViewModel(CategoriesViewModel.class);
+        CategoriesViewModel categoriesViewModel = getViewModel(CategoriesViewModel.class);
         categoriesViewModel.clear();
 
-        AreasViewModel areasViewModel = (AreasViewModel) getViewModel(AreasViewModel.class);
+        AreasViewModel areasViewModel = getViewModel(AreasViewModel.class);
         areasViewModel.clear();
 
-        AreaCoursesViewModel areaCoursesViewModel = (AreaCoursesViewModel) getViewModel(AreaCoursesViewModel.class);
+        AreaCoursesViewModel areaCoursesViewModel = getViewModel(AreaCoursesViewModel.class);
         areaCoursesViewModel.clear();
     }
 

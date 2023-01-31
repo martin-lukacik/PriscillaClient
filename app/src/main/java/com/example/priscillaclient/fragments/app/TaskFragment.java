@@ -3,6 +3,7 @@ package com.example.priscillaclient.fragments.app;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Html;
@@ -11,8 +12,10 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -64,7 +67,7 @@ public class TaskFragment extends FragmentBase {
 
     private int courseId;
     private int chapterId;
-    private int currentTask = 0;
+    private int currentTask;
     private int currentLessonId = 0;
 
     ArrayList<Lesson> lessons;
@@ -116,11 +119,7 @@ public class TaskFragment extends FragmentBase {
         });
         lessonsViewModel.fetchData(chapterId);
 
-        // Task list
-        tasksViewModel.getData().observe(this, (data) -> {
-            showError(tasksViewModel.getError());
-            onUpdateTasks(data);
-        });
+        // Task states
         tasksViewModel.getHelpState().observe(this, this::onUpdateHelp);
         tasksViewModel.getAnswerState().observe(this, this::onUpdateAnswer);
 
@@ -150,6 +149,15 @@ public class TaskFragment extends FragmentBase {
         String darkCss = (isDarkModeEnabled() ? readFile(R.raw.task_style_dark) : "");
         css = "<style>" + readFile(R.raw.task_style) + darkCss + "</style>";
         javascript = "<script>" + readFile(R.raw.task_script) + "</script>";
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        DrawerLayout drawer = findViewById(R.id.drawerLayout);
+        outState.putBoolean("drawerStatus", drawer.isOpen());
+        outState.putInt("currentTask", currentTask); // TODO remember task AND lesson
     }
 
     private void onUpdateTasks(ArrayList<Task> tasks) {
@@ -202,9 +210,6 @@ public class TaskFragment extends FragmentBase {
         }
 
         navigationView.invalidate();
-
-        DrawerLayout drawer = findViewById(R.id.drawerLayout);
-        drawer.open();
     }
 
     private boolean onSelectLesson(MenuItem item, int lessonId) {
@@ -254,6 +259,18 @@ public class TaskFragment extends FragmentBase {
         String loadingContent = "<div style=\"display:block;width:99%;position:absolute;top:50%;text-align:center;font-size:36px\">" +  getString(R.string.loading) + "</div>";
         String html = css + javascript + "<div id=\"task-content\">" + loadingContent + "</div>";
         webView.loadDataWithBaseURL(null, html, "text/html; charset=utf-8", "UTF-8", null);
+        webView.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+
+                // Task list needs webView to be ready
+                tasksViewModel.getData().observe(getViewLifecycleOwner(), (data) -> {
+                    showError(tasksViewModel.getError());
+                    onUpdateTasks(data);
+                });
+            }
+        });
 
         buttonTaskHelp.setOnClickListener(this::getTaskHelp);
         buttonTaskNext.setOnClickListener(this::nextTask);
@@ -289,8 +306,16 @@ public class TaskFragment extends FragmentBase {
             return false;
         });
 
-        ScrollView taskScrollView = findViewById(R.id.taskScrollView);
-        taskScrollView.scrollTo(0, 0);
+        boolean drawerStatus = true;
+        if (savedInstanceState != null) {
+            currentTask = savedInstanceState.getInt("currentTask");
+            drawerStatus = savedInstanceState.getBoolean("drawerStatus");
+        }
+
+        if (drawerStatus) {
+            DrawerLayout drawer = findViewById(R.id.drawerLayout);
+            drawer.open();
+        }
     }
 
     private void getTaskHelp(View view) {
@@ -580,6 +605,12 @@ public class TaskFragment extends FragmentBase {
     int currentIndex = 0;
     public void updateTaskList(ArrayList<Task> tasks) {
 
+        View view = requireActivity().getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+
         if (tasks.isEmpty())
             return;
 
@@ -641,9 +672,6 @@ public class TaskFragment extends FragmentBase {
         webView.evaluateJavascript("loadData('" + content.replaceAll("\n", "<br>") + "')", null);
 
         taskLayout.setVisibility(View.VISIBLE);
-
-        ScrollView taskScrollView = findViewById(R.id.taskScrollView);
-        taskScrollView.scrollTo(0, 0);
     }
 
     private void clearTaskLayout() {
@@ -663,8 +691,6 @@ public class TaskFragment extends FragmentBase {
 
 
         taskLayout.setVisibility(View.INVISIBLE);
-
-        //webView.setVisibility(View.GONE);
 
         String str = (currentTask + 1) + " / " + tasks.size();
         taskCount.setText(str);
