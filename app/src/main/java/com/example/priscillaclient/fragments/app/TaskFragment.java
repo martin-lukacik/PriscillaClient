@@ -106,6 +106,7 @@ public class TaskFragment extends FragmentBase {
         taskResultViewModel = getViewModel(TaskResultViewModel.class);
         tasksViewModel = getViewModel(TasksViewModel.class);
         lessonsViewModel = getViewModel(LessonsViewModel.class);
+        userViewModel = getViewModel(UserViewModel.class);
 
         // TODO create a sub-fragment in task fragment for task only, keep lesson viewmodel here
         // Lesson list
@@ -136,6 +137,8 @@ public class TaskFragment extends FragmentBase {
             showError(taskResultViewModel.getError());
         });
         taskResultViewModel.getLoadedCode().observe(this, (data) -> {
+            if (data == null)
+                return;
             showError(taskResultViewModel.getError());
             if (tasks != null && !tasks.isEmpty()) {
                 codes = new ArrayList<>(data.y);
