@@ -36,7 +36,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="32sp"
-                    android:textColor="?colorSecondary"
+                    android:textColor="?colorPrimary"
                     style="?android:attr/borderlessButtonStyle"
                     android:backgroundTint="@android:color/transparent"
                     android:layout_weight="1"
@@ -57,7 +57,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="32sp"
-                    android:textColor="?colorSecondary"
+                    android:textColor="?colorPrimary"
                     style="?android:attr/borderlessButtonStyle"
                     android:backgroundTint="@android:color/transparent"
                     android:layout_weight="1"
@@ -113,6 +113,7 @@
                     android:id="@+id/inputEditText"
                     android:inputType="textNoSuggestions"
                     android:hint="@string/answer"
+                    android:backgroundTint="?colorPrimary"
                     android:autofillHints="" />
 
                 <LinearLayout
