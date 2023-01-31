@@ -1,4 +1,4 @@
-package com.example.priscillaclient.util;
+package com.example.priscillaclient.misc;
 
 public final class Preferences {
     // Preferences group

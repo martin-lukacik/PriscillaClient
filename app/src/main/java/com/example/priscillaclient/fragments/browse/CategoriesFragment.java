@@ -18,14 +18,18 @@ import java.util.ArrayList;
 
 public class CategoriesFragment extends FragmentBase implements FragmentAdapter<ArrayList<Category>> {
 
+    // Members
     private ArrayList<Category> categories;
+
+    // Views
+    private ListView categoryListView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         layoutId = R.layout.fragment_categories;
 
-        CategoriesViewModel viewModel = (CategoriesViewModel) getViewModel(CategoriesViewModel.class);
+        CategoriesViewModel viewModel = getViewModel(CategoriesViewModel.class);
         viewModel.getData().observe(this, onResponse(viewModel.getError()));
         viewModel.fetchData();
     }
@@ -33,21 +37,21 @@ public class CategoriesFragment extends FragmentBase implements FragmentAdapter<
     @Override
     public void onViewCreated(@NotNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         setEmptyView(findViewById(R.id.categoryListView));
+
+        categoryListView = findViewById(R.id.categoryListView);
+        categoryListView.setOnItemClickListener(this::onCategorySelected);
     }
 
+    @Override
     public void onUpdate(ArrayList<Category> categories) {
-
         this.categories = categories;
 
         ArrayAdapter<Category> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, categories);
-        ListView categoryListView = findViewById(R.id.categoryListView);
         categoryListView.setAdapter(adapter);
-        categoryListView.setOnItemClickListener(this::categorySelected);
     }
 
-    private void categorySelected(AdapterView<?> adapterView, View view, int i, long l) {
+    private void onCategorySelected(AdapterView<?> adapterView, View view, int i, long l) {
         int categoryId = categories.get(i).category_id;
         Bundle args = new Bundle();
         args.putInt("categoryId", categoryId);

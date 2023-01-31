@@ -1,7 +1,7 @@
 package com.example.priscillaclient.api.tasks;
 
 import com.example.priscillaclient.api.HttpConnection;
-import com.example.priscillaclient.util.Pair;
+import com.example.priscillaclient.misc.Pair;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

@@ -9,13 +9,11 @@ import android.widget.AbsListView;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.priscillaclient.ActivityBase;
 import com.example.priscillaclient.MainActivity;
 import com.example.priscillaclient.R;
-import com.example.priscillaclient.util.LoadingDialog;
 import com.example.priscillaclient.viewmodels.ViewModelBase;
 
 import org.jetbrains.annotations.NotNull;

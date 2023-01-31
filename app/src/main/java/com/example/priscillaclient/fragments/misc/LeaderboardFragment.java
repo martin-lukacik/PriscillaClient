@@ -20,17 +20,16 @@ public class LeaderboardFragment extends FragmentBase implements FragmentAdapter
 
     LeaderboardAdapter adapter;
 
-    public LeaderboardFragment() { }
-
     int index = 0;
     int top = 0;
 
+    ListView leaderboardListview;
+
     public void onPause() {
         super.onPause();
-        ListView lv = findViewById(R.id.leaderboardList);
-        View c = lv.getChildAt(0);
-        index = lv.getFirstVisiblePosition();
-        top = (c == null ? 0 : (c.getTop() - lv.getPaddingTop()));
+        View v = leaderboardListview.getChildAt(0);
+        index = leaderboardListview.getFirstVisiblePosition();
+        top = (v == null ? 0 : (v.getTop() - leaderboardListview.getPaddingTop()));
     }
 
     @Override
@@ -54,24 +53,24 @@ public class LeaderboardFragment extends FragmentBase implements FragmentAdapter
     public void onViewCreated(@NotNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        setEmptyView(findViewById(R.id.leaderboardList));
+
         if (savedInstanceState != null) {
             index = savedInstanceState.getInt("index", 0);
             top = savedInstanceState.getInt("top", 0);
         }
 
-        setEmptyView(findViewById(R.id.leaderboardList));
+        leaderboardListview = findViewById(R.id.leaderboardList);
     }
 
     @Override
     public void onUpdate(ArrayList<Leader> response) {
-
         SettingsViewModel viewModel = getViewModel(SettingsViewModel.class);
 
-        ListView lv = findViewById(R.id.leaderboardList);
-
-        if (viewModel.getData().getValue() != null && lv != null) {
+        if (viewModel.getData().getValue() != null && leaderboardListview != null) {
             adapter = new LeaderboardAdapter(getActivity(), response, viewModel.getData().getValue().countries);
-            lv.setAdapter(adapter);
+            leaderboardListview.setAdapter(adapter);
+            leaderboardListview.setSelectionFromTop(index, top);
         }
     }
 }

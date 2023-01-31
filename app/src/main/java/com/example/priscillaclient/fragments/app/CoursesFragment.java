@@ -11,7 +11,7 @@ import com.example.priscillaclient.R;
 import com.example.priscillaclient.adapters.CourseListAdapter;
 import com.example.priscillaclient.fragments.FragmentAdapter;
 import com.example.priscillaclient.fragments.FragmentBase;
-import com.example.priscillaclient.util.Preferences;
+import com.example.priscillaclient.misc.Preferences;
 import com.example.priscillaclient.viewmodels.app.CoursesViewModel;
 import com.example.priscillaclient.viewmodels.app.models.Course;
 
@@ -46,7 +46,7 @@ public class CoursesFragment extends FragmentBase implements FragmentAdapter<Arr
         super.onViewCreated(view, savedInstanceState);
         setEmptyView(findViewById(R.id.courseListView));
 
-        GridView courseListView = findViewById(R.id.courseListView);
+        courseListView = findViewById(R.id.courseListView);
         courseListView.setOnItemClickListener(this::onCourseSelected);
         courseListView.setOnItemLongClickListener(this::onCoursePinned);
     }
@@ -104,7 +104,6 @@ public class CoursesFragment extends FragmentBase implements FragmentAdapter<Arr
         if (courses != null) {
             this.courses = new ArrayList<>(courses);
             adapter = new CourseListAdapter(getActivity(), this.courses);
-            GridView courseListView = requireActivity().findViewById(R.id.courseListView);
             courseListView.setAdapter(adapter);
         }
     }

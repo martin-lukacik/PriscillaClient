@@ -1,6 +1,6 @@
 package com.example.priscillaclient.viewmodels.user.models;
 
-import com.example.priscillaclient.util.Pair;
+import com.example.priscillaclient.misc.Pair;
 
 import org.json.JSONArray;
 import org.json.JSONException;

@@ -59,7 +59,7 @@ public class LeaderboardAdapter extends ArrayAdapter<Leader> {
 
         holder.position.setText(String.valueOf(i + 1));
         holder.name.setText(leader.nickname);
-        holder.xp.setText(leader.xp + " " + R.string.xp);
+        holder.xp.setText(String.valueOf(leader.xp) + " " + getContext().getString(R.string.xp));
 
         for (Country c : countries) {
             if (c.country_name.equals(leader.country)) {

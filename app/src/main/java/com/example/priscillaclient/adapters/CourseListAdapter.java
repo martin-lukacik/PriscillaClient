@@ -21,16 +21,14 @@ import com.example.priscillaclient.viewmodels.app.models.Course;
 import java.util.ArrayList;
 
 public class CourseListAdapter extends ArrayAdapter<Course> {
-    private final Activity context;
     private final ArrayList<Course> courses;
 
     public CourseListAdapter(Activity context, ArrayList<Course> courses) {
         super(context, R.layout.listview_course, courses);
-        this.context = context;
         this.courses = courses;
     }
 
-    static class ViewHolder{
+    static class ViewHolder {
         TextView titleText;
         TextView subtitleText;
         TextView contentText;
@@ -50,7 +48,7 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
 
         if (view == null) {
             holder = new ViewHolder();
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.listview_course, parent, false);
 
             holder.titleText = view.findViewById(R.id.title);
@@ -87,7 +85,7 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
         holder.codeIcon.setColorFilter(color);
         holder.contactIcon.setColorFilter(color);
 
-        Drawable drawable = ResourcesCompat.getDrawable(context.getResources(), R.drawable.course_title_border, null);//context.getResources().getDrawable(R.drawable.course_title_border);
+        Drawable drawable = ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.course_title_border, null);
         if (drawable != null)
             drawable.mutate().setColorFilter(color, PorterDuff.Mode.SRC_IN);
         holder.titleText.setBackground(drawable);

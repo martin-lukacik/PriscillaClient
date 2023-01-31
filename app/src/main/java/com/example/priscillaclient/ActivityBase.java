@@ -1,7 +1,6 @@
 package com.example.priscillaclient;
 
 import android.Manifest;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -13,7 +12,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.example.priscillaclient.util.Preferences;
+import com.example.priscillaclient.misc.Preferences;
 import com.example.priscillaclient.viewmodels.user.models.Theme;
 
 import java.util.Locale;

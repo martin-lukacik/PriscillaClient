@@ -49,10 +49,10 @@ public class ChaptersFragment extends FragmentBase implements FragmentAdapter<Ar
     }
 
     @Override
-    public void onUpdate(ArrayList<Chapter> response) {
-        chapters = (ArrayList<Chapter>) response;
+    public void onUpdate(ArrayList<Chapter> chapters) {
+        this.chapters = (ArrayList<Chapter>) chapters;
 
-        ChapterListAdapter adapter = new ChapterListAdapter(getActivity(), chapters, courseColor);
+        ChapterListAdapter adapter = new ChapterListAdapter(getActivity(), this.chapters, courseColor);
         GridView chaptersListView = findViewById(R.id.chapterListView);
         chaptersListView.setAdapter(adapter);
         chaptersListView.setOnItemClickListener(this::onChapterSelected);

@@ -1,4 +1,4 @@
-package com.example.priscillaclient.util;
+package com.example.priscillaclient.misc;
 
 public class Pair<X, Y> {
     public final X x;

@@ -13,7 +13,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
-import com.example.priscillaclient.util.Preferences;
+import com.example.priscillaclient.misc.Preferences;
 import com.example.priscillaclient.viewmodels.user.ProfileViewModel;
 import com.example.priscillaclient.viewmodels.user.SettingsViewModel;
 import com.example.priscillaclient.viewmodels.user.UserViewModel;
@@ -21,7 +21,6 @@ import com.example.priscillaclient.viewmodels.user.models.Language;
 import com.example.priscillaclient.viewmodels.user.models.User;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.util.Locale;
 import java.util.Random;
 
 /*help 10

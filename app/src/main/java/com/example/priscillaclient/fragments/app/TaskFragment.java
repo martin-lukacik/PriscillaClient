@@ -3,7 +3,6 @@ package com.example.priscillaclient.fragments.app;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Html;
@@ -31,9 +30,8 @@ import com.example.priscillaclient.api.tasks.DoEvaluateTask;
 import com.example.priscillaclient.api.tasks.DoPassTask;
 import com.example.priscillaclient.api.tasks.DoRunProgram;
 import com.example.priscillaclient.fragments.FragmentBase;
-import com.example.priscillaclient.util.JavascriptInterface;
-import com.example.priscillaclient.util.LoadingDialog;
-import com.example.priscillaclient.util.Preferences;
+import com.example.priscillaclient.misc.JavascriptInterface;
+import com.example.priscillaclient.misc.LoadingDialog;
 import com.example.priscillaclient.viewmodels.app.ChaptersViewModel;
 import com.example.priscillaclient.viewmodels.app.LessonsViewModel;
 import com.example.priscillaclient.viewmodels.app.TaskResultViewModel;
@@ -44,7 +42,6 @@ import com.example.priscillaclient.viewmodels.app.models.Lesson;
 import com.example.priscillaclient.viewmodels.app.models.Task;
 import com.example.priscillaclient.viewmodels.app.models.TaskResult;
 import com.example.priscillaclient.viewmodels.user.UserViewModel;
-import com.example.priscillaclient.viewmodels.user.models.Theme;
 import com.example.priscillaclient.viewmodels.user.models.User;
 import com.google.android.material.navigation.NavigationView;
 
@@ -64,8 +61,6 @@ public class TaskFragment extends FragmentBase {
 
     public static final String ARG_COURSE_ID = "courseId";
     public static final String ARG_CHAPTER_ID = "chapterId";
-
-    private int themeId = Theme.THEME_LIGHT;
 
     private int courseId;
     private int chapterId;
@@ -90,6 +85,7 @@ public class TaskFragment extends FragmentBase {
     WebView webView;
     EditText inputEditText;
     LinearLayout stars;
+    CodeEditor codeEditor;
 
     LoadingDialog dialog;
 
@@ -108,6 +104,26 @@ public class TaskFragment extends FragmentBase {
         }
 
         taskResultViewModel = getViewModel(TaskResultViewModel.class);
+        tasksViewModel = getViewModel(TasksViewModel.class);
+        lessonsViewModel = getViewModel(LessonsViewModel.class);
+
+        // TODO create a sub-fragment in task fragment for task only, keep lesson viewmodel here
+        // Lesson list
+        lessonsViewModel.getData().observe(this, (data) -> {
+            showError(lessonsViewModel.getError());
+            onUpdateLessons(data);
+        });
+        lessonsViewModel.fetchData(chapterId);
+
+        // Task list
+        tasksViewModel.getData().observe(this, (data) -> {
+            showError(tasksViewModel.getError());
+            onUpdateTasks(data);
+        });
+        tasksViewModel.getHelpState().observe(this, this::onUpdateHelp);
+        tasksViewModel.getAnswerState().observe(this, this::onUpdateAnswer);
+
+        // Task evaluation result
         taskResultViewModel.clear();
         taskResultViewModel.getData().observe(this, (data) -> {
             showError(taskResultViewModel.getError());
@@ -116,10 +132,8 @@ public class TaskFragment extends FragmentBase {
                 dialog.dismiss();
         });
         taskResultViewModel.getSaveState().observe(this, (data) -> {
-            if (taskResultViewModel.hasError())
-                showError(taskResultViewModel.getError());
-            else
-                showError(data);
+            showError(data);
+            showError(taskResultViewModel.getError());
         });
         taskResultViewModel.getLoadedCode().observe(this, (data) -> {
             showError(taskResultViewModel.getError());
@@ -129,43 +143,20 @@ public class TaskFragment extends FragmentBase {
             }
         });
 
-        tasksViewModel = getViewModel(TasksViewModel.class);
-        tasksViewModel.getData().observe(this, (data) -> {
-            showError(tasksViewModel.getError());
-            onUpdateTasks(data);
-        });
-        tasksViewModel.getHelpState().observe(this, this::onUpdateHelp);
-        tasksViewModel.getAnswerState().observe(this, this::onUpdateAnswer);
-
-        lessonsViewModel = getViewModel(LessonsViewModel.class);
-        lessonsViewModel.getData().observe(this, (data) -> {
-            if (lessonsViewModel.hasError())
-                showError(lessonsViewModel.getError());
-            else
-                onUpdateLessons(data);
-        });
-        lessonsViewModel.fetchData(chapterId);
-
-        if (getActivity() != null) {
-            SharedPreferences settings = getActivity().getSharedPreferences(Preferences.PREFS, 0);
-            themeId = settings.getInt(Preferences.PREFS_THEME_ID, 0);
-        }
-
-        String darkCss = (themeId != 1 && themeId != 3 ? readFile(R.raw.task_style_dark) : "");
+        // HTML preload
+        String darkCss = (isDarkModeEnabled() ? readFile(R.raw.task_style_dark) : "");
         css = "<style>" + readFile(R.raw.task_style) + darkCss + "</style>";
         javascript = "<script>" + readFile(R.raw.task_script) + "</script>";
     }
 
     private void onUpdateTasks(ArrayList<Task> tasks) {
-
         this.tasks = tasks;
 
         updateTaskList(tasks);
     }
 
     private void onUpdateLessons(ArrayList<Lesson> lessons) {
-
-        if (lessons.isEmpty())
+        if (lessons == null || lessons.isEmpty())
             return;
 
         currentLessonId = lessons.get(0).id;
@@ -429,28 +420,14 @@ public class TaskFragment extends FragmentBase {
                 case TASK_DRAG:
                     webView.evaluateJavascript("loadTaskDrag('" + new JSONArray(answerList) + "')", null);
                     break;
-
-                default:
-                {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
-                    builder.setMessage(answer.answer);
-                    builder.setTitle(R.string.help);
-                    builder.setPositiveButton(R.string.ok, null);
-
-                    AlertDialog dialog = builder.create();
-                    dialog.show();
-                }
             }
         }
-
 
         // update coins, xp, etc.
         userViewModel.fetchData();
     }
 
     public void onUpdateHelp(Answer help) {
-
         if (help == null)
             return;
 
@@ -553,7 +530,7 @@ public class TaskFragment extends FragmentBase {
             stars.addView(star);
         }
     }
-    CodeEditor codeEditor;
+
     @SuppressLint("ClickableViewAccessibility")
     public void updateTaskCode(Task task) {
 

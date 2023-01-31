@@ -3,9 +3,7 @@ package com.example.priscillaclient.fragments.browse;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
-import android.text.Html;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -16,14 +14,12 @@ import androidx.lifecycle.Observer;
 
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.fragments.FragmentAdapter;
+import com.example.priscillaclient.fragments.FragmentBase;
 import com.example.priscillaclient.fragments.app.ChaptersFragment;
 import com.example.priscillaclient.viewmodels.app.CoursesViewModel;
 import com.example.priscillaclient.viewmodels.app.models.Course;
 import com.example.priscillaclient.viewmodels.browse.AreaCoursesViewModel;
 import com.example.priscillaclient.viewmodels.browse.models.AreaCourse;
-import com.example.priscillaclient.fragments.FragmentBase;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.color.MaterialColors;
 import com.google.android.material.textview.MaterialTextView;
 
 import org.jetbrains.annotations.NotNull;
@@ -66,6 +62,7 @@ public class AreaCourseFragment extends FragmentBase implements FragmentAdapter<
         setEmptyView(findViewById(R.id.areaCourseList));
     }
 
+    @Override
     public void onUpdate(ArrayList<AreaCourse> areaCourses) {
         this.areaCourses = areaCourses;
 
@@ -75,7 +72,8 @@ public class AreaCourseFragment extends FragmentBase implements FragmentAdapter<
                 View view = super.getView(position, convertView, parent);
                 if (areaCourses.get(position).status != AreaCourse.CourseStatus.OPENED) {
                     String str = ((MaterialTextView) view).getText().toString();
-                    ((MaterialTextView) view).setText("✱ " + str);
+                    char unopenedCourseTag = '✱';
+                    ((MaterialTextView) view).setText(unopenedCourseTag + " " + str);
                 }
                 return view;
             }

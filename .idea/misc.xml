@@ -90,6 +90,10 @@
       <item index="0" class="java.lang.String" itemvalue="android.webkit.JavascriptInterface" />
     </list>
   </component>
+  <component name="JavadocGenerationManager">
+    <option name="OUTPUT_DIRECTORY" value="D:/javadoc" />
+    <option name="OPTION_SCOPE" value="private" />
+  </component>
   <component name="NullableNotNullManager">
     <option name="myDefaultNullable" value="androidx.annotation.Nullable" />
     <option name="myDefaultNotNull" value="org.jetbrains.annotations.NotNull" />

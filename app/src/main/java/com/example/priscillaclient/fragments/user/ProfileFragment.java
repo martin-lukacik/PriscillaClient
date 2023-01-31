@@ -13,7 +13,7 @@ import com.example.priscillaclient.LoginActivity;
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.fragments.FragmentAdapter;
 import com.example.priscillaclient.fragments.FragmentBase;
-import com.example.priscillaclient.util.Preferences;
+import com.example.priscillaclient.misc.Preferences;
 import com.example.priscillaclient.viewmodels.user.ProfileViewModel;
 import com.example.priscillaclient.viewmodels.user.SettingsViewModel;
 import com.example.priscillaclient.viewmodels.user.UserViewModel;
