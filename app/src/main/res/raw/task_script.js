@@ -172,4 +172,6 @@ function remove(el) {
     }
 
     el.innerText = " ";
+
+    collectDrag();
 }

@@ -599,8 +599,6 @@ public class TaskFragment extends FragmentBase {
 
         String content = task.content;
 
-
-        boolean dark = isDarkModeEnabled();
         codeTaskLayout.setVisibility(View.GONE);
         switch (task.type) {
 
@@ -613,7 +611,7 @@ public class TaskFragment extends FragmentBase {
 
             case TASK_CHOICE:
                 if (task.answers != null)
-                    TaskHelper.initializeTaskChoice(getActivity(), taskLayout, dark, task.answers);
+                    TaskHelper.initializeTaskChoice(getActivity(), taskLayout, task.answers);
                 break;
 
             case TASK_FILL:
@@ -626,7 +624,7 @@ public class TaskFragment extends FragmentBase {
 
             case TASK_MULTI:
                 if (task.answers != null)
-                    TaskHelper.initializeTaskMulti(getActivity(), taskLayout, dark, task.answers);
+                    TaskHelper.initializeTaskMulti(getActivity(), taskLayout, task.answers);
                 break;
 
             case TASK_DRAG:

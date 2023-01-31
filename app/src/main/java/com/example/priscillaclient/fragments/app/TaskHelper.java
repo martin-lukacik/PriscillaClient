@@ -1,6 +1,8 @@
 package com.example.priscillaclient.fragments.app;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.util.TypedValue;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -9,13 +11,14 @@ import android.widget.RadioGroup;
 import androidx.core.content.ContextCompat;
 import androidx.core.widget.CompoundButtonCompat;
 
+import com.example.priscillaclient.R;
 import com.example.priscillaclient.viewmodels.app.models.Task;
 
 import java.util.ArrayList;
 
 public final class TaskHelper {
 
-    public static void initializeTaskChoice(Context context, LinearLayout taskLayout, boolean dark, ArrayList<String> answers) {
+    public static void initializeTaskChoice(Context context, LinearLayout taskLayout, ArrayList<String> answers) {
         RadioGroup radioGroup = new RadioGroup(context);
         radioGroup.setTag("CLEAR");
 
@@ -25,16 +28,17 @@ public final class TaskHelper {
             radioButton.setText(answer);
             radioButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
-            if (dark)
-                radioButton.setTextColor(0xffffffff);
+            TypedValue typedValue = new TypedValue();
+            context.getTheme().resolveAttribute(R.attr.colorPrimaryVariant, typedValue, true);
+            int color = typedValue.data;
+            CompoundButtonCompat.setButtonTintList(radioButton, ColorStateList.valueOf(color));
 
-            CompoundButtonCompat.setButtonTintList(radioButton, ContextCompat.getColorStateList(context, com.google.android.material.R.color.design_default_color_secondary));
             radioGroup.addView(radioButton);
         }
         taskLayout.addView(radioGroup);
     }
 
-    public static void initializeTaskMulti(Context context, LinearLayout taskLayout, boolean dark, ArrayList<String> answers) {
+    public static void initializeTaskMulti(Context context, LinearLayout taskLayout, ArrayList<String> answers) {
         for (String answer : answers) {
             CheckBox checkBox = new CheckBox(context);
             checkBox.setTag("CLEAR");
@@ -42,10 +46,11 @@ public final class TaskHelper {
             checkBox.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
             checkBox.setText(answer);
 
-            if (dark)
-                checkBox.setTextColor(0xffffffff);
+            TypedValue typedValue = new TypedValue();
+            context.getTheme().resolveAttribute(R.attr.colorPrimaryVariant, typedValue, true);
+            int color = typedValue.data;
+            CompoundButtonCompat.setButtonTintList(checkBox, ColorStateList.valueOf(color));
 
-            CompoundButtonCompat.setButtonTintList(checkBox, ContextCompat.getColorStateList(context, com.google.android.material.R.color.design_default_color_secondary));
             taskLayout.addView(checkBox);
         }
     }
