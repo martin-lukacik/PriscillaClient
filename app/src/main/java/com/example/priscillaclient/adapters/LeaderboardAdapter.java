@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.viewmodels.misc.models.Leader;
 import com.example.priscillaclient.viewmodels.user.models.Country;
+import com.example.priscillaclient.viewmodels.user.models.Settings;
 
 import java.util.ArrayList;
 
@@ -19,13 +20,13 @@ public class LeaderboardAdapter extends ArrayAdapter<Leader> {
 
     final Activity context;
     final ArrayList<Leader> leaders;
-    final ArrayList<Country> countries;
+    final Settings settings;
 
-    public LeaderboardAdapter(Activity context, ArrayList<Leader> leaders, ArrayList<Country> countries) {
+    public LeaderboardAdapter(Activity context, ArrayList<Leader> leaders, Settings settings) {
         super(context, R.layout.listview_leaderboard, leaders);
         this.context = context;
         this.leaders = leaders;
-        this.countries = countries;
+        this.settings = settings;
     }
 
     static class ViewHolder {
@@ -59,13 +60,15 @@ public class LeaderboardAdapter extends ArrayAdapter<Leader> {
 
         holder.position.setText(String.valueOf(i + 1));
         holder.name.setText(leader.nickname);
-        holder.xp.setText(String.valueOf(leader.xp) + " " + getContext().getString(R.string.xp));
+        holder.xp.setText(leader.xp + " " + getContext().getString(R.string.xp));
 
-        for (Country c : countries) {
-            if (c.country_name.equals(leader.country)) {
-                int id = getContext().getResources().getIdentifier("flag_" + c.iso_code.toLowerCase(), "drawable", context.getPackageName());
-                holder.country.setImageResource(id);
-                break;
+        if (settings != null) {
+            for (Country c : settings.countries) {
+                if (c.country_name.equals(leader.country)) {
+                    int id = getContext().getResources().getIdentifier("flag_" + c.iso_code.toLowerCase(), "drawable", context.getPackageName());
+                    holder.country.setImageResource(id);
+                    break;
+                }
             }
         }
 

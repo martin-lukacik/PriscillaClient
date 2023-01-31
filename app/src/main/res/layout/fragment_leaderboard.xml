@@ -5,10 +5,15 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".fragments.misc.LeaderboardFragment">
-
-    <ListView
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/pullToRefresh"
+        android:layoutMode="clipBounds"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/leaderboardList" />
-
+        android:layout_height="wrap_content">
+        <ListView
+            android:overScrollMode="never"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/leaderboardList" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </LinearLayout>

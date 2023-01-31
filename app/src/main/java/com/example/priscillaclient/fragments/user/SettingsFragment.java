@@ -18,6 +18,7 @@ import com.example.priscillaclient.MainActivity;
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.fragments.FragmentAdapter;
 import com.example.priscillaclient.fragments.FragmentBase;
+import com.example.priscillaclient.misc.LoadingDialog;
 import com.example.priscillaclient.misc.Pair;
 import com.example.priscillaclient.misc.Preferences;
 import com.example.priscillaclient.viewmodels.app.ChaptersViewModel;
@@ -58,7 +59,7 @@ public class SettingsFragment extends FragmentBase implements FragmentAdapter<Pr
 
     TextView settingsSave;
 
-    public SettingsFragment() { }
+    LoadingDialog dialog;
 
     Bundle state;
     @Override
@@ -105,6 +106,9 @@ public class SettingsFragment extends FragmentBase implements FragmentAdapter<Pr
     @Override
     public void onViewCreated(@NotNull View view, Bundle state) {
         super.onViewCreated(view, state);
+
+        View v = findViewById(R.id.loadingView);
+        v.setVisibility(View.GONE);
 
         profileEditName = findViewById(R.id.profileEditName);
         profileEditSurname = findViewById(R.id.profileEditSurname);
@@ -177,33 +181,39 @@ public class SettingsFragment extends FragmentBase implements FragmentAdapter<Pr
             UserViewModel userViewModel = getViewModel(UserViewModel.class);
             userViewModel.update(age, content_type_id, country, group, lang, name, nick, surname, theme_id);
 
+            dialog = new LoadingDialog(getActivity());
+            dialog.show();
             Observer<User> observer = new Observer<User>() {
                 @Override
                 public void onChanged(User user) {
                     if (user == null)
                         return;
+
+                    dialog.dismiss();
+
                     profileViewModel.fetchData();
+
                     userViewModel.getData().removeObserver(this);
+
+                    String savedShortcut = settings.getString(Preferences.PREFS_LANGUAGE_SHORTCUT, "en");
+                    if (!savedShortcut.equals(shortcut)) {
+
+                        clearLocalizedViewModels();
+
+                        SharedPreferences.Editor editor = settings.edit();
+                        editor.putString(Preferences.PREFS_LANGUAGE_SHORTCUT, shortcut);
+                        editor.apply();
+
+                        showLanguageChangeDialog(shortcut);
+                    } else if (isThemeChanged) {
+                        ((ActivityBase) requireActivity()).setDarkMode(theme_id, true);
+                    }
+
+                    requireActivity().onBackPressed(); // navigate back to profile
                 }
             };
 
             userViewModel.getData().observe(this, observer);
-
-            String savedShortcut = settings.getString(Preferences.PREFS_LANGUAGE_SHORTCUT, "en");
-            if (!savedShortcut.equals(shortcut)) {
-
-                clearLocalizedViewModels();
-
-                SharedPreferences.Editor editor = settings.edit();
-                editor.putString(Preferences.PREFS_LANGUAGE_SHORTCUT, shortcut);
-                editor.apply();
-
-                showLanguageChangeDialog(shortcut);
-            } else if (isThemeChanged) {
-                ((ActivityBase) requireActivity()).setDarkMode(theme_id, true);
-            }
-
-            requireActivity().onBackPressed(); // navigate back to profile
         } else {
             String msg = getResources().getString(R.string.settings_no_changes);
             Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();

@@ -29,6 +29,7 @@
                 android:layout_marginEnd="15dp"
                 android:orientation="horizontal">
                 <EditText
+                    android:backgroundTint="?colorPrimary"
                     android:layout_weight="4"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -37,6 +38,7 @@
                     android:autofillHints="name"
                     android:inputType="textPersonName" />
                 <EditText
+                    android:backgroundTint="?colorPrimary"
                     android:layout_weight="5"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -48,6 +50,7 @@
 
             <!-- Nickname -->
             <EditText
+                android:backgroundTint="?colorPrimary"
                 android:layout_marginTop="10dp"
                 android:layout_marginStart="15dp"
                 android:layout_marginEnd="15dp"
@@ -68,6 +71,7 @@
                 android:text="@string/primary_group"
                 android:textSize="18sp" />
             <Spinner
+                android:backgroundTint="?colorPrimary"
                 android:layout_marginStart="25dp"
                 android:layout_marginEnd="25dp"
                 android:padding="10dp"
@@ -85,6 +89,7 @@
                 android:text="@string/student_type"
                 android:textSize="18sp" />
             <Spinner
+                android:backgroundTint="?colorPrimary"
                 android:layout_marginStart="25dp"
                 android:layout_marginEnd="25dp"
                 android:padding="10dp"
@@ -102,6 +107,7 @@
                 android:text="@string/country"
                 android:textSize="18sp" />
             <Spinner
+                android:backgroundTint="?colorPrimary"
                 android:layout_marginStart="25dp"
                 android:layout_marginEnd="25dp"
                 android:padding="10dp"
@@ -119,6 +125,7 @@
                 android:text="@string/language"
                 android:textSize="18sp" />
             <Spinner
+                android:backgroundTint="?colorPrimary"
                 android:layout_marginStart="25dp"
                 android:layout_marginEnd="25dp"
                 android:padding="10dp"
@@ -136,6 +143,7 @@
                 android:text="@string/theme"
                 android:textSize="18sp" />
             <Spinner
+                android:backgroundTint="?colorPrimary"
                 android:layout_marginStart="25dp"
                 android:layout_marginEnd="25dp"
                 android:padding="10dp"
@@ -153,6 +161,7 @@
                 android:text="@string/birth_year"
                 android:textSize="18sp" />
             <Spinner
+                android:backgroundTint="?colorPrimary"
                 android:layout_marginStart="25dp"
                 android:layout_marginEnd="25dp"
                 android:padding="10dp"
@@ -173,6 +182,7 @@
                 android:gravity="center"
                 android:text="@string/save_changes"
                 android:textSize="20sp"
-                android:textColor="@android:color/holo_blue_dark" />
+                android:textStyle="bold"
+                android:textColor="?colorPrimary" />
         </LinearLayout>
 </ScrollView>
