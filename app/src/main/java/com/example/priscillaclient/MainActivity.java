@@ -182,7 +182,7 @@ public class MainActivity extends ActivityBase {
             return;
         }
 
-        setActionBarTitle(user.performance.xp + " XP | " + user.performance.coins);
+        setActionBarTitle(user.performance.xp + " XP   " + user.performance.coins);
 
         if (initialUpdate) {
             setDarkMode(user.theme_id, true);

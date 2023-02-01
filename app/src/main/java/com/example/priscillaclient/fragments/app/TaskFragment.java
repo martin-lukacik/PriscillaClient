@@ -573,6 +573,8 @@ public class TaskFragment extends FragmentBase {
     public void updateTaskCode(Task task) {
 
         if (codes.isEmpty()) {
+            if (task.files == null)
+                return; // TODO ??
             codes = new ArrayList<>(task.files);
         }
 
