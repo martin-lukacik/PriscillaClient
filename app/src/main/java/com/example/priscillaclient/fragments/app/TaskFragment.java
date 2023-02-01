@@ -524,6 +524,7 @@ public class TaskFragment extends FragmentBase {
         Dialog dialog = new Dialog(getActivity());
         dialog.setCancelable(true);
         dialog.setContentView(view);
+        view.setBackgroundResource(android.R.color.transparent);
         dialog.show();
         view.findViewById(R.id.dialog_dismiss).setOnClickListener(e -> dialog.dismiss());
     }
