@@ -5,7 +5,10 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -144,11 +147,6 @@ public class TaskFragment extends FragmentBase {
                 updateTaskCode(tasks.get(currentTask));
             }
         });
-
-        // HTML preload
-        String darkCss = (isDarkModeEnabled() ? readFile(R.raw.task_style_dark) : "");
-        css = "<style>" + readFile(R.raw.task_style) + darkCss + "</style>";
-        javascript = "<script>" + readFile(R.raw.task_script) + "</script>";
     }
 
     @Override
@@ -230,23 +228,11 @@ public class TaskFragment extends FragmentBase {
         return true;
     }
 
-    @SuppressLint({"SetJavaScriptEnabled", "ClickableViewAccessibility"})
-    @Override
-    public void onViewCreated(@NotNull View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        webView = findViewById(R.id.webView);
-        stars = findViewById(R.id.stars);
-        taskLayout = findViewById(R.id.taskLayout);
-        codeTaskLayout = findViewById(R.id.codeTaskLayout);
-        taskCount = findViewById(R.id.taskCount);
-        inputEditText = findViewById(R.id.inputEditText);
-        buttonTaskNext = findViewById(R.id.buttonTaskNext);
-        buttonTaskPrevious = findViewById(R.id.buttonTaskPrevious);
-        buttonTaskHelp = findViewById(R.id.buttonTaskHelp);
-        buttonTaskSubmit = findViewById(R.id.buttonTaskSubmit);
-
-        inputEditText.setVisibility(View.GONE);
+    @SuppressLint("SetJavaScriptEnabled")
+    private void setupWebView() {
+        String darkCss = (isDarkModeEnabled() ? readFile(R.raw.task_style_dark) : "");
+        css = "<style>" + readFile(R.raw.task_style) + darkCss + "</style>";
+        javascript = "<script>" + readFile(R.raw.task_script) + "</script>";
 
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
@@ -271,12 +257,9 @@ public class TaskFragment extends FragmentBase {
                 });
             }
         });
+    }
 
-        buttonTaskHelp.setOnClickListener(this::getTaskHelp);
-        buttonTaskNext.setOnClickListener(this::nextTask);
-        buttonTaskPrevious.setOnClickListener(this::previousTask);
-        buttonTaskSubmit.setOnClickListener(this::submit);
-
+    private void setupCodeEditor() {
         codeEditor = new CodeEditor(getActivity());
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         params.setMargins(0, 36, 0, 0);
@@ -296,7 +279,7 @@ public class TaskFragment extends FragmentBase {
 
         codeEditor.setOnTouchListener((v, event) -> {
             if (codeEditor.hasFocus()) {
-                 int eventMask = (event.getAction() & MotionEvent.ACTION_MASK);
+                int eventMask = (event.getAction() & MotionEvent.ACTION_MASK);
                 v.getParent().requestDisallowInterceptTouchEvent(true);
                 if (eventMask == MotionEvent.ACTION_SCROLL) {
                     v.getParent().requestDisallowInterceptTouchEvent(false);
@@ -305,6 +288,33 @@ public class TaskFragment extends FragmentBase {
             }
             return false;
         });
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    @Override
+    public void onViewCreated(@NotNull View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        webView = findViewById(R.id.webView);
+        stars = findViewById(R.id.stars);
+        taskLayout = findViewById(R.id.taskLayout);
+        codeTaskLayout = findViewById(R.id.codeTaskLayout);
+        taskCount = findViewById(R.id.taskCount);
+        inputEditText = findViewById(R.id.inputEditText);
+        buttonTaskNext = findViewById(R.id.buttonTaskNext);
+        buttonTaskPrevious = findViewById(R.id.buttonTaskPrevious);
+        buttonTaskHelp = findViewById(R.id.buttonTaskHelp);
+        buttonTaskSubmit = findViewById(R.id.buttonTaskSubmit);
+
+        inputEditText.setVisibility(View.GONE);
+
+        setupWebView();
+        setupCodeEditor();
+
+        buttonTaskHelp.setOnClickListener(this::getTaskHelp);
+        buttonTaskNext.setOnClickListener(this::nextTask);
+        buttonTaskPrevious.setOnClickListener(this::previousTask);
+        buttonTaskSubmit.setOnClickListener(this::submit);
 
         boolean drawerStatus = true;
         if (savedInstanceState != null) {
