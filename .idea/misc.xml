@@ -58,6 +58,7 @@
         <entry key="app/src/main/res/layout/fragment_area_course.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_areas.xml" value="0.10081053698074975" />
         <entry key="app/src/main/res/layout/fragment_categories.xml" value="0.10081053698074975" />
+        <entry key="app/src/main/res/layout/fragment_courses.xml" value="0.11480945489628558" />
         <entry key="app/src/main/res/layout/fragment_leaderboard.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.22" />
         <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.1" />

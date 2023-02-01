@@ -16,6 +16,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.ValueCallback;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -672,7 +673,7 @@ public class TaskFragment extends FragmentBase {
                 break;
 
             case TASK_DRAG:
-                String dragInputHtml = "<span onclick=\"return remove(this);\" class=\"drag\" style=\"text-align:center; color:white; display:inline-block; background:grey; width:4em\"> </span>";
+                String dragInputHtml = "<span onclick=\"return remove(this);\" class=\"drag\">&nbsp;</span>";
                 content = task.content.replaceAll("§§_§§", dragInputHtml);
                 content += TaskHelper.initializeTaskDrag(task);
                 break;
@@ -682,7 +683,13 @@ public class TaskFragment extends FragmentBase {
                 break;
         }
 
-        webView.evaluateJavascript("loadData('" + content.replaceAll("\n", "<br>") + "')", null);
+        String finalContent = content.replaceAll("\n", "<br>").replaceAll("\\\\", "\\\\\\\\").replaceAll("'", "\\\\'");
+        webView.evaluateJavascript("loadData('" + finalContent + "')", s -> {
+            ScrollView scrollView = findViewById(R.id.taskScrollView);
+            scrollView.scrollTo(0, 0);
+        });
+
+        //webView.evaluateJavascript("loadData('<p>Priraďte správny vysvetľujúci komentár:</p><p>LF §§_§§</p><p>CR §§_§§</p><p>form feed §§_§§</p><p>BEL §§_§§</p>')", null);
 
         taskLayout.setVisibility(View.VISIBLE);
     }

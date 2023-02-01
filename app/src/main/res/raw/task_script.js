@@ -147,8 +147,8 @@ function add(el) {
     let els = document.getElementsByTagName("span");
 
     for (let i = 0; i < els.length; ++i) {
-        if (els[i].innerText == " ") {
-            els[i].innerText = el.innerText;
+        if (els[i].innerHTML == "&nbsp;") {
+            els[i].innerHTML = el.innerText;
             el.disabled = true;
             break;
         }
@@ -159,19 +159,19 @@ function add(el) {
 
 function remove(el) {
 
-    if (el.innerText == " ")
+    if (el.innerHTML == "&nbsp;")
         return;
 
     let els = document.getElementsByTagName("button");
 
     for (let i = 0; i < els.length; ++i) {
-        if (els[i].disabled && els[i].innerText == el.innerText) {
+        if (els[i].disabled && els[i].innerHTML == el.innerHTML) {
             els[i].disabled = false;
             break;
         }
     }
 
-    el.innerText = " ";
+    el.innerHTML = "&nbsp;";
 
     collectDrag();
 }

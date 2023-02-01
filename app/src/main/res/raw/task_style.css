@@ -4,6 +4,13 @@
 .answer {
     max-width:4em;
 }
+.drag {
+    text-align:center;
+    color:white;
+    display:inline-block;
+    background:grey;
+    min-width:4em;
+}
 pre {
     background:lightgrey;
     color:black;
