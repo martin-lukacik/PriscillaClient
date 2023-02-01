@@ -29,18 +29,17 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:paddingBottom="0dp"
+                android:paddingTop="5dp"
                 android:orientation="horizontal">
                 <Button
+                    android:insetTop="0dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="32sp"
-                    android:textColor="?colorPrimary"
-                    style="?android:attr/borderlessButtonStyle"
-                    android:backgroundTint="@android:color/transparent"
                     android:layout_weight="1"
+                    android:textSize="32sp"
+                    android:textColor="@drawable/btn_default"
                     android:textStyle="bold"
+                    style="@style/TaskNavigationButton"
                     android:text="«"
                     android:id="@+id/buttonTaskPrevious"
                     android:layout_gravity="start" />
@@ -54,14 +53,14 @@
                     android:gravity="center"
                     android:layout_gravity="center" />
                 <Button
+                    android:insetTop="0dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="32sp"
-                    android:textColor="?colorPrimary"
-                    style="?android:attr/borderlessButtonStyle"
-                    android:backgroundTint="@android:color/transparent"
                     android:layout_weight="1"
+                    android:textSize="32sp"
+                    android:textColor="@drawable/btn_default"
                     android:textStyle="bold"
+                    style="@style/TaskNavigationButton"
                     android:text="»"
                     android:id="@+id/buttonTaskNext"
                     android:layout_gravity="end" />

@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="AppTheme" parent="Theme.MaterialComponents.DayNight" />
+
+    <style name="TaskNavigationButton" parent="@style/Widget.AppCompat.Button.Borderless">
+        <item name="rippleColor">@android:color/transparent</item>
+        <item name="backgroundTint">@android:color/transparent</item>
+    </style>
 </resources>
