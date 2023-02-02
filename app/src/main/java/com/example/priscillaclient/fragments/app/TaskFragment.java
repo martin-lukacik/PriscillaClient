@@ -29,6 +29,7 @@ import android.widget.TextView;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.priscillaclient.R;
+import com.example.priscillaclient.api.tasks.DoEvaluateHtml;
 import com.example.priscillaclient.api.tasks.DoEvaluateTask;
 import com.example.priscillaclient.api.tasks.DoPassTask;
 import com.example.priscillaclient.api.tasks.DoRunProgram;
@@ -332,7 +333,7 @@ public class TaskFragment extends FragmentBase {
 
         if (task.type == Task.Type.TASK_CODE
             || task.type == Task.Type.TASK_CODE2
-            || task.type == Task.Type.TASK_CODE3) {
+            || task.type == Task.Type.TASK_CODE_SQL) {
             priceHelp = 20;
             priceAnswer = 40;
         }
@@ -398,7 +399,8 @@ public class TaskFragment extends FragmentBase {
             switch (task.type) {
                 case TASK_CODE:
                 case TASK_CODE2:
-                case TASK_CODE3:
+                case TASK_CODE_SQL:
+                case TASK_CODE_HTML:
                     break;
 
                 case TASK_ORDER:
@@ -641,7 +643,8 @@ public class TaskFragment extends FragmentBase {
 
             case TASK_CODE:
             case TASK_CODE2:
-            case TASK_CODE3:
+            case TASK_CODE_SQL:
+            case TASK_CODE_HTML:
                 taskResultViewModel.loadCode(task.task_id);
                 codeTaskLayout.setVisibility(View.VISIBLE);
                 break;
@@ -745,7 +748,19 @@ public class TaskFragment extends FragmentBase {
             String answer = null;
             switch (task.type) {
 
-                case TASK_CODE3:
+                case TASK_CODE_HTML:
+                    /*{
+                        "answer_list": "[\"<!DOCTYPE html>\\n<html >\\n\\t<head>\\n\\t\\t<meta charset=\\\"UTF-8\\\">\\n\\t\\t<title>Nazov dokumentu</title>\\n\\t</head>\\n\\t<body>\\n\\t\\n\\t</body>\\n</html>\"]",
+                        "description": "[{\"res\":false,\"desc\":\"Nastavenie atribútu\"}]",
+                        "task_id": 2899,
+                        "task_type_id": 11,
+                        "time_length": 578
+                    }*/
+
+                    taskResultViewModel.postData(new DoEvaluateHtml(task, "[" + codes.get(0) + "]", currentTaskClock, task.fileNames.get(0)));
+
+                    return;
+                case TASK_CODE_SQL:
                     //exeType = 1;
                 case TASK_CODE:
                 case TASK_CODE2:

@@ -95,7 +95,7 @@ public class Task {
             }
 
 
-            if (type == Type.TASK_CODE || type == Type.TASK_CODE2 || type == Type.TASK_CODE3) {
+            if (type == Type.TASK_CODE || type == Type.TASK_CODE2 || type == Type.TASK_CODE_SQL) {
 
                 JSONObject g = new JSONObject(globals);
                 if (g.has("files")) {
@@ -116,6 +116,15 @@ public class Task {
 
                 content = j.getString("assignment");
             }
+
+            if (type == Type.TASK_CODE_HTML) {
+                String f = j.getString("requestedFile");
+                files = new ArrayList<>();
+                files.add(f);
+
+                fileNames = new ArrayList<>();
+                fileNames.add(j.getJSONArray("rules_list").getJSONObject(0).getString("description"));
+            }
         } catch (Exception ignore) {
         }
     }
@@ -131,6 +140,7 @@ public class Task {
         TASK_ORDER,         // 7
         TASK_CODE,          // 8
         TASK_CODE2,         // 9
-        TASK_CODE3,         // 10
+        TASK_CODE_SQL,      // 10
+        TASK_CODE_HTML,     // 11
     }
 }
