@@ -19,7 +19,7 @@ public class TokenViewModel extends ViewModelBase {
         apiTask.executeAsync(new GetToken(username, password, email, grantType), (data, error) -> {
             loadingState.setValue(false);
             if (error != null)
-                errorState.setValue(error);
+               setErrorState(error);
             else
                 state.setValue(data);
         });

@@ -13,7 +13,7 @@ public abstract class ViewModelBase extends ViewModel {
     protected String error = null;
 
     protected final MutableLiveData<Boolean> loadingState = new MutableLiveData<>(false);
-    protected final MutableLiveData<String> errorState = new MutableLiveData<>(null);
+    private final MutableLiveData<String> errorState = new MutableLiveData<>(null);
 
     public LiveData<Boolean> getLoadingState() {
         return loadingState;
@@ -21,6 +21,11 @@ public abstract class ViewModelBase extends ViewModel {
 
     public LiveData<String> getErrorState() {
         return errorState;
+    }
+
+    public void setErrorState(String error) {
+        errorState.setValue(error);
+        errorState.setValue(null); // clear error so it doesn't keep showing up
     }
 
     public boolean hasError() {

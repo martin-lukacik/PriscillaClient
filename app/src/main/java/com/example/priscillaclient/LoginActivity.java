@@ -23,6 +23,8 @@ public class LoginActivity extends ActivityBase {
     public static boolean userLoggedIn = false;
     private LoadingDialog dialog;
 
+    TokenViewModel viewModel;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +47,7 @@ public class LoginActivity extends ActivityBase {
 
         dialog = new LoadingDialog(this);
 
-        TokenViewModel viewModel = ViewModelProviders.of(this).get(TokenViewModel.class);
+        viewModel = ViewModelProviders.of(this).get(TokenViewModel.class);
         viewModel.getData().observe(this, this::onUpdate);
 
         // Observe loading state
@@ -82,8 +84,13 @@ public class LoginActivity extends ActivityBase {
         String username = ((EditText) findViewById(R.id.inputUsername)).getText().toString();
         String password = ((EditText) findViewById(R.id.inputPassword)).getText().toString();
 
-        TokenViewModel viewModel = ViewModelProviders.of(this).get(TokenViewModel.class);
-        viewModel.fetchData(username, password, username, "password");
+        if (password.isEmpty()) {
+            String refreshToken = settings.getString(Preferences.PREFS_REFRESH_TOKEN, null);
+            viewModel.fetchData(username, refreshToken, username, "refresh_token");
+        } else {
+            TokenViewModel viewModel = ViewModelProviders.of(this).get(TokenViewModel.class);
+            viewModel.fetchData(username, password, username, "password");
+        }
     }
 
     public void onUpdate(Token token) {
