@@ -113,13 +113,10 @@ public class MainActivity extends ActivityBase {
     private void fetchData() {
         UserViewModel userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
         userViewModel.getData().observe(this, (data) -> {
-            if (userViewModel.hasError())
-                showError(userViewModel.getError());
-            else {
-                initialUpdate = true;
-                onUpdate(data);
-            }
+            initialUpdate = true; // TODO probably need to remove this observer and this can go away
+            onUpdate(data);
         });
+        userViewModel.getErrorState().observe(this, this::showError);
         userViewModel.fetchData();
 
 

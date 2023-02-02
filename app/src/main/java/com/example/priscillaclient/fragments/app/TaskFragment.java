@@ -5,10 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Typeface;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,7 +13,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.webkit.ValueCallback;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -110,48 +106,90 @@ public class TaskFragment extends FragmentBase {
             chapterId = getArguments().getInt(ARG_CHAPTER_ID);
         }
 
+        dialog = new LoadingDialog(getActivity());
+
+        lessonsViewModel = getViewModel(LessonsViewModel.class);
         taskResultViewModel = getViewModel(TaskResultViewModel.class);
         tasksViewModel = getViewModel(TasksViewModel.class);
-        lessonsViewModel = getViewModel(LessonsViewModel.class);
         userViewModel = getViewModel(UserViewModel.class);
 
-        // TODO create a sub-fragment in task fragment for task only, keep lesson viewmodel here
-        // Lesson list
-        lessonsViewModel.getData().observe(this, (data) -> {
-            showError(lessonsViewModel.getError());
-            onUpdateLessons(data);
-        });
         lessonsViewModel.fetchData(chapterId);
 
+        // Lessons
+        lessonsViewModel.getData().observe(this, this::onUpdate);
+        lessonsViewModel.getErrorState().observe(this, this::showError);
+
         // Task states
+        tasksViewModel.getErrorState().observe(this, this::showError);
         tasksViewModel.getHelpState().observe(this, this::onUpdateHelp);
         tasksViewModel.getAnswerState().observe(this, this::onUpdateAnswer);
 
-        // Task evaluation result
+        // Task result
         taskResultViewModel.clear();
-        taskResultViewModel.getData().observe(this, (data) -> {
-            showError(taskResultViewModel.getError());
-            onUpdate(data);
-            if (dialog != null)
-                dialog.dismiss();
+        taskResultViewModel.getData().observe(this, this::onUpdate);
+        taskResultViewModel.getErrorState().observe(this, this::showError);
+        taskResultViewModel.getLoadingState().observe(this, (isLoading) -> {
+            if (dialog != null) {
+                if (isLoading)
+                    dialog.show();
+                else
+                    dialog.dismiss();
+            }
         });
-        taskResultViewModel.getSaveState().observe(this, (data) -> {
-            showError(data);
-            showError(taskResultViewModel.getError());
-        });
-        taskResultViewModel.getLoadedCode().observe(this, (data) -> {
-            if (data == null)
-                return;
-            showError(taskResultViewModel.getError());
-            if (tasks != null && !tasks.isEmpty()) {
+        taskResultViewModel.getSaveState().observe(this, this::showError);
+        taskResultViewModel.getCodeLoadedState().observe(this, (data) -> {
+            if (data != null && tasks != null && !tasks.isEmpty()) {
                 codes = new ArrayList<>(data.y);
-                updateTaskCode(tasks.get(currentTask));
+                onUpdate(tasks.get(currentTask));
             }
         });
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onViewCreated(@NotNull View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        // Setup views
+        setupViews(savedInstanceState);
+    }
+
+    private void setupViews(Bundle savedInstanceState) {
+        webView = findViewById(R.id.webView);
+        stars = findViewById(R.id.stars);
+        taskLayout = findViewById(R.id.taskLayout);
+        codeTaskLayout = findViewById(R.id.codeTaskLayout);
+        taskCount = findViewById(R.id.taskCount);
+        inputEditText = findViewById(R.id.inputEditText);
+        buttonTaskNext = findViewById(R.id.buttonTaskNext);
+        buttonTaskPrevious = findViewById(R.id.buttonTaskPrevious);
+        buttonTaskHelp = findViewById(R.id.buttonTaskHelp);
+        buttonTaskSubmit = findViewById(R.id.buttonTaskSubmit);
+
+        inputEditText.setVisibility(View.GONE);
+
+        setupWebView();
+        setupCodeEditor();
+
+        buttonTaskHelp.setOnClickListener(this::getTaskHelp);
+        buttonTaskNext.setOnClickListener(this::nextTask);
+        buttonTaskPrevious.setOnClickListener(this::previousTask);
+        buttonTaskSubmit.setOnClickListener(this::submit);
+
+        boolean drawerStatus = true;
+        if (savedInstanceState != null) {
+            currentTask = savedInstanceState.getInt("currentTask");
+            drawerStatus = savedInstanceState.getBoolean("drawerStatus");
+        }
+
+        if (drawerStatus) {
+            DrawerLayout drawer = findViewById(R.id.drawerLayout);
+            drawer.open();
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NotNull Bundle outState) {
         super.onSaveInstanceState(outState);
 
         DrawerLayout drawer = findViewById(R.id.drawerLayout);
@@ -159,13 +197,7 @@ public class TaskFragment extends FragmentBase {
         outState.putInt("currentTask", currentTask); // TODO remember task AND lesson
     }
 
-    private void onUpdateTasks(ArrayList<Task> tasks) {
-        this.tasks = tasks;
-
-        updateTaskList(tasks);
-    }
-
-    private void onUpdateLessons(ArrayList<Lesson> lessons) {
+    private void onUpdate(ArrayList<Lesson> lessons) {
         if (lessons == null || lessons.isEmpty())
             return;
 
@@ -252,10 +284,7 @@ public class TaskFragment extends FragmentBase {
                 super.onPageFinished(view, url);
 
                 // Task list needs webView to be ready
-                tasksViewModel.getData().observe(getViewLifecycleOwner(), (data) -> {
-                    showError(tasksViewModel.getError());
-                    onUpdateTasks(data);
-                });
+                tasksViewModel.getData().observe(getViewLifecycleOwner(), (tasks) -> onUpdateTasks(tasks));
             }
         });
     }
@@ -289,44 +318,6 @@ public class TaskFragment extends FragmentBase {
             }
             return false;
         });
-    }
-
-    @SuppressLint("ClickableViewAccessibility")
-    @Override
-    public void onViewCreated(@NotNull View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        webView = findViewById(R.id.webView);
-        stars = findViewById(R.id.stars);
-        taskLayout = findViewById(R.id.taskLayout);
-        codeTaskLayout = findViewById(R.id.codeTaskLayout);
-        taskCount = findViewById(R.id.taskCount);
-        inputEditText = findViewById(R.id.inputEditText);
-        buttonTaskNext = findViewById(R.id.buttonTaskNext);
-        buttonTaskPrevious = findViewById(R.id.buttonTaskPrevious);
-        buttonTaskHelp = findViewById(R.id.buttonTaskHelp);
-        buttonTaskSubmit = findViewById(R.id.buttonTaskSubmit);
-
-        inputEditText.setVisibility(View.GONE);
-
-        setupWebView();
-        setupCodeEditor();
-
-        buttonTaskHelp.setOnClickListener(this::getTaskHelp);
-        buttonTaskNext.setOnClickListener(this::nextTask);
-        buttonTaskPrevious.setOnClickListener(this::previousTask);
-        buttonTaskSubmit.setOnClickListener(this::submit);
-
-        boolean drawerStatus = true;
-        if (savedInstanceState != null) {
-            currentTask = savedInstanceState.getInt("currentTask");
-            drawerStatus = savedInstanceState.getBoolean("drawerStatus");
-        }
-
-        if (drawerStatus) {
-            DrawerLayout drawer = findViewById(R.id.drawerLayout);
-            drawer.open();
-        }
     }
 
     private void getTaskHelp(View view) {
@@ -572,7 +563,7 @@ public class TaskFragment extends FragmentBase {
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    public void updateTaskCode(Task task) {
+    public void onUpdate(Task task) {
 
         if (codes.isEmpty()) {
             if (task.files == null)
@@ -595,8 +586,8 @@ public class TaskFragment extends FragmentBase {
 
             fileNameView.setPadding(25, 0, 0, 0);
             fileNameView.setOnClickListener((e) -> {
-                codes.set(currentIndex, codeEditor.getText().toString());
-                currentIndex = finalI;
+                codes.set(currentFileIndex, codeEditor.getText().toString());
+                currentFileIndex = finalI;
                 codeEditor.setText(codes.get(finalI));
 
                 for (int j = 0; j < codeTaskLayout.getChildCount(); ++j) {
@@ -616,8 +607,9 @@ public class TaskFragment extends FragmentBase {
         codeTaskLayout.addView(codeEditor);
     }
 
-    int currentIndex = 0;
-    public void updateTaskList(ArrayList<Task> tasks) {
+    int currentFileIndex = 0;
+    public void onUpdateTasks(ArrayList<Task> tasks) {
+        this.tasks = tasks;
 
         View view = requireActivity().getCurrentFocus();
         if (view != null) {
@@ -757,10 +749,8 @@ public class TaskFragment extends FragmentBase {
                     //exeType = 1;
                 case TASK_CODE:
                 case TASK_CODE2:
-                    codes.set(currentIndex, codeEditor.getText().toString());
+                    codes.set(currentFileIndex, codeEditor.getText().toString());
                     taskResultViewModel.saveCode(task.task_id, task.fileNames, codes);
-                    dialog = new LoadingDialog(getActivity());
-                    dialog.show();
                     taskResultViewModel.postData(new DoRunProgram(exeType, task, task.fileNames, codes, currentTaskClock));
                     return;
 
@@ -820,14 +810,14 @@ public class TaskFragment extends FragmentBase {
     public void nextTask(View view) {
         if (tasks.size() > currentTask + 1) {
             ++currentTask;
-            updateTaskList(tasks);
+            onUpdateTasks(tasks);
         }
     }
 
     public void previousTask(View view) {
         if (currentTask - 1 >= 0) {
             --currentTask;
-            updateTaskList(tasks);
+            onUpdateTasks(tasks);
         }
     }
 }

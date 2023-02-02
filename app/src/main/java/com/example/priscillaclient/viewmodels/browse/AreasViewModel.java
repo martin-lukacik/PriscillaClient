@@ -20,12 +20,17 @@ public class AreasViewModel extends ViewModelBase {
 
     public void fetchData(int categoryId) {
         if (lastCategoryId != categoryId) {
-            state.setValue(null);
-            apiTask.executeAsync(new GetAreas(categoryId), (data, error) -> {
-                setError(error);
-                state.setValue(data);
-            });
             lastCategoryId = categoryId;
+
+            clear();
+            setLoadingState(true);
+            apiTask.executeAsync(new GetAreas(categoryId), (data, error) -> {
+                setLoadingState(false);
+                if (error != null)
+                    setErrorState(error);
+                else
+                    state.setValue(data);
+            });
         }
     }
 

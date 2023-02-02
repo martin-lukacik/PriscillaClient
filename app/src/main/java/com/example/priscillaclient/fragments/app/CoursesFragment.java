@@ -9,7 +9,6 @@ import android.widget.GridView;
 
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.adapters.CourseListAdapter;
-import com.example.priscillaclient.fragments.FragmentAdapter;
 import com.example.priscillaclient.fragments.FragmentBase;
 import com.example.priscillaclient.misc.Preferences;
 import com.example.priscillaclient.viewmodels.app.CoursesViewModel;
@@ -19,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
-public class CoursesFragment extends FragmentBase implements FragmentAdapter<ArrayList<Course>> {
+public class CoursesFragment extends FragmentBase {
 
     // Members
     private CourseListAdapter adapter;
@@ -36,83 +35,35 @@ public class CoursesFragment extends FragmentBase implements FragmentAdapter<Arr
         super.onCreate(savedInstanceState);
         layoutId = R.layout.fragment_courses;
 
+        // Prepare view models
         viewModel = getViewModel(CoursesViewModel.class);
-        viewModel.getData().observe(this, onResponse(viewModel.getError()));
-        viewModel.fetchData();
+        viewModel.fetchData(false);
     }
 
     @Override
     public void onViewCreated(@NotNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setEmptyView(findViewById(R.id.courseListView));
 
+        // Setup views
         courseListView = findViewById(R.id.courseListView);
         courseListView.setOnItemClickListener(this::onCourseSelected);
         courseListView.setOnItemLongClickListener(this::onCoursePinned);
+        setEmptyView(courseListView);
+
+        // Setup observers
+        viewModel.getData().observe(getViewLifecycleOwner(), this::onUpdate);
+        viewModel.getErrorState().observe(getViewLifecycleOwner(), this::showError);
     }
 
-    @Override
-    public void onUpdate(ArrayList<Course> response) {
-        onUpdateCourses(response);
-
-        SharedPreferences settings = requireActivity().getApplicationContext().getSharedPreferences(Preferences.PREFS, 0);
-        int pinnedCourseId = settings.getInt(Preferences.PREFS_PINNED_COURSE_ID, -1);
-
-        setPinnedCourse(pinnedCourseId);
-    }
-
-    private void setPinnedCourse(int courseId) {
-        int courseIndex = -1;
-
-        for (int i = 0; i < courses.size(); ++i) {
-            Course course = courses.get(i);
-            course.isPinned = false;
-
-            if (courseId == courses.get(i).course_id) {
-                course.isPinned = true;
-                courseIndex = i;
-            }
-        }
-
-        if (courseIndex != -1) {
-            Course c = courses.remove(courseIndex);
-            courses.add(0, c);
-        }
-    }
-
-    private boolean onCoursePinned(AdapterView<?> adapterView, View view, int i, long l) {
-        int courseId = courses.get(i).course_id;
-
-        SharedPreferences settings = requireActivity().getApplicationContext().getSharedPreferences(Preferences.PREFS, 0);
-        int savedPinId = settings.getInt(Preferences.PREFS_PINNED_COURSE_ID, -1);
-
-        if (savedPinId == -1) {
-            savePinnedCourse(courseId);
-            setPinnedCourse(courseId);
-            adapter.notifyDataSetChanged();
-        } else if (courseId == savedPinId) {
-            savePinnedCourse(-1);
-            setPinnedCourse(-1);
-
-            onUpdateCourses(viewModel.getData().getValue());
-        }
-
-        return true;
-    }
-
-    private void onUpdateCourses(ArrayList<Course> courses) {
+    public void onUpdate(ArrayList<Course> courses) {
         if (courses != null) {
             this.courses = new ArrayList<>(courses);
             adapter = new CourseListAdapter(getActivity(), this.courses);
             courseListView.setAdapter(adapter);
         }
-    }
 
-    private void savePinnedCourse(int courseId) {
-        SharedPreferences settings = requireActivity().getApplicationContext().getSharedPreferences(Preferences.PREFS, 0);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putInt(Preferences.PREFS_PINNED_COURSE_ID, courseId);
-        editor.apply();
+        int savedPinId = preferences.getInt(Preferences.PREFS_PINNED_COURSE_ID, -1);
+        setPinnedCourse(savedPinId, false);
     }
 
     private void onCourseSelected(AdapterView<?> adapterView, View view, int i, long l){
@@ -122,5 +73,52 @@ public class CoursesFragment extends FragmentBase implements FragmentAdapter<Arr
         args.putInt(ChaptersFragment.ARG_COURSE_COLOR, Color.parseColor(course.area_color));
 
         navigate(R.id.chaptersFragment, args);
+    }
+
+    private boolean onCoursePinned(AdapterView<?> adapterView, View view, int i, long l) {
+        int savedPinId = preferences.getInt(Preferences.PREFS_PINNED_COURSE_ID, -1);
+        int courseId = courses.get(i).course_id;
+
+        if (savedPinId == -1) {
+            // Nothing pinned
+            setPinnedCourse(courseId, true);
+            adapter.notifyDataSetChanged();
+        } else if (courseId == savedPinId) {
+            // Cleared pin, restore original order
+            setPinnedCourse(-1, true);
+            onUpdate(viewModel.getData().getValue());
+        }
+
+        return true;
+    }
+
+    private void savePinnedCourse(int courseId) {
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt(Preferences.PREFS_PINNED_COURSE_ID, courseId);
+        editor.apply();
+    }
+
+    private void setPinnedCourse(int courseId, boolean save) {
+        int courseIndex = -1;
+
+        if (courseId != -1 && courses != null) {
+            for (int i = 0; i < courses.size(); ++i) {
+                Course course = courses.get(i);
+                course.isPinned = false;
+
+                if (courseId == courses.get(i).course_id) {
+                    course.isPinned = true;
+                    courseIndex = i;
+                }
+            }
+
+            if (courseIndex != -1) {
+                Course c = courses.remove(courseIndex);
+                courses.add(0, c);
+            }
+        }
+
+        if (save)
+            savePinnedCourse(courseId);
     }
 }

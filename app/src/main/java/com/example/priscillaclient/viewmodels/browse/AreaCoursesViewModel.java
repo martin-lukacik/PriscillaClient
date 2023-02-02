@@ -20,12 +20,17 @@ public class AreaCoursesViewModel extends ViewModelBase {
 
     public void fetchData(int areaId) {
         if (lastAreaId != areaId) {
-            state.setValue(null);
-            apiTask.executeAsync(new GetAreaCourses(areaId), (data, error) -> {
-                setError(error);
-                state.setValue(data);
-            });
             lastAreaId = areaId;
+
+            clear();
+            setLoadingState(true);
+            apiTask.executeAsync(new GetAreaCourses(areaId), (data, error) -> {
+                setLoadingState(false);
+                if (error != null)
+                    setErrorState(error);
+                else
+                    state.setValue(data);
+            });
         }
     }
 

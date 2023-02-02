@@ -7,7 +7,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.priscillaclient.R;
-import com.example.priscillaclient.fragments.FragmentAdapter;
 import com.example.priscillaclient.viewmodels.browse.AreasViewModel;
 import com.example.priscillaclient.viewmodels.browse.models.Area;
 import com.example.priscillaclient.fragments.FragmentBase;
@@ -16,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
-public class AreasFragment extends FragmentBase implements FragmentAdapter<ArrayList<Area>> {
+public class AreasFragment extends FragmentBase {
 
     // Arguments
     public static final String ARG_CATEGORY_ID = "categoryId";
@@ -28,6 +27,9 @@ public class AreasFragment extends FragmentBase implements FragmentAdapter<Array
     // Views
     private ListView areaListView;
 
+    // View models
+    AreasViewModel viewModel;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,26 +39,30 @@ public class AreasFragment extends FragmentBase implements FragmentAdapter<Array
             categoryId = getArguments().getInt(ARG_CATEGORY_ID);
         }
 
-        AreasViewModel viewModel = getViewModel(AreasViewModel.class);
-        viewModel.getData().observe(this, onResponse(viewModel.getError()));
+        viewModel = getViewModel(AreasViewModel.class);
         viewModel.fetchData(categoryId);
     }
 
     @Override
     public void onViewCreated(@NotNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setEmptyView(findViewById(R.id.areaListView));
 
+        // Setup views
         areaListView = findViewById(R.id.areaListView);
         areaListView.setOnItemClickListener(this::onAreaSelected);
+        setEmptyView(areaListView);
+
+        // Setup observers
+        viewModel.getData().observe(getViewLifecycleOwner(), this::onUpdate);
+        viewModel.getErrorState().observe(getViewLifecycleOwner(), this::showError);
     }
 
-    @Override
     public void onUpdate(ArrayList<Area> areas) {
-        this.areas = areas;
-
-        ArrayAdapter<Area> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, areas);
-        areaListView.setAdapter(adapter);
+        if (areas != null) {
+            this.areas = areas;
+            ArrayAdapter<Area> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, areas);
+            areaListView.setAdapter(adapter);
+        }
     }
 
     private void onAreaSelected(AdapterView<?> adapterView, View view, int i, long l) {

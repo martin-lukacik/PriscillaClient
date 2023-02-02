@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.example.priscillaclient.LoginActivity;
 import com.example.priscillaclient.R;
-import com.example.priscillaclient.fragments.FragmentAdapter;
 import com.example.priscillaclient.fragments.FragmentBase;
 import com.example.priscillaclient.misc.Preferences;
 import com.example.priscillaclient.viewmodels.user.ProfileViewModel;
@@ -24,7 +23,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.jetbrains.annotations.NotNull;
 
-public class ProfileFragment extends FragmentBase implements FragmentAdapter<User> {
+public class ProfileFragment extends FragmentBase {
 
     Profile profile;
     Settings settings;
@@ -35,19 +34,9 @@ public class ProfileFragment extends FragmentBase implements FragmentAdapter<Use
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         layoutId = R.layout.fragment_profile;
-
-        UserViewModel userViewModel = (UserViewModel) getViewModel(UserViewModel.class);
-        userViewModel.getData().observe(this, onResponse(userViewModel.getError()));
-
-        ProfileViewModel profileViewModel = (ProfileViewModel) getViewModel(ProfileViewModel.class);
-        profile = profileViewModel.getData().getValue();
-        profileViewModel.getData().observe(this, (data) -> {
-            profile = data;
-            onUpdateProfile();
-        });
-
-        SettingsViewModel settingsViewModel = (SettingsViewModel) getViewModel(SettingsViewModel.class);
-        settings = settingsViewModel.getData().getValue();
+        UserViewModel userViewModel = getViewModel(UserViewModel.class);
+        userViewModel.getData().observe(this, this::onUpdate);
+        userViewModel.getErrorState().observe(this, this::showError);
     }
 
     @Override
@@ -56,7 +45,13 @@ public class ProfileFragment extends FragmentBase implements FragmentAdapter<Use
         View v = findViewById(R.id.loadingView);
         v.setVisibility(View.GONE);
 
-        onUpdateProfile();
+        SettingsViewModel settingsViewModel = getViewModel(SettingsViewModel.class);
+        settingsViewModel.getErrorState().observe(getViewLifecycleOwner(), this::showError);
+        settings = settingsViewModel.getData().getValue();
+
+        ProfileViewModel profileViewModel = getViewModel(ProfileViewModel.class);
+        profileViewModel.getData().observe(getViewLifecycleOwner(), this::onUpdate);
+        profileViewModel.getErrorState().observe(getViewLifecycleOwner(), this::showError);
     }
 
     public void logout(View view) {
@@ -93,10 +88,11 @@ public class ProfileFragment extends FragmentBase implements FragmentAdapter<Use
 
     @SuppressLint("SetTextI18n")
     public void onUpdate(User user) {
+        if (user == null)
+            return;
 
         TextView profileLogout = findViewById(R.id.profileLogoutButton);
         profileLogout.setOnClickListener(this::logout);
-
 
         TextView usernameShort = findViewById(R.id.usernameShort);
         TextView usernameFull = findViewById(R.id.usernameFull);
@@ -120,9 +116,6 @@ public class ProfileFragment extends FragmentBase implements FragmentAdapter<Use
         usernameShort.setText(shortName);
 
         // Color the text
-        //usernameShort.setTextColor(color);
-
-        /*usernameShort.setBackgroundColor(color);*/
         usernameShort.setTextColor(0xffffffff);
         // Color the circle
         GradientDrawable drawable = (GradientDrawable) usernameShort.getBackground();
@@ -145,9 +138,11 @@ public class ProfileFragment extends FragmentBase implements FragmentAdapter<Use
         profileSettings.setOnClickListener(this::showProfileSettings);
     }
 
-    public void onUpdateProfile() {
+    public void onUpdate(Profile profile) {
         if (profile == null)
             return;
+
+        this.profile = profile;
 
         TextView profileYear = findViewById(R.id.profileYear);
         profileYear.setText(String.valueOf(profile.yob));

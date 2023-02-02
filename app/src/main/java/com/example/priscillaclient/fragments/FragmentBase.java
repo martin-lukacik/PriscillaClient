@@ -1,5 +1,6 @@
 package com.example.priscillaclient.fragments;
 
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.example.priscillaclient.ActivityBase;
 import com.example.priscillaclient.MainActivity;
 import com.example.priscillaclient.R;
+import com.example.priscillaclient.misc.Preferences;
 import com.example.priscillaclient.viewmodels.ViewModelBase;
 
 import org.jetbrains.annotations.NotNull;
@@ -21,6 +23,8 @@ import org.jetbrains.annotations.NotNull;
 import java.io.InputStream;
 
 public abstract class FragmentBase extends Fragment {
+
+    protected SharedPreferences preferences;
 
     protected int layoutId = 0;
     private View layout;
@@ -34,6 +38,13 @@ public abstract class FragmentBase extends Fragment {
     public void navigate(int layoutId, Bundle args) {
         ((MainActivity) requireActivity()).navigate(layoutId, args);
     }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        preferences = requireActivity().getApplicationContext().getSharedPreferences(Preferences.PREFS, 0);
+    }
+
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedState) {
         if (layout == null)

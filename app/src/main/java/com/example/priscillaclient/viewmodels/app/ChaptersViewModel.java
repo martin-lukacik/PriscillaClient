@@ -21,12 +21,17 @@ public class ChaptersViewModel extends ViewModelBase {
 
     public void fetchData(int courseId) {
         if (lastCourseId != courseId) {
-            state.setValue(null);
-            apiTask.executeAsync(new GetChapters(courseId), (data, error) -> {
-                setError(error);
-                state.setValue(data);
-            });
             lastCourseId = courseId;
+
+            clear();
+            setLoadingState(true);
+            apiTask.executeAsync(new GetChapters(courseId), (data, error) -> {
+                setLoadingState(false);
+                if (error != null)
+                    setErrorState(error);
+                else
+                    state.setValue(data);
+            });
         }
     }
 

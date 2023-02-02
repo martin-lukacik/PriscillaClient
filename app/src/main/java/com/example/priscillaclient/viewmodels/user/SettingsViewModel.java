@@ -16,8 +16,10 @@ public class SettingsViewModel extends ViewModelBase {
 
     public void fetchData() {
         apiTask.executeAsync(new GetSettings(), (data, error) -> {
-            setError(error);
-            state.setValue(data);
+            if (error != null)
+                setErrorState(error);
+            else
+                state.setValue(data);
         });
     }
 }

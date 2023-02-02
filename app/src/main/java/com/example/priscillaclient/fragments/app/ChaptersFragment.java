@@ -2,12 +2,10 @@ package com.example.priscillaclient.fragments.app;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.adapters.ChapterListAdapter;
-import com.example.priscillaclient.fragments.FragmentAdapter;
 import com.example.priscillaclient.fragments.FragmentBase;
 import com.example.priscillaclient.viewmodels.app.ChaptersViewModel;
 import com.example.priscillaclient.viewmodels.app.models.Chapter;
@@ -16,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
-public class ChaptersFragment extends FragmentBase implements FragmentAdapter<ArrayList<Chapter>> {
+public class ChaptersFragment extends FragmentBase {
 
     // Arguments
     public static final String ARG_COURSE_ID = "courseId";
@@ -26,6 +24,12 @@ public class ChaptersFragment extends FragmentBase implements FragmentAdapter<Ar
     private int courseId;
     private int courseColor;
     private ArrayList<Chapter> chapters = new ArrayList<>();
+
+    // Views
+    GridView chaptersListView;
+
+    // View models
+    ChaptersViewModel viewModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,31 +41,37 @@ public class ChaptersFragment extends FragmentBase implements FragmentAdapter<Ar
             courseColor = getArguments().getInt(ARG_COURSE_COLOR);
         }
 
-        ChaptersViewModel viewModel = getViewModel(ChaptersViewModel.class);
-        viewModel.getData().observe(this, onResponse(viewModel.getError()));
+        // Prepare view models
+        viewModel = getViewModel(ChaptersViewModel.class);
         viewModel.fetchData(courseId);
     }
 
     @Override
     public void onViewCreated(@NotNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setEmptyView(findViewById(R.id.chapterListView));
+
+        // Setup views
+        chaptersListView = findViewById(R.id.chapterListView);
+        chaptersListView.setOnItemClickListener((a, v, index, l) -> onChapterSelected(index));
+        setEmptyView(chaptersListView);
+
+        // Setup observers
+        viewModel.getData().observe(getViewLifecycleOwner(), this::onUpdate);
+        viewModel.getErrorState().observe(getViewLifecycleOwner(), this::showError);
     }
 
-    @Override
     public void onUpdate(ArrayList<Chapter> chapters) {
-        this.chapters = (ArrayList<Chapter>) chapters;
-
-        ChapterListAdapter adapter = new ChapterListAdapter(getActivity(), this.chapters, courseColor);
-        GridView chaptersListView = findViewById(R.id.chapterListView);
-        chaptersListView.setAdapter(adapter);
-        chaptersListView.setOnItemClickListener(this::onChapterSelected);
+        if (chapters != null) {
+            this.chapters = chapters;
+            ChapterListAdapter adapter = new ChapterListAdapter(getActivity(), this.chapters, courseColor);
+            chaptersListView.setAdapter(adapter);
+        }
     }
 
-    private void onChapterSelected(AdapterView<?> adapterView, View view, int i, long l) {
+    private void onChapterSelected(int index) {
         Bundle args = new Bundle();
         args.putInt(TaskFragment.ARG_COURSE_ID, courseId);
-        args.putInt(TaskFragment.ARG_CHAPTER_ID, chapters.get(i).id);
+        args.putInt(TaskFragment.ARG_CHAPTER_ID, chapters.get(index).id);
 
         navigate(R.id.taskFragment, args);
     }

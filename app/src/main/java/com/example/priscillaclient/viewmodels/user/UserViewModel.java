@@ -17,18 +17,24 @@ public class UserViewModel extends ViewModelBase {
 
     public void fetchData() {
         apiTask.executeAsync(new GetUser(), (data, error) -> {
-            setError(error);
-            state.setValue(data);
+            if (error != null)
+                setErrorState(error);
+            else
+                state.setValue(data);
         });
     }
 
     public void update(int age, int content_type_id, int country, String group, int lang, String name, String nick, String surname, int theme_id) {
         state.setValue(null);
+        setLoadingState(true);
         apiTask.executeAsync(
             new DoUpdate(age, content_type_id, country, group, lang, name, nick, surname, theme_id),
             (data, error) -> {
-                setError(error);
-                fetchData();
+                setLoadingState(false);
+                if (error != null && !error.equals("OK"))
+                    setErrorState(error);
+                else
+                    fetchData();
             }
         );
     }

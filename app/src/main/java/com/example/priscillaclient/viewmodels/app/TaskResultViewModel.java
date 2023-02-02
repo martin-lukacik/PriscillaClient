@@ -26,28 +26,37 @@ public class TaskResultViewModel extends ViewModelBase {
     }
 
     public void postData(Callable<TaskResult> callable) {
+        setLoadingState(true);
         apiTask.executeAsync(callable, (data, error) -> {
-            setError(error);
-            state.setValue(data);
+            setLoadingState(false);
+            if (error != null)
+                setErrorState(error);
+            else
+                state.setValue(data);
         });
     }
 
     public void saveCode(int taskId, ArrayList<String> fileNames, ArrayList<String> fileContents) {
         apiTask.executeAsync(new DoSaveProgram(taskId, fileNames, fileContents), (data, error) -> {
-            setError(error);
-            saveState.setValue(data);
-            saveState.setValue(null); // no longer needed
+            if (error != null)
+                setErrorState(error);
+            else {
+                saveState.setValue(data);
+                saveState.setValue(null); // no longer needed
+            }
         });
     }
 
-    public LiveData<Pair<ArrayList<String>, ArrayList<String>>> getLoadedCode() {
+    public LiveData<Pair<ArrayList<String>, ArrayList<String>>> getCodeLoadedState() {
         return code;
     }
 
     public void loadCode(int taskId) {
         apiTask.executeAsync(new GetProgram(taskId), (data, error) -> {
-            setError(error);
-            code.setValue(data);
+            if (error != null)
+                setErrorState(error);
+            else
+                code.setValue(data);
         });
     }
 

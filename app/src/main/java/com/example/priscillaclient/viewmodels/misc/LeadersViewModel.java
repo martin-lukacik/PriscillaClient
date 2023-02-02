@@ -18,9 +18,9 @@ public class LeadersViewModel extends ViewModelBase {
 
     public void fetchData(boolean forceFetch) {
         if (forceFetch || getData().getValue() == null || getData().getValue().isEmpty()) {
-            loadingState.setValue(true);
+            setLoadingState(true);
             apiTask.executeAsync(new GetLeaders(), (data, error) -> {
-                loadingState.setValue(false);
+                setLoadingState(false);
                 if (error != null)
                     setErrorState(error);
                 else

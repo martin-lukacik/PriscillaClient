@@ -15,9 +15,9 @@ public class TokenViewModel extends ViewModelBase {
     }
 
     public void fetchData(String username, String password, String email, String grantType) {
-        loadingState.setValue(true);
+        setLoadingState(true);
         apiTask.executeAsync(new GetToken(username, password, email, grantType), (data, error) -> {
-            loadingState.setValue(false);
+            setLoadingState(false);
             if (error != null)
                setErrorState(error);
             else

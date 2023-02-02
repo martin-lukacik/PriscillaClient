@@ -17,10 +17,15 @@ public class CategoriesViewModel extends ViewModelBase {
     }
 
     public void fetchData() {
-        if (getData().getValue() == null) {
+        if (getData().getValue() == null || getData().getValue().isEmpty()) {
+            clear();
+            setLoadingState(true);
             apiTask.executeAsync(new GetCategories(), (data, error) -> {
-                setError(error);
-                state.setValue(data);
+                setLoadingState(false);
+                if (error != null)
+                    setErrorState(error);
+                else
+                    state.setValue(data);
             });
         }
     }

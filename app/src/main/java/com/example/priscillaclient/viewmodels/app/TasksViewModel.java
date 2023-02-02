@@ -34,8 +34,10 @@ public class TasksViewModel extends ViewModelBase {
     public void fetchData(int courseId, int chapterId, int lessonId, boolean forceFetch) {
         if (forceFetch || lastLessonId != lessonId) {
             apiTask.executeAsync(new GetTasks(courseId, chapterId, lessonId), (data, error) -> {
-                setError(error);
-                state.setValue(data);
+                if (error != null)
+                    setErrorState(error);
+                else
+                    state.setValue(data);
             });
             lastLessonId = lessonId;
         }
@@ -43,17 +45,23 @@ public class TasksViewModel extends ViewModelBase {
 
     public void getHelp(int taskId) {
         apiTask.executeAsync(new GetAnswer(taskId, Answer.AnswerType.HELP), (data, error) -> {
-            setError(error);
-            helpState.setValue(data);
-            helpState.setValue(null); // clear help, no longer needed
+            if (error != null)
+                setErrorState(error);
+            else {
+                helpState.setValue(data);
+                helpState.setValue(null); // clear help, no longer needed
+            }
         });
     }
 
     public void getAnswer(int taskId) {
         apiTask.executeAsync(new GetAnswer(taskId, Answer.AnswerType.ANSWER), (data, error) -> {
-            setError(error);
-            answerState.setValue(data);
-            answerState.setValue(null); // clear answer, no longer needed
+            if (error != null)
+                setErrorState(error);
+            else {
+                answerState.setValue(data);
+                answerState.setValue(null); // clear answer, no longer needed
+            }
         });
     }
 

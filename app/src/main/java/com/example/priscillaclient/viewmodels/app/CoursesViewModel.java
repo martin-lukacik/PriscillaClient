@@ -23,20 +23,26 @@ public class CoursesViewModel extends ViewModelBase {
         return joinCourseState;
     }
 
-    public void fetchData() {
-        if (getData().getValue() == null || getData().getValue().isEmpty()) {
-            state.setValue(null);
+    public void fetchData(boolean forceFetch) {
+        if (forceFetch || getData().getValue() == null || getData().getValue().isEmpty()) {
+            clear();
+            setLoadingState(true);
             apiTask.executeAsync(new GetCourses(), (data, error) -> {
-                setError(error);
-                state.setValue(data);
+                setLoadingState(false);
+                if (error != null)
+                    setErrorState(error);
+                else
+                    state.setValue(data);
             });
         }
     }
 
     public void joinCourse(int courseId) {
         apiTask.executeAsync(new DoJoinCourse(courseId), (data, error) -> {
-            setError(error);
-            joinCourseState.setValue(data);
+            if (error != null)
+                setErrorState(error);
+            else
+                joinCourseState.setValue(data);
         });
     }
 

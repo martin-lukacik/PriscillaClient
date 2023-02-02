@@ -14,9 +14,7 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
 
 import com.example.priscillaclient.ActivityBase;
-import com.example.priscillaclient.MainActivity;
 import com.example.priscillaclient.R;
-import com.example.priscillaclient.fragments.FragmentAdapter;
 import com.example.priscillaclient.fragments.FragmentBase;
 import com.example.priscillaclient.misc.LoadingDialog;
 import com.example.priscillaclient.misc.Pair;
@@ -39,7 +37,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Calendar;
 
-public class SettingsFragment extends FragmentBase implements FragmentAdapter<Profile> {
+public class SettingsFragment extends FragmentBase {
 
     ProfileViewModel profileViewModel;
 
@@ -67,14 +65,40 @@ public class SettingsFragment extends FragmentBase implements FragmentAdapter<Pr
         super.onCreate(savedInstanceState);
         layoutId = R.layout.fragment_settings;
 
+        dialog = new LoadingDialog(getActivity());
+
         this.settings = (getViewModel(SettingsViewModel.class)).getData().getValue();
 
         state = savedInstanceState;
         profileViewModel = getViewModel(ProfileViewModel.class);
-        profileViewModel.getData().observe(this, onResponse(profileViewModel.getError()));
+        profileViewModel.getData().observe(this, this::onUpdate);
+        profileViewModel.getErrorState().observe(this, this::showError);
+    }
+
+    @Override
+    public void onViewCreated(@NotNull View view, Bundle state) {
+        super.onViewCreated(view, state);
+
+        View v = findViewById(R.id.loadingView);
+        v.setVisibility(View.GONE);
+
+        profileEditName = findViewById(R.id.profileEditName);
+        profileEditSurname = findViewById(R.id.profileEditSurname);
+        profileEditNickname = findViewById(R.id.profileEditNickname);
+        profileEditGroup = findViewById(R.id.profileEditGroup);
+        profileEditStudentType = findViewById(R.id.profileEditStudentType);
+        profileEditCountry = findViewById(R.id.profileEditCountry);
+        profileEditLanguage = findViewById(R.id.profileEditLanguage);
+        profileEditTheme = findViewById(R.id.profileEditTheme);
+        profileEditYear = findViewById(R.id.profileEditYear);
+
+        settingsSave = findViewById(R.id.settingsSaveButton);
+        settingsSave.setOnClickListener(this::save);
     }
 
     public void onUpdate(Profile profile) {
+        if (profile == null)
+            return;
 
         this.profile = profile;
 
@@ -101,27 +125,6 @@ public class SettingsFragment extends FragmentBase implements FragmentAdapter<Pr
             profileEditSurname.setText(state.getString("surname"));
             state = null;
         }
-    }
-
-    @Override
-    public void onViewCreated(@NotNull View view, Bundle state) {
-        super.onViewCreated(view, state);
-
-        View v = findViewById(R.id.loadingView);
-        v.setVisibility(View.GONE);
-
-        profileEditName = findViewById(R.id.profileEditName);
-        profileEditSurname = findViewById(R.id.profileEditSurname);
-        profileEditNickname = findViewById(R.id.profileEditNickname);
-        profileEditGroup = findViewById(R.id.profileEditGroup);
-        profileEditStudentType = findViewById(R.id.profileEditStudentType);
-        profileEditCountry = findViewById(R.id.profileEditCountry);
-        profileEditLanguage = findViewById(R.id.profileEditLanguage);
-        profileEditTheme = findViewById(R.id.profileEditTheme);
-        profileEditYear = findViewById(R.id.profileEditYear);
-
-        settingsSave = findViewById(R.id.settingsSaveButton);
-        settingsSave.setOnClickListener(this::save);
     }
 
     @Override
@@ -181,7 +184,6 @@ public class SettingsFragment extends FragmentBase implements FragmentAdapter<Pr
             UserViewModel userViewModel = getViewModel(UserViewModel.class);
             userViewModel.update(age, content_type_id, country, group, lang, name, nick, surname, theme_id);
 
-            dialog = new LoadingDialog(getActivity());
             dialog.show();
             Observer<User> observer = new Observer<User>() {
                 @Override

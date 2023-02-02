@@ -13,7 +13,6 @@ import android.widget.ListView;
 import androidx.lifecycle.Observer;
 
 import com.example.priscillaclient.R;
-import com.example.priscillaclient.fragments.FragmentAdapter;
 import com.example.priscillaclient.fragments.FragmentBase;
 import com.example.priscillaclient.fragments.app.ChaptersFragment;
 import com.example.priscillaclient.viewmodels.app.CoursesViewModel;
@@ -26,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
-public class AreaCourseFragment extends FragmentBase implements FragmentAdapter<ArrayList<AreaCourse>> {
+public class AreaCourseFragment extends FragmentBase {
 
     // Arguments
     public static final String ARG_AREA_ID = "areaId";
@@ -36,7 +35,11 @@ public class AreaCourseFragment extends FragmentBase implements FragmentAdapter<
     private ArrayList<Course> courses;
     private ArrayList<AreaCourse> areaCourses;
 
+    // Views
+    ListView areaCourseList;
+
     // View models
+    private AreaCoursesViewModel viewModel;
     private CoursesViewModel coursesViewModel;
 
     @Override
@@ -48,8 +51,7 @@ public class AreaCourseFragment extends FragmentBase implements FragmentAdapter<
             areaId = getArguments().getInt(ARG_AREA_ID);
         }
 
-        AreaCoursesViewModel viewModel = getViewModel(AreaCoursesViewModel.class);
-        viewModel.getData().observe(this, onResponse(viewModel.getError()));
+        viewModel = getViewModel(AreaCoursesViewModel.class);
         viewModel.fetchData(areaId);
 
         coursesViewModel = getViewModel(CoursesViewModel.class);
@@ -59,29 +61,36 @@ public class AreaCourseFragment extends FragmentBase implements FragmentAdapter<
     @Override
     public void onViewCreated(@NotNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setEmptyView(findViewById(R.id.areaCourseList));
+
+        // Setup views
+        areaCourseList = findViewById(R.id.areaCourseList);
+        areaCourseList.setOnItemClickListener(this::courseSelected);
+        setEmptyView(areaCourseList);
+
+        // Setup observers
+        viewModel.getData().observe(getViewLifecycleOwner(), this::onUpdate);
+        viewModel.getErrorState().observe(getViewLifecycleOwner(), this::showError);
     }
 
-    @Override
     public void onUpdate(ArrayList<AreaCourse> areaCourses) {
-        this.areaCourses = areaCourses;
+        if (areaCourses != null) {
+            this.areaCourses = areaCourses;
 
-        ArrayAdapter<AreaCourse> adapter = new ArrayAdapter<AreaCourse>(getActivity(), android.R.layout.simple_list_item_1, areaCourses) {
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent){
-                View view = super.getView(position, convertView, parent);
-                if (areaCourses.get(position).status != AreaCourse.CourseStatus.OPENED) {
-                    String str = ((MaterialTextView) view).getText().toString();
-                    char unopenedCourseTag = '✱';
-                    ((MaterialTextView) view).setText(unopenedCourseTag + " " + str);
+            ArrayAdapter<AreaCourse> adapter = new ArrayAdapter<AreaCourse>(getActivity(), android.R.layout.simple_list_item_1, areaCourses) {
+                @Override
+                public View getView(int position, View convertView, ViewGroup parent) {
+                    View view = super.getView(position, convertView, parent);
+                    if (areaCourses.get(position).status != AreaCourse.CourseStatus.OPENED) {
+                        String str = ((MaterialTextView) view).getText().toString();
+                        char unopenedCourseTag = '✱';
+                        ((MaterialTextView) view).setText(unopenedCourseTag + " " + str);
+                    }
+                    return view;
                 }
-                return view;
-            }
-        };
+            };
 
-        ListView areaCourseList = findViewById(R.id.areaCourseList);
-        areaCourseList.setAdapter(adapter);
-        areaCourseList.setOnItemClickListener(this::courseSelected);
+            areaCourseList.setAdapter(adapter);
+        }
     }
 
     private void courseSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -111,8 +120,7 @@ public class AreaCourseFragment extends FragmentBase implements FragmentAdapter<
                 if (s == null)
                     return;
                 navigate(R.id.menu_dashboard);
-                coursesViewModel.clear();
-                coursesViewModel.fetchData();
+                coursesViewModel.fetchData(true);
                 coursesViewModel.getJoinState().removeObserver(this); // observer no longer needed
             }
         });
