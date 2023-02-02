@@ -55,7 +55,6 @@ public class ProfileFragment extends FragmentBase {
     }
 
     public void logout(View view) {
-
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.log_out);
         builder.setMessage(R.string.settings_reset);

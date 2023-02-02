@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.lifecycle.ViewModelProviders;
@@ -72,6 +73,14 @@ public class LoginActivity extends ActivityBase {
                 viewModel.fetchData(username, refreshToken, username, "refresh_token");
             }
         }
+    }
+
+    @Override
+    public void showError(String error) {
+        if (error == null)
+            return;
+        TextView loginError = findViewById(R.id.loginError);
+        loginError.setText(error);
     }
 
     public void redirect(View view) {
