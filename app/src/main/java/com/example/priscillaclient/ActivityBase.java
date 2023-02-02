@@ -1,10 +1,12 @@
 package com.example.priscillaclient;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -84,5 +86,17 @@ public class ActivityBase extends AppCompatActivity {
         int uiMode = getResources().getConfiguration().uiMode;
         int nightModeFlags = uiMode & Configuration.UI_MODE_NIGHT_MASK;
         return nightModeFlags == Configuration.UI_MODE_NIGHT_YES;
+    }
+
+    public void showError(String error) {
+        if (error != null) {
+            Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+
+            if (error.equals("Unauthorized.")) {
+                LoginActivity.userLoggedIn = false;
+                startActivity(new Intent(this, LoginActivity.class));
+                finish();
+            }
+        }
     }
 }

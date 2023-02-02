@@ -11,13 +11,9 @@ import java.util.ArrayList;
 
 public class LeadersViewModel extends ViewModelBase {
     private final MutableLiveData<ArrayList<Leader>> state = new MutableLiveData<>(null);
-    private final MutableLiveData<Boolean> loadingState = new MutableLiveData<>(false);
 
     public LiveData<ArrayList<Leader>> getData() {
         return state;
-    }
-    public LiveData<Boolean> loadingState() {
-        return loadingState;
     }
 
     public void fetchData(boolean forceFetch) {
@@ -25,8 +21,10 @@ public class LeadersViewModel extends ViewModelBase {
             loadingState.setValue(true);
             apiTask.executeAsync(new GetLeaders(), (data, error) -> {
                 loadingState.setValue(false);
-                setError(error);
-                state.setValue(data);
+                if (error != null)
+                    errorState.setValue(error);
+                else
+                    state.setValue(data);
             });
         }
     }

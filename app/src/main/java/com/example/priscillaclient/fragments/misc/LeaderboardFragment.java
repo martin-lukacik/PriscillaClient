@@ -56,10 +56,7 @@ public class LeaderboardFragment extends FragmentBase {
         layoutId = R.layout.fragment_leaderboard;
 
         viewModel = getViewModel(LeadersViewModel.class);
-        viewModel.getData().observe(this, (data) -> {
-            showError(viewModel.getError());
-            onUpdate(data);
-        });
+        viewModel.getData().observe(this, this::onUpdate);
         viewModel.fetchData(false);
     }
 
@@ -82,9 +79,12 @@ public class LeaderboardFragment extends FragmentBase {
         });
 
         // Observe loading state
-        viewModel.loadingState().observe(getViewLifecycleOwner(), (isLoading) -> {
+        viewModel.getLoadingState().observe(getViewLifecycleOwner(), (isLoading) -> {
             pullToRefresh.setRefreshing(isLoading);
         });
+
+        // Observe error state
+        viewModel.getErrorState().observe(getViewLifecycleOwner(), this::showError);
     }
 
     public void onUpdate(ArrayList<Leader> leaders) {

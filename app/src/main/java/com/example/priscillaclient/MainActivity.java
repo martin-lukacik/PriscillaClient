@@ -185,6 +185,7 @@ public class MainActivity extends ActivityBase {
         setActionBarTitle(user.performance.xp + " XP   " + user.performance.coins);
 
         if (initialUpdate) {
+            // TODO test if this is necessary (check for user updates)
             setDarkMode(user.theme_id, true);
         }
         initialUpdate = false;
@@ -226,18 +227,6 @@ public class MainActivity extends ActivityBase {
                 Intent i = new Intent(Intent.ACTION_MAIN);
                 i.addCategory(Intent.CATEGORY_HOME);
                 startActivity(i);
-            }
-        }
-    }
-
-    public void showError(String error) {
-        if (error != null) {
-            Toast.makeText(this, error, Toast.LENGTH_LONG).show();
-
-            if (error.equals("Unauthorized.")) {
-                LoginActivity.userLoggedIn = false;
-                startActivity(new Intent(this, LoginActivity.class));
-                finish();
             }
         }
     }

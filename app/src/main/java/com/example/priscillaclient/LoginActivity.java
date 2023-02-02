@@ -46,14 +46,19 @@ public class LoginActivity extends ActivityBase {
         dialog = new LoadingDialog(this);
 
         TokenViewModel viewModel = ViewModelProviders.of(this).get(TokenViewModel.class);
-        viewModel.getData().observe(this, (data) -> {
-            if (viewModel.hasError()) {
+        viewModel.getData().observe(this, this::onUpdate);
+
+        // Observe loading state
+        viewModel.getLoadingState().observe(this, (isLoading) -> {
+            if (!isLoading)
                 dialog.dismiss();
-                Toast.makeText(this, viewModel.getError(), Toast.LENGTH_LONG).show();
-            }
             else
-                onUpdate(data);
+                dialog.show();
         });
+
+        // Observe error state
+        viewModel.getErrorState().observe(this, this::showError);
+
         String username = settings.getString(Preferences.PREFS_USERNAME, null);
         String refreshToken = settings.getString(Preferences.PREFS_REFRESH_TOKEN, null);
 
@@ -63,7 +68,6 @@ public class LoginActivity extends ActivityBase {
                 rememberUser.setChecked(true);
                 ((EditText) findViewById(R.id.inputUsername)).setText(username);
                 viewModel.fetchData(username, refreshToken, username, "refresh_token");
-                dialog.show();
             }
         }
     }
@@ -80,14 +84,11 @@ public class LoginActivity extends ActivityBase {
 
         TokenViewModel viewModel = ViewModelProviders.of(this).get(TokenViewModel.class);
         viewModel.fetchData(username, password, username, "password");
-        dialog.show();
     }
 
     public void onUpdate(Token token) {
         if (userLoggedIn || token == null)
             return;
-
-        dialog.dismiss();
 
         String username = ((EditText) findViewById(R.id.inputUsername)).getText().toString();
 
