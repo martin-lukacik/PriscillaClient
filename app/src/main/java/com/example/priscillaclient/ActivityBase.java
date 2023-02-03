@@ -22,33 +22,19 @@ import java.util.Random;
 
 public class ActivityBase extends AppCompatActivity {
 
-    protected SharedPreferences settings;
+    protected SharedPreferences preferences;
     protected int themeId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        preferences = getSharedPreferences(Preferences.PREFS, 0);
+        themeId = preferences.getInt(Preferences.PREFS_THEME_ID, 0);
+        int motiveIndex = preferences.getInt(Preferences.PREFS_MOTIVE, -1);
+        String shortcut = preferences.getString(Preferences.PREFS_LANGUAGE_SHORTCUT, "en");
 
-        int index = getSharedPreferences(Preferences.PREFS, 0).getInt(Preferences.PREFS_MOTIVE, -1);
-
-        int[] styles = new int[] {
-                R.style.Purple,
-                R.style.Blue,
-                R.style.Green,
-                R.style.Orange,
-                R.style.Red,
-        };
-        if (index == -1)
-            index = new Random().nextInt(styles.length);
-        else
-            --index;
-        setTheme(styles[index]);
-
-        settings = getSharedPreferences(Preferences.PREFS, 0);
-
-        themeId = settings.getInt(Preferences.PREFS_THEME_ID, 0);
+        setTheme(getThemeId(motiveIndex));
         setDarkMode(themeId, false, true);
-
-        changeLocale(settings.getString(Preferences.PREFS_LANGUAGE_SHORTCUT, "en"), false);
+        changeLocale(shortcut, false);
 
         super.onCreate(savedInstanceState);
 
@@ -65,7 +51,7 @@ public class ActivityBase extends AppCompatActivity {
 
     public void setDarkMode(int themeId, boolean save, boolean refresh) {
         if (save) {
-            SharedPreferences.Editor editor = settings.edit();
+            SharedPreferences.Editor editor = preferences.edit();
             editor.putInt(Preferences.PREFS_THEME_ID, themeId);
             editor.apply();
         }
@@ -114,5 +100,22 @@ public class ActivityBase extends AppCompatActivity {
                 finish();
             }
         }
+    }
+
+    private int getThemeId(int motiveIndex) {
+
+        int[] styles = new int[] { // TODO hardcoded
+                0,
+                R.style.Purple,
+                R.style.Blue,
+                R.style.Green,
+                R.style.Orange,
+                R.style.Red,
+        };
+
+        if (motiveIndex == -1)
+            motiveIndex = new Random().nextInt(styles.length) + 1;
+
+        return styles[motiveIndex];
     }
 }

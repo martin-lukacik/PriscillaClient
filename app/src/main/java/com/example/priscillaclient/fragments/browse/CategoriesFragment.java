@@ -58,7 +58,7 @@ public class CategoriesFragment extends FragmentBase {
     private void onCategorySelected(AdapterView<?> adapterView, View view, int i, long l) {
         int categoryId = categories.get(i).category_id;
         Bundle args = new Bundle();
-        args.putInt("categoryId", categoryId);
+        args.putInt(AreasFragment.ARG_CATEGORY_ID, categoryId);
 
         navigate(R.id.areasFragment, args);
     }

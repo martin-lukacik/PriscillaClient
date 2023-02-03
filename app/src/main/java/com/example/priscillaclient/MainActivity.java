@@ -17,58 +17,9 @@ import com.example.priscillaclient.viewmodels.user.ProfileViewModel;
 import com.example.priscillaclient.viewmodels.user.SettingsViewModel;
 import com.example.priscillaclient.viewmodels.user.UserViewModel;
 import com.example.priscillaclient.viewmodels.user.models.Language;
+import com.example.priscillaclient.viewmodels.user.models.Settings;
 import com.example.priscillaclient.viewmodels.user.models.User;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-/*help 10
-answer 20
-
-code 20, 40
-
-https://app.priscilla.fitped.eu/get-my-help/{TASK_ID}
-help = String
-
-
-
-ANSWER is ARRAY for
-    CHOICE
-    RADIO,
-
-
-/get-my-answer/{TASK_ID}
-{
-	"answers": [
-		{
-			"answer": "sekvencia",
-			"feedback": ""
-		},
-		{
-			"answer": "vetvenie",
-			"feedback": ""
-		},
-		{
-			"answer": "cyklus",
-			"feedback": ""
-		},
-		{
-			"answer": "zložené podmienky",
-			"feedback": ""
-		},
-		{
-			"answer": "polia",
-			"feedback": ""
-		}
-	],
-	"user": {
-		"xp": 11056,
-		"coins": 365,
-		"level": 1,
-		"badges": []
-	}
-}
-
-answers = {"title":"House (Dom)","assignment":[""],"files":[{"rContent":"public class House {\n\n}","aContent":"public class House {\n    String color;\n    double height;\n    double width = 10.5;\n    int rooms = 5;\n}"},{"rContent":"public class MainApp {\n  \n    public static void main() {\n        \/\/ toto je len príklad použitia, tento kód sa nevykonáva\n        House example = new House(); \/\/ vytvori instanciu\n        example.color = \"green\";\n        example.height = 6.2;\n    \texample.width = 12.5;\n    \texample.rooms = 8;\n    }\n}","aContent":""}],"testCases":"","filesToKeep":[""],"configFiles":[""],"help":"","global":{"files":{"files":["House.java","MainApp.java"],"filesToKeep":["file1.txt"],"configFiles":["vpl_run.sh","vpl_debug.sh","vpl_evaluate.sh","Main.java","Evaluate.java","MySolution.java"]}}}
-*/
 
 public class MainActivity extends ActivityBase {
 
@@ -106,39 +57,12 @@ public class MainActivity extends ActivityBase {
         userViewModel.getErrorState().observe(this, this::showError);
         userViewModel.fetchData();
 
-
         ProfileViewModel profileViewModel = ViewModelProviders.of(this).get(ProfileViewModel.class);
         profileViewModel.fetchData();
 
         SettingsViewModel settingsViewModel = ViewModelProviders.of(this).get(SettingsViewModel.class);
         settingsViewModel.fetchData();
-        settingsViewModel.getData().observe(this, (data) -> {
-            if (data == null || data.isEmpty())
-                return;
-
-            profileViewModel.getData().observe(this, (d) -> {
-
-                if (d == null)
-                    return;
-
-                String currentShortcut = settings.getString(Preferences.PREFS_LANGUAGE_SHORTCUT, "en");
-                String shortcut = "en";
-
-                for (Language language : data.languages) {
-                    if (language.id == d.pref_lang_id) {
-                        shortcut = language.shortcut.toLowerCase();
-                        break;
-                    }
-                }
-
-                if (!shortcut.equals(currentShortcut)) {
-                    SharedPreferences.Editor editor = settings.edit();
-                    editor.putString(Preferences.PREFS_LANGUAGE_SHORTCUT, shortcut);
-                    editor.apply();
-                    changeLocale(shortcut, true);
-                }
-            });
-        });
+        settingsViewModel.getData().observe(this, this::onUpdate);
     }
 
     private void setupNavigation() {
@@ -166,6 +90,35 @@ public class MainActivity extends ActivityBase {
 
         setDarkMode(user.theme_id, true, true);
         initialUpdate = false;
+    }
+
+    public void onUpdate(Settings settings) {
+        if (settings == null || settings.isEmpty())
+            return;
+
+        ProfileViewModel profileViewModel = ViewModelProviders.of(this).get(ProfileViewModel.class);
+        profileViewModel.getData().observe(this, (d) -> {
+
+            if (d == null)
+                return;
+
+            String currentShortcut = preferences.getString(Preferences.PREFS_LANGUAGE_SHORTCUT, "en");
+            String shortcut = "en";
+
+            for (Language language : settings.languages) {
+                if (language.id == d.pref_lang_id) {
+                    shortcut = language.shortcut.toLowerCase();
+                    break;
+                }
+            }
+
+            if (!shortcut.equals(currentShortcut)) {
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putString(Preferences.PREFS_LANGUAGE_SHORTCUT, shortcut);
+                editor.apply();
+                changeLocale(shortcut, true);
+            }
+        });
     }
 
     void setActionBarTitle(String title) {

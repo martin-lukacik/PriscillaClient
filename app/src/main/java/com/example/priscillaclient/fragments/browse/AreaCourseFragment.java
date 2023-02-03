@@ -64,7 +64,7 @@ public class AreaCourseFragment extends FragmentBase {
 
         // Setup views
         areaCourseList = findViewById(R.id.areaCourseList);
-        areaCourseList.setOnItemClickListener(this::courseSelected);
+        areaCourseList.setOnItemClickListener(this::onCourseSelected);
         setEmptyView(areaCourseList);
 
         // Setup observers
@@ -93,7 +93,7 @@ public class AreaCourseFragment extends FragmentBase {
         }
     }
 
-    private void courseSelected(AdapterView<?> adapterView, View view, int i, long l) {
+    private void onCourseSelected(AdapterView<?> adapterView, View view, int i, long l) {
         AreaCourse course = areaCourses.get(i);
 
         if (course.status == AreaCourse.CourseStatus.OPENED) {

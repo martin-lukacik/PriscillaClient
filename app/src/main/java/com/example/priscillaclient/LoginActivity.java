@@ -61,8 +61,8 @@ public class LoginActivity extends ActivityBase {
         // Observe error state
         viewModel.getErrorState().observe(this, this::showError);
 
-        String username = settings.getString(Preferences.PREFS_USERNAME, null);
-        String refreshToken = settings.getString(Preferences.PREFS_REFRESH_TOKEN, null);
+        String username = preferences.getString(Preferences.PREFS_USERNAME, null);
+        String refreshToken = preferences.getString(Preferences.PREFS_REFRESH_TOKEN, null);
 
         if (!userLoggedIn) {
             if (username != null && refreshToken != null) {
@@ -93,7 +93,7 @@ public class LoginActivity extends ActivityBase {
         String password = ((EditText) findViewById(R.id.inputPassword)).getText().toString();
 
         if (password.isEmpty()) {
-            String refreshToken = settings.getString(Preferences.PREFS_REFRESH_TOKEN, null);
+            String refreshToken = preferences.getString(Preferences.PREFS_REFRESH_TOKEN, null);
             viewModel.fetchData(username, refreshToken, username, "refresh_token");
         } else {
             TokenViewModel viewModel = ViewModelProviders.of(this).get(TokenViewModel.class);
@@ -107,7 +107,7 @@ public class LoginActivity extends ActivityBase {
 
         String username = ((EditText) findViewById(R.id.inputUsername)).getText().toString();
 
-        SharedPreferences.Editor editor = settings.edit();
+        SharedPreferences.Editor editor = preferences.edit();
         CheckBox rememberUser = findViewById(R.id.rememberUser);
         if (rememberUser.isChecked()) {
             editor.putString(Preferences.PREFS_USERNAME, username);
