@@ -48,4 +48,6 @@
     <string name="balance">Current balance</string>
     <string name="execution">Execution</string>
     <string name="compilation">Compilation</string>
+    <string name="join_course">Join course</string>
+    <string name="join">JOIN</string>
 </resources>

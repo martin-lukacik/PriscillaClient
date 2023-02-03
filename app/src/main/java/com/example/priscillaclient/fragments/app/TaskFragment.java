@@ -155,6 +155,16 @@ public class TaskFragment extends FragmentBase {
         setupViews(savedInstanceState);
     }
 
+    @Override
+    public void onSaveInstanceState(@NotNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        DrawerLayout drawer = findViewById(R.id.drawerLayout);
+        outState.putBoolean("drawerStatus", drawer.isOpen());
+        outState.putInt("currentTask", currentTask);
+        outState.putInt("currentLessonId", currentLessonId);
+    }
+
     private void setupViews(Bundle savedInstanceState) {
         webView = findViewById(R.id.webView);
         stars = findViewById(R.id.stars);
@@ -169,7 +179,7 @@ public class TaskFragment extends FragmentBase {
 
         inputEditText.setVisibility(View.GONE);
 
-        setupWebView();
+        setupWebView(savedInstanceState);
         setupCodeEditor();
 
         buttonTaskHelp.setOnClickListener(this::getTaskHelp);
@@ -180,6 +190,7 @@ public class TaskFragment extends FragmentBase {
         boolean drawerStatus = true;
         if (savedInstanceState != null) {
             currentTask = savedInstanceState.getInt("currentTask");
+            currentLessonId = savedInstanceState.getInt("currentLessonId");
             drawerStatus = savedInstanceState.getBoolean("drawerStatus");
         }
 
@@ -189,20 +200,78 @@ public class TaskFragment extends FragmentBase {
         }
     }
 
-    @Override
-    public void onSaveInstanceState(@NotNull Bundle outState) {
-        super.onSaveInstanceState(outState);
+    @SuppressLint("SetJavaScriptEnabled")
+    private void setupWebView(Bundle state) {
+        String darkCss = (isDarkModeEnabled() ? readFile(R.raw.task_style_dark) : "");
+        css = "<style>" + readFile(R.raw.task_style) + darkCss + "</style>";
+        javascript = "<script>" + readFile(R.raw.task_script) + "</script>";
 
-        DrawerLayout drawer = findViewById(R.id.drawerLayout);
-        outState.putBoolean("drawerStatus", drawer.isOpen());
-        outState.putInt("currentTask", currentTask); // TODO remember task AND lesson
+        WebSettings settings = webView.getSettings();
+        settings.setJavaScriptEnabled(true);
+        webView.addJavascriptInterface(javascriptInterface, "Android");
+        webView.setOnLongClickListener(v -> true);
+        webView.setLongClickable(false);
+        webView.setVerticalScrollBarEnabled(false);
+        webView.setHorizontalScrollBarEnabled(false);
+        webView.setHorizontalScrollBarEnabled(false);
+        String loadingContent = "<div style=\"display:block;width:99%;position:absolute;top:50%;text-align:center;font-size:36px\">" +  getString(R.string.loading) + "</div>";
+        String html = css + javascript + "<div id=\"task-content\">" + loadingContent + "</div>";
+        webView.loadDataWithBaseURL(null, html, "text/html; charset=utf-8", "UTF-8", null);
+        webView.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+
+                // Task list needs webView to be ready
+                tasksViewModel.getData().observe(getViewLifecycleOwner(), (tasks) -> {
+                    if (state != null) {
+                        currentTask = state.getInt("currentTask", 0);
+                        state.clear();
+                    }
+                    onUpdateTasks(tasks);
+                });
+            }
+        });
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private void setupCodeEditor() {
+        codeEditor = new CodeEditor(getActivity());
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        params.setMargins(0, 36, 0, 0);
+        codeEditor.setLayoutParams(params);
+        codeEditor.setHighlightCurrentLine(true);
+        codeEditor.setHighlightBracketPair(true);
+        codeEditor.setEditorLanguage(new JavaLanguage());
+        codeEditor.setTypefaceText(Typeface.MONOSPACE);
+
+        EditorColorScheme scheme = new EditorColorScheme(isDarkModeEnabled()) { };
+        scheme.setColor(EditorColorScheme.WHOLE_BACKGROUND, isDarkModeEnabled() ? 0xFF333333 : 0xffffffff);
+        scheme.setColor(EditorColorScheme.TEXT_NORMAL, isDarkModeEnabled() ? 0xffffffff : 0xFF333333);
+        scheme.setColor(EditorColorScheme.LINE_NUMBER_BACKGROUND, isDarkModeEnabled() ? 0xFF333333 : 0xffffffff);
+        scheme.setColor(EditorColorScheme.LINE_NUMBER, isDarkModeEnabled() ? 0xfff1f1f1 : 0xFF333333);
+        scheme.setColor(EditorColorScheme.LINE_NUMBER_CURRENT, isDarkModeEnabled() ? 0xffffffff : 0xFF333333);
+        codeEditor.setColorScheme(scheme);
+
+        codeEditor.setOnTouchListener((v, event) -> {
+            if (codeEditor.hasFocus()) {
+                int eventMask = (event.getAction() & MotionEvent.ACTION_MASK);
+                v.getParent().requestDisallowInterceptTouchEvent(true);
+                if (eventMask == MotionEvent.ACTION_SCROLL) {
+                    v.getParent().requestDisallowInterceptTouchEvent(false);
+                    return true;
+                }
+            }
+            return false;
+        });
     }
 
     private void onUpdate(ArrayList<Lesson> lessons) {
         if (lessons == null || lessons.isEmpty())
             return;
 
-        currentLessonId = lessons.get(0).id;
+        if (currentLessonId == 0)
+            currentLessonId = lessons.get(0).id;
         currentTask = 0;
         this.lessons = lessons;
 
@@ -234,7 +303,7 @@ public class TaskFragment extends FragmentBase {
         for (Lesson lesson : lessons) {
             MenuItem menuItem = menu.add(lesson.name);
 
-            if (!initialChecked) {
+            if (!initialChecked && lesson.id == currentLessonId) {
                 menuItem.setChecked(initialChecked = true);
             }
 
@@ -260,65 +329,6 @@ public class TaskFragment extends FragmentBase {
         DrawerLayout drawer = findViewById(R.id.drawerLayout);
         drawer.closeDrawers();
         return true;
-    }
-
-    @SuppressLint("SetJavaScriptEnabled")
-    private void setupWebView() {
-        String darkCss = (isDarkModeEnabled() ? readFile(R.raw.task_style_dark) : "");
-        css = "<style>" + readFile(R.raw.task_style) + darkCss + "</style>";
-        javascript = "<script>" + readFile(R.raw.task_script) + "</script>";
-
-        WebSettings settings = webView.getSettings();
-        settings.setJavaScriptEnabled(true);
-        webView.addJavascriptInterface(javascriptInterface, "Android");
-        webView.setOnLongClickListener(v -> true);
-        webView.setLongClickable(false);
-        webView.setVerticalScrollBarEnabled(false);
-        webView.setHorizontalScrollBarEnabled(false);
-        webView.setHorizontalScrollBarEnabled(false);
-        String loadingContent = "<div style=\"display:block;width:99%;position:absolute;top:50%;text-align:center;font-size:36px\">" +  getString(R.string.loading) + "</div>";
-        String html = css + javascript + "<div id=\"task-content\">" + loadingContent + "</div>";
-        webView.loadDataWithBaseURL(null, html, "text/html; charset=utf-8", "UTF-8", null);
-        webView.setWebViewClient(new WebViewClient() {
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                super.onPageFinished(view, url);
-
-                // Task list needs webView to be ready
-                tasksViewModel.getData().observe(getViewLifecycleOwner(), (tasks) -> onUpdateTasks(tasks));
-            }
-        });
-    }
-
-    private void setupCodeEditor() {
-        codeEditor = new CodeEditor(getActivity());
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        params.setMargins(0, 36, 0, 0);
-        codeEditor.setLayoutParams(params);
-        codeEditor.setHighlightCurrentLine(true);
-        codeEditor.setHighlightBracketPair(true);
-        codeEditor.setEditorLanguage(new JavaLanguage());
-        codeEditor.setTypefaceText(Typeface.MONOSPACE);
-
-        EditorColorScheme scheme = new EditorColorScheme(isDarkModeEnabled()) { };
-        scheme.setColor(EditorColorScheme.WHOLE_BACKGROUND, isDarkModeEnabled() ? 0xFF333333 : 0xffffffff);
-        scheme.setColor(EditorColorScheme.TEXT_NORMAL, isDarkModeEnabled() ? 0xffffffff : 0xFF333333);
-        scheme.setColor(EditorColorScheme.LINE_NUMBER_BACKGROUND, isDarkModeEnabled() ? 0xFF333333 : 0xffffffff);
-        scheme.setColor(EditorColorScheme.LINE_NUMBER, isDarkModeEnabled() ? 0xfff1f1f1 : 0xFF333333);
-        scheme.setColor(EditorColorScheme.LINE_NUMBER_CURRENT, isDarkModeEnabled() ? 0xffffffff : 0xFF333333);
-        codeEditor.setColorScheme(scheme);
-
-        codeEditor.setOnTouchListener((v, event) -> {
-            if (codeEditor.hasFocus()) {
-                int eventMask = (event.getAction() & MotionEvent.ACTION_MASK);
-                v.getParent().requestDisallowInterceptTouchEvent(true);
-                if (eventMask == MotionEvent.ACTION_SCROLL) {
-                    v.getParent().requestDisallowInterceptTouchEvent(false);
-                    return true;
-                }
-            }
-            return false;
-        });
     }
 
     private void getTaskHelp(View view) {
@@ -564,12 +574,11 @@ public class TaskFragment extends FragmentBase {
         }
     }
 
-    @SuppressLint("ClickableViewAccessibility")
     public void onUpdate(Task task) {
+        if (task == null || task.files == null)
+            return;
 
         if (codes.isEmpty()) {
-            if (task.files == null)
-                return; // TODO ??
             codes = new ArrayList<>(task.files);
         }
 
@@ -746,7 +755,6 @@ public class TaskFragment extends FragmentBase {
             Task task = tasks.get(currentTask);
             ArrayList<String> postedAnswers = new ArrayList<>();
 
-            int exeType = 0;
             String answer = null;
             switch (task.type) {
 
@@ -754,12 +762,11 @@ public class TaskFragment extends FragmentBase {
                     taskResultViewModel.postData(new DoEvaluateHtml(task, codes.get(0), currentTaskClock, task.fileNames.get(0)));
                     return;
                 case TASK_CODE_SQL:
-                    //exeType = 1;
                 case TASK_CODE:
                 case TASK_CODE2:
                     codes.set(currentFileIndex, codeEditor.getText().toString());
                     taskResultViewModel.saveCode(task.task_id, task.fileNames, codes);
-                    taskResultViewModel.postData(new DoRunProgram(exeType, task, task.fileNames, codes, currentTaskClock));
+                    taskResultViewModel.postData(new DoRunProgram(0, task, task.fileNames, codes, currentTaskClock));
                     return;
 
                 case TASK_READ:

@@ -103,8 +103,8 @@ public class AreaCourseFragment extends FragmentBase {
         } else {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setTitle(course.title);
-            builder.setMessage("Join course " + course.title + " ?"); // TODO localize
-            builder.setPositiveButton("JOIN", (dialog, id) -> joinCourse(course.id));
+            builder.setMessage(getString(R.string.join_course) + " " + course.title + " ?");
+            builder.setPositiveButton(getString(R.string.join), (dialog, id) -> joinCourse(course.id));
             builder.setNegativeButton(R.string.cancel, null);
 
             Dialog d = builder.create();

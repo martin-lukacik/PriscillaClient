@@ -100,7 +100,7 @@ public class MainActivity extends ActivityBase {
     private void fetchData() {
         UserViewModel userViewModel = ViewModelProviders.of(this).get(UserViewModel.class);
         userViewModel.getData().observe(this, (data) -> {
-            initialUpdate = true; // TODO probably need to remove this observer and this can go away
+            initialUpdate = true;
             onUpdate(data);
         });
         userViewModel.getErrorState().observe(this, this::showError);
@@ -159,19 +159,12 @@ public class MainActivity extends ActivityBase {
 
     boolean initialUpdate = true;
     public void onUpdate(User user) {
-        if (user == null)
+        if (user == null || !initialUpdate)
             return;
-
-        if (!initialUpdate) {
-            return;
-        }
 
         setActionBarTitle(user.performance.xp + " XP   " + user.performance.coins);
 
-        if (initialUpdate) {
-            // TODO test if this is necessary (check for user updates)
-            setDarkMode(user.theme_id, true, true);
-        }
+        setDarkMode(user.theme_id, true, true);
         initialUpdate = false;
     }
 
