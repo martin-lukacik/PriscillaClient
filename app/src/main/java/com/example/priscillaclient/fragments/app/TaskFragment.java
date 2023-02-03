@@ -225,7 +225,11 @@ public class TaskFragment extends FragmentBase {
                 // Task list needs webView to be ready
                 tasksViewModel.getData().observe(getViewLifecycleOwner(), (tasks) -> {
                     if (state != null) {
-                        currentTask = state.getInt("currentTask", 0);
+                        int index = state.getInt("currentTask", -1);
+
+                        if (index != -1)
+                            currentTask = index;
+
                         state.clear();
                     }
                     onUpdateTasks(tasks);
