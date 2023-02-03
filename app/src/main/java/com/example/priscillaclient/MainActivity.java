@@ -81,16 +81,6 @@ public class MainActivity extends ActivityBase {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        int[] styles = new int[] {
-            R.style.Purple,
-            R.style.Blue,
-            R.style.Green,
-            R.style.Red,
-            R.style.Orange,
-        };
-        setTheme(styles[new Random().nextInt(styles.length)]);
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -183,7 +173,7 @@ public class MainActivity extends ActivityBase {
 
         if (initialUpdate) {
             // TODO test if this is necessary (check for user updates)
-            setDarkMode(user.theme_id, true);
+            setDarkMode(user.theme_id, true, true);
         }
         initialUpdate = false;
     }

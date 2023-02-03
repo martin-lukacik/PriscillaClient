@@ -1,6 +1,10 @@
 package com.example.priscillaclient.fragments.user;
 
 import android.content.SharedPreferences;
+import android.content.res.TypedArray;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,6 +57,7 @@ public class SettingsFragment extends FragmentBase {
     Spinner profileEditCountry;
     Spinner profileEditLanguage;
     Spinner profileEditTheme;
+    Spinner profileEditMotive;
     Spinner profileEditYear;
 
     TextView settingsSave;
@@ -90,6 +95,7 @@ public class SettingsFragment extends FragmentBase {
         profileEditCountry = findViewById(R.id.profileEditCountry);
         profileEditLanguage = findViewById(R.id.profileEditLanguage);
         profileEditTheme = findViewById(R.id.profileEditTheme);
+        profileEditMotive = findViewById(R.id.profileEditMotive);
         profileEditYear = findViewById(R.id.profileEditYear);
 
         settingsSave = findViewById(R.id.settingsSaveButton);
@@ -112,6 +118,7 @@ public class SettingsFragment extends FragmentBase {
         loadProfileCountry(settings);
         loadProfileLanguage(settings);
         loadProfileTheme(settings);
+        loadProfileMotive();
 
         if (state != null) {
             profileEditYear.setSelection(state.getInt("year"));
@@ -120,6 +127,7 @@ public class SettingsFragment extends FragmentBase {
             profileEditGroup.setSelection(state.getInt("group"));
             profileEditLanguage.setSelection(state.getInt("lang"));
             profileEditTheme.setSelection(state.getInt("theme"));
+            profileEditMotive.setSelection(state.getInt("motive"));
             profileEditName.setText(state.getString("name"));
             profileEditNickname.setText(state.getString("nick"));
             profileEditSurname.setText(state.getString("surname"));
@@ -136,22 +144,18 @@ public class SettingsFragment extends FragmentBase {
         outState.putInt("group", profileEditGroup.getSelectedItemPosition());
         outState.putInt("lang", profileEditLanguage.getSelectedItemPosition());
         outState.putInt("theme", profileEditTheme.getSelectedItemPosition());
+        outState.putInt("motive", profileEditMotive.getSelectedItemPosition());
         outState.putString("name", profileEditName.getText().toString());
         outState.putString("nick", profileEditNickname.getText().toString());
         outState.putString("surname", profileEditSurname.getText().toString());
     }
 
-    public void showLanguageChangeDialog(String shortcut) {
-        if (!isThemeChanged) {
-            ((ActivityBase) requireActivity()).changeLocale(shortcut, true);
-        } else {
-            ((ActivityBase) requireActivity()).changeLocale(shortcut, true);
-            ((ActivityBase) requireActivity()).setDarkMode(changedThemeId, true);
-        }
-    }
-
     boolean isThemeChanged = false;
     int changedThemeId = 1;
+
+    boolean isMotiveChanged = false;
+    int changedMotive = -1;
+
     public void save(View view) {
         int age = profileEditYear.getSelectedItemPosition() + startingYear;
         int content_type_id = profileEditStudentType.getSelectedItemPosition() + 1;
@@ -162,13 +166,17 @@ public class SettingsFragment extends FragmentBase {
         String nick = profileEditNickname.getText().toString();
         String surname = profileEditSurname.getText().toString();
         int theme_id = settings.themes.get(profileEditTheme.getSelectedItemPosition()).id;
+        int motive = profileEditMotive.getSelectedItemPosition();
         String shortcut = settings.languages.get(profileEditLanguage.getSelectedItemPosition()).shortcut.toLowerCase();
 
-        SharedPreferences settings = requireActivity().getSharedPreferences(Preferences.PREFS, 0);
-
-        if (settings.getInt(Preferences.PREFS_THEME_ID, 1) != theme_id) {
+        if (preferences.getInt(Preferences.PREFS_THEME_ID, 1) != theme_id) {
             isThemeChanged = true;
             changedThemeId = theme_id;
+        }
+
+        int savedMotive = preferences.getInt(Preferences.PREFS_MOTIVE, -1);
+        if (savedMotive != motive) {
+            isMotiveChanged = true;
         }
 
         if (profile.yob != age
@@ -180,6 +188,7 @@ public class SettingsFragment extends FragmentBase {
             || !profile.nickname.equals(nick)
             || !profile.surname.equals(surname)
             || profile.theme_id != theme_id
+            || isMotiveChanged
         ) {
             UserViewModel userViewModel = getViewModel(UserViewModel.class);
             userViewModel.update(age, content_type_id, country, group, lang, name, nick, surname, theme_id);
@@ -197,18 +206,33 @@ public class SettingsFragment extends FragmentBase {
 
                     userViewModel.getData().removeObserver(this);
 
-                    String savedShortcut = settings.getString(Preferences.PREFS_LANGUAGE_SHORTCUT, "en");
+                    String savedShortcut = preferences.getString(Preferences.PREFS_LANGUAGE_SHORTCUT, "en");
                     if (!savedShortcut.equals(shortcut)) {
 
                         clearLocalizedViewModels();
 
-                        SharedPreferences.Editor editor = settings.edit();
+                        SharedPreferences.Editor editor = preferences.edit();
                         editor.putString(Preferences.PREFS_LANGUAGE_SHORTCUT, shortcut);
                         editor.apply();
 
-                        showLanguageChangeDialog(shortcut);
-                    } else if (isThemeChanged) {
-                        ((ActivityBase) requireActivity()).setDarkMode(theme_id, true);
+                        ((ActivityBase) requireActivity()).changeLocale(shortcut, false);
+                    }
+
+                    boolean needsRecreate = false;
+                    if (isThemeChanged) {
+                        needsRecreate = true;
+                        ((ActivityBase) requireActivity()).setDarkMode(changedThemeId, true, false);
+                    }
+                    if (isMotiveChanged) {
+                        needsRecreate = true;
+
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.putInt(Preferences.PREFS_MOTIVE, motive);
+                        editor.apply();
+                    }
+
+                    if (needsRecreate) {
+                        requireActivity().recreate();
                     }
 
                     requireActivity().onBackPressed(); // navigate back to profile
@@ -251,6 +275,53 @@ public class SettingsFragment extends FragmentBase {
         spinner.setSelection(selectedIndex);
     }
 
+    private void loadProfileMotive() {
+        int savedIndex = preferences.getInt(Preferences.PREFS_MOTIVE, 0);
+        String[] items = new String[] { "Random", "Purple", "Blue", "Green", "Orange", "Red" };
+        int[] colors = new int[] {
+            0,
+            Color.parseColor("#3700B3"),
+            Color.parseColor("#004f99"),
+            Color.parseColor("#017020"),
+            Color.parseColor("#955001"),
+            Color.parseColor("#8c1b1a"),
+        };
+  /*      loadSelection(profileEditMotive, items, savedIndex);
+
+*/
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.spinner_row, items) {
+
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+
+                View v = super.getView(position, convertView, parent);
+
+                int id = getContext().getResources().getIdentifier("ic_rectangle", "drawable", getContext().getPackageName());
+                TextView textView = v.findViewById(R.id.spinnerLanguage);
+                Drawable drawable = ContextCompat.getDrawable(getContext(), id);
+
+
+                if (position > 0) {
+                    drawable.setColorFilter(colors[position], PorterDuff.Mode.SRC_ATOP);
+
+
+                    textView.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
+                }
+                return v;
+            }
+
+            @Override
+            public View getDropDownView(int position, View convertView, @NotNull ViewGroup parent) {
+                View v = getView(position, convertView, parent);
+                v.setPadding(0, 10, 0, 10);
+                return v;
+            }
+        };
+        adapter.setDropDownViewResource(R.layout.spinner_row);
+        profileEditMotive.setAdapter(adapter);
+        profileEditMotive.setSelection(savedIndex);
+    }
+
     private void loadProfileStudentType(Profile profile) {
         String[] items = new String[] { "teen student", "university student" }; // TODO hardcored
         loadSelection(profileEditStudentType, items, profile.content_type_id - 1);
@@ -287,7 +358,7 @@ public class SettingsFragment extends FragmentBase {
 
                 View v = super.getView(position, convertView, parent);
 
-                SettingsViewModel settingsViewModel = (SettingsViewModel) getViewModel(SettingsViewModel.class);
+                SettingsViewModel settingsViewModel = getViewModel(SettingsViewModel.class);
 
                 if (settingsViewModel.getData().getValue() != null) {
                     String shortcut = settingsViewModel.getData().getValue().languages.get(position).shortcut;

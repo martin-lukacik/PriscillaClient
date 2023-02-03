@@ -18,6 +18,7 @@ import com.example.priscillaclient.misc.Preferences;
 import com.example.priscillaclient.viewmodels.user.models.Theme;
 
 import java.util.Locale;
+import java.util.Random;
 
 public class ActivityBase extends AppCompatActivity {
 
@@ -27,10 +28,25 @@ public class ActivityBase extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+        int index = getSharedPreferences(Preferences.PREFS, 0).getInt(Preferences.PREFS_MOTIVE, -1);
+
+        int[] styles = new int[] {
+                R.style.Purple,
+                R.style.Blue,
+                R.style.Green,
+                R.style.Orange,
+                R.style.Red,
+        };
+        if (index == -1)
+            index = new Random().nextInt(styles.length);
+        else
+            --index;
+        setTheme(styles[index]);
+
         settings = getSharedPreferences(Preferences.PREFS, 0);
 
         themeId = settings.getInt(Preferences.PREFS_THEME_ID, 0);
-        setDarkMode(themeId, false);
+        setDarkMode(themeId, false, true);
 
         changeLocale(settings.getString(Preferences.PREFS_LANGUAGE_SHORTCUT, "en"), false);
 
@@ -47,7 +63,7 @@ public class ActivityBase extends AppCompatActivity {
         }
     }
 
-    public void setDarkMode(int themeId, boolean save) {
+    public void setDarkMode(int themeId, boolean save, boolean refresh) {
         if (save) {
             SharedPreferences.Editor editor = settings.edit();
             editor.putInt(Preferences.PREFS_THEME_ID, themeId);
@@ -65,7 +81,7 @@ public class ActivityBase extends AppCompatActivity {
                 themeId = AppCompatDelegate.MODE_NIGHT_NO;
         }
 
-        if (AppCompatDelegate.getDefaultNightMode() != themeId)
+        if (refresh && AppCompatDelegate.getDefaultNightMode() != themeId)
             AppCompatDelegate.setDefaultNightMode(themeId);
     }
 

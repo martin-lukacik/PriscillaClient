@@ -32,8 +32,8 @@ public class TaskResult {
                 answers.add(new Answer(jAnswers.optJSONObject(i)));
             }
         } else {
-            compilation = json.getString("compilation");
-            execution = json.getString("execution");
+            compilation = json.optString("compilation");
+            execution = json.optString("execution");
         }
     }
 }

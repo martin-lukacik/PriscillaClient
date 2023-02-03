@@ -134,24 +134,6 @@
                 android:layout_height="wrap_content"
                 android:spinnerMode="dropdown" />
 
-            <!-- Theme -->
-            <TextView
-                android:layout_marginStart="15dp"
-                android:layout_marginEnd="15dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/theme"
-                android:textSize="18sp" />
-            <Spinner
-                android:backgroundTint="?colorPrimary"
-                android:layout_marginStart="25dp"
-                android:layout_marginEnd="25dp"
-                android:padding="10dp"
-                android:id="@+id/profileEditTheme"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:spinnerMode="dropdown" />
-
             <!-- Birth year -->
             <TextView
                 android:layout_marginStart="15dp"
@@ -170,6 +152,42 @@
                 android:layout_height="wrap_content"
                 android:spinnerMode="dropdown" />
 
+            <!-- Theme -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:text="@string/theme"
+                android:textSize="18sp" />
+            <Spinner
+                android:backgroundTint="?colorPrimary"
+                android:layout_marginStart="25dp"
+                android:layout_marginEnd="25dp"
+                android:padding="10dp"
+                android:id="@+id/profileEditTheme"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:spinnerMode="dropdown" />
+
+            <!-- Theme -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:text="Motive"
+                android:textSize="18sp" />
+
+            <Spinner
+                android:backgroundTint="?colorPrimary"
+                android:layout_marginStart="25dp"
+                android:layout_marginEnd="25dp"
+                android:padding="10dp"
+                android:id="@+id/profileEditMotive"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:spinnerMode="dropdown" />
             <TextView
                 android:id="@+id/settingsSaveButton"
                 android:padding="10dp"
