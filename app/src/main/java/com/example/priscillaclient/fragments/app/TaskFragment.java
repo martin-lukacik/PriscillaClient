@@ -4,9 +4,12 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -274,8 +277,16 @@ public class TaskFragment extends FragmentBase {
         if (lessons == null || lessons.isEmpty())
             return;
 
-        if (currentLessonId == 0)
+        boolean flag = false;
+
+        for (int i = 0; i < lessons.size(); ++i) {
+            if (lessons.get(i).id == currentLessonId) {
+                flag = true;
+            }
+        }
+        if (!flag)
             currentLessonId = lessons.get(0).id;
+
         currentTask = 0;
         this.lessons = lessons;
 
@@ -289,18 +300,22 @@ public class TaskFragment extends FragmentBase {
         Menu menu = navigationView.getMenu();
         menu.clear();
 
+        TextView textView = navigationView.getHeaderView(0).findViewById(R.id.drawer_title);
+        WebView imageView = navigationView.getHeaderView(0).findViewById(R.id.drawer_icon); // has to be a WebView (BitmapFactory returns null for base64 icons)
+        imageView.setBackgroundColor(0);
+
         // Set menu title
         if (chapters != null && !chapters.isEmpty()) {
             for (Chapter c : chapters) {
                 if (c.id == chapterId) {
-                    menu.add(c.name);
+                    textView.setText(c.name);
+                    imageView.loadData("<img style=\"filter:brightness(0) saturate(100%) invert(100%);max-width:100%;height:auto\" src=\"" + c.icon + "\" />", "text/html; charset=utf-8", "UTF-8");
                     break;
                 }
             }
         } else {
-            menu.add(R.string.lessons);
+            textView.setText(R.string.lessons);
         }
-        menu.getItem(0).setEnabled(false);
 
         // Set menu items
         boolean initialChecked = false;

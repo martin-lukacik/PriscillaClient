@@ -3,17 +3,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:id="@+id/drawerLayout"
     tools:context=".fragments.app.TaskFragment">
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigationView"
+        app:headerLayout="@layout/drawer_header"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:layout_marginStart="-65dp"
+        android:fitsSystemWindows="true"
         android:layout_gravity="start" />
-
 
     <ScrollView
         android:id="@+id/taskScrollView"

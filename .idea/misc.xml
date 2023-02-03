@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Martin/AndroidStudioProjects/PriscillaClient/app/src/main/res/drawable/bg_item.xml" value="0.1775" />
         <entry key="..\:/Users/Martin/AndroidStudioProjects/PriscillaClient/app/src/main/res/drawable/btn_active.xml" value="0.1815" />
         <entry key="..\:/Users/Martin/AndroidStudioProjects/PriscillaClient/app/src/main/res/drawable/btn_default.xml" value="0.1815" />
         <entry key="..\:/Users/Martin/AndroidStudioProjects/PriscillaClient/app/src/main/res/drawable/course_border.xml" value="0.25" />
@@ -24,6 +25,7 @@
         <entry key="..\:/Users/Martin/AndroidStudioProjects/PriscillaClient/app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="..\:/Users/Martin/AndroidStudioProjects/PriscillaClient/app/src/main/res/layout/activity_profile.xml" value="0.2536231884057971" />
         <entry key="..\:/Users/Martin/AndroidStudioProjects/PriscillaClient/app/src/main/res/layout/activity_task.xml" value="0.18802083333333333" />
+        <entry key="..\:/Users/Martin/AndroidStudioProjects/PriscillaClient/app/src/main/res/layout/drawer_header.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Martin/AndroidStudioProjects/PriscillaClient/app/src/main/res/layout/fragment_area_course.xml" value="0.151268115942029" />
         <entry key="..\:/Users/Martin/AndroidStudioProjects/PriscillaClient/app/src/main/res/layout/fragment_categories.xml" value="0.17831813576494426" />
         <entry key="..\:/Users/Martin/AndroidStudioProjects/PriscillaClient/app/src/main/res/layout/fragment_chapter.xml" value="0.24814814814814815" />
