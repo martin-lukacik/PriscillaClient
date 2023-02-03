@@ -101,7 +101,7 @@ public class CoursesFragment extends FragmentBase {
     private void setPinnedCourse(int courseId, boolean save) {
         int courseIndex = -1;
 
-        if (courseId != -1 && courses != null) {
+        if (courses != null) {
             for (int i = 0; i < courses.size(); ++i) {
                 Course course = courses.get(i);
                 course.isPinned = false;
