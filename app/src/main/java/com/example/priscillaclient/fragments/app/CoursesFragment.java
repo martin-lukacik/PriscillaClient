@@ -83,6 +83,7 @@ public class CoursesFragment extends FragmentBase {
             // Nothing pinned
             setPinnedCourse(courseId, true);
             adapter.notifyDataSetChanged();
+            courseListView.smoothScrollToPositionFromTop(0, 0);
         } else if (courseId == savedPinId) {
             // Cleared pin, restore original order
             setPinnedCourse(-1, true);
