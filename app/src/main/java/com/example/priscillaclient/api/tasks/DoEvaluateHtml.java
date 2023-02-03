@@ -9,10 +9,10 @@ import org.json.JSONObject;
 import java.util.concurrent.Callable;
 
 public class DoEvaluateHtml implements Callable<TaskResult> {
-    Task task;
-    String answersJson;
-    int timeLength;
-    String desc;
+    private final Task task;
+    private final String answersJson;
+    private final int timeLength;
+    private final String desc;
 
     public DoEvaluateHtml(Task task, String answersJson, int timeLength, String desc) {
         this.answersJson = answersJson;
@@ -26,7 +26,12 @@ public class DoEvaluateHtml implements Callable<TaskResult> {
         HttpConnection connection = new HttpConnection("/task-evaluate", "POST");
 
         JSONObject json = new JSONObject();
-        json.put("answer_list", answersJson);
+        json.put("answer_list",
+                "[\"" + answersJson
+                .replaceAll("\n", "\\\\n")
+                .replaceAll("\t", "\\\\t")
+                .replaceAll("\"", "\\\\\"")
+                + "\"]"); // TODO BUG </html> -> <\/html>
         json.put("description", "[{\"res\":false,\"desc\":\"" + desc + "\"}]");
         json.put("task_id", task.task_id);
         json.put("task_type_id", task.task_type_id);

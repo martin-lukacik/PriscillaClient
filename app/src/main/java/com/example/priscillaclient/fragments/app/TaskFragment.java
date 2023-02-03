@@ -95,7 +95,7 @@ public class TaskFragment extends FragmentBase {
 
     String css;
     String javascript;
-    final JavascriptInterface javascriptInterface = new JavascriptInterface(getActivity());
+    final JavascriptInterface javascriptInterface = new JavascriptInterface();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -588,6 +588,8 @@ public class TaskFragment extends FragmentBase {
 
             fileNameView.setPadding(25, 0, 0, 0);
             fileNameView.setOnClickListener((e) -> {
+                if (currentFileIndex == finalI)
+                    return;
                 codes.set(currentFileIndex, codeEditor.getText().toString());
                 currentFileIndex = finalI;
                 codeEditor.setText(codes.get(finalI));
@@ -749,16 +751,7 @@ public class TaskFragment extends FragmentBase {
             switch (task.type) {
 
                 case TASK_CODE_HTML:
-                    /*{
-                        "answer_list": "[\"<!DOCTYPE html>\\n<html >\\n\\t<head>\\n\\t\\t<meta charset=\\\"UTF-8\\\">\\n\\t\\t<title>Nazov dokumentu</title>\\n\\t</head>\\n\\t<body>\\n\\t\\n\\t</body>\\n</html>\"]",
-                        "description": "[{\"res\":false,\"desc\":\"Nastavenie atribútu\"}]",
-                        "task_id": 2899,
-                        "task_type_id": 11,
-                        "time_length": 578
-                    }*/
-
-                    taskResultViewModel.postData(new DoEvaluateHtml(task, "[" + codes.get(0) + "]", currentTaskClock, task.fileNames.get(0)));
-
+                    taskResultViewModel.postData(new DoEvaluateHtml(task, codes.get(0), currentTaskClock, task.fileNames.get(0)));
                     return;
                 case TASK_CODE_SQL:
                     //exeType = 1;

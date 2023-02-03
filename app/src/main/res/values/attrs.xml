@@ -4,6 +4,4 @@
     <attr name="colorPrimaryVariant" format="reference|color" />
     <attr name="colorCourse" format="reference|color" />
     <attr name="colorSpinner" format="reference|color" />
-    <attr name="colorSolidGreen" format="reference|color" />
-    <attr name="colorSolidBlue" format="reference|color" />
 </resources>

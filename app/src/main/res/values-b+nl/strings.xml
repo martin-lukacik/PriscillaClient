@@ -30,7 +30,7 @@
     <string name="done">GEDAAN</string>
     <string name="settings_reset">Alle lokale instellingen worden gereset!</string>
     <string name="cancel">Annuleren</string>
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
     <string name="language_changed">Taalvoorkeuren zijn veranderd. Er is een herstart nodig om de wijzigingen door te voeren.</string>
     <string name="loading" tools:ignore="TypographyEllipsis">Bezig met laden...</string>
 </resources>

@@ -8,7 +8,7 @@ import com.example.priscillaclient.api.ApiTask;
 
 public abstract class ViewModelBase extends ViewModel {
 
-    protected ApiTask apiTask = new ApiTask();
+    protected final ApiTask apiTask = new ApiTask();
 
     protected String error = null;
 

@@ -35,8 +35,8 @@ public class Task {
     public ArrayList<String> fileNames = null;
     public ArrayList<String> files = null;
 
-    public Type type;
-    static Type[] taskTypes = Type.values();
+    public final Type type;
+    static final Type[] taskTypes = Type.values();
 
     public Task(JSONObject json) throws JSONException {
 

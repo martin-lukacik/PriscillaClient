@@ -10,7 +10,8 @@ import java.util.concurrent.Callable;
 
 public class DoPassTask implements Callable<TaskResult> {
 
-    Task task;
+    private final Task task;
+
     public DoPassTask(Task task) {
         this.task = task;
     }

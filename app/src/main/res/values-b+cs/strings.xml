@@ -29,7 +29,7 @@
     <string name="done">HOTOVO</string>
     <string name="settings_reset">Lokální nastavení se zmažou!</string>
     <string name="cancel">Zrušit</string>
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
     <string name="language_changed">Jazykové preference se změnily. Aby se změny projevily, je potřeba restart.</string>
     <string name="loading" tools:ignore="TypographyEllipsis">Načítám...</string>
 </resources>

@@ -1,7 +1,6 @@
 package com.example.priscillaclient.fragments.user;
 
 import android.content.SharedPreferences;
-import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -278,7 +277,7 @@ public class SettingsFragment extends FragmentBase {
     private void loadProfileMotive() {
         int savedIndex = preferences.getInt(Preferences.PREFS_MOTIVE, 0);
         String[] items = new String[] { "Random", "Purple", "Blue", "Green", "Orange", "Red" };
-        int[] colors = new int[] {
+        int[] colors = new int[] { // TODO hardcoded
             0,
             Color.parseColor("#3700B3"),
             Color.parseColor("#004f99"),
@@ -286,9 +285,7 @@ public class SettingsFragment extends FragmentBase {
             Color.parseColor("#955001"),
             Color.parseColor("#8c1b1a"),
         };
-  /*      loadSelection(profileEditMotive, items, savedIndex);
 
-*/
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.spinner_row, items) {
 
             @Override

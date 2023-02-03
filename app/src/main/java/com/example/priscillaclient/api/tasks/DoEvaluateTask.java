@@ -10,9 +10,9 @@ import java.util.concurrent.Callable;
 
 public class DoEvaluateTask implements Callable<TaskResult> {
 
-    Task task;
-    String answersJson;
-    int timeLength;
+    private final Task task;
+    private final String answersJson;
+    private final int timeLength;
 
     public DoEvaluateTask(Task task, String answersJson, int timeLength) {
         this.answersJson = answersJson;

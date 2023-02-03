@@ -67,14 +67,10 @@ public class LeaderboardFragment extends FragmentBase {
         setEmptyView(leaderboardListview);
 
         pullToRefresh = findViewById(R.id.pullToRefresh);
-        pullToRefresh.setOnRefreshListener(() -> {
-            viewModel.fetchData(true);
-        });
+        pullToRefresh.setOnRefreshListener(() -> viewModel.fetchData(true));
 
         // Observe loading state
-        viewModel.getLoadingState().observe(getViewLifecycleOwner(), (isLoading) -> {
-            pullToRefresh.setRefreshing(isLoading);
-        });
+        viewModel.getLoadingState().observe(getViewLifecycleOwner(), (isLoading) -> pullToRefresh.setRefreshing(isLoading));
 
         // Observe error state
         viewModel.getErrorState().observe(getViewLifecycleOwner(), this::showError);

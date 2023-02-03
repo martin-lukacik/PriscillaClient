@@ -1,15 +1,10 @@
 package com.example.priscillaclient.misc;
 
-import android.content.Context;
-
 public class JavascriptInterface {
 
-    Context context;
     public String data;
 
-    public JavascriptInterface(Context context) {
-        this.context = context;
-    }
+    public JavascriptInterface() { }
 
     @android.webkit.JavascriptInterface
     public void sendData(String data) {
