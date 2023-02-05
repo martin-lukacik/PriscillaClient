@@ -1,5 +1,6 @@
 *{
     -webkit-user-select: none;
+    font-size:18px;
 }
 .answer {
     max-width:4em;

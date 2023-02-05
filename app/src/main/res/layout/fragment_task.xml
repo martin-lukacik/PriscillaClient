@@ -11,8 +11,10 @@
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigationView"
         app:headerLayout="@layout/drawer_header"
+        app:itemTextAppearance="?android:attr/textAppearanceMedium"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
+        app:itemMaxLines="2"
         android:layout_marginStart="-65dp"
         android:fitsSystemWindows="true"
         android:layout_gravity="start" />
@@ -111,6 +113,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/webView" />
                 <EditText
+                    android:textSize="18sp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/inputEditText"

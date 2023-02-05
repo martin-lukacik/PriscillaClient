@@ -33,7 +33,7 @@ public final class TaskHelper {
             int color = typedValue.data;
             CompoundButtonCompat.setButtonTintList(radioButton, ColorStateList.valueOf(color));
 
-            radioButton.setId(View.generateViewId());
+            radioButton.setTextSize(18);
 
             radioGroup.addView(radioButton);
         }
@@ -53,7 +53,7 @@ public final class TaskHelper {
             int color = typedValue.data;
             CompoundButtonCompat.setButtonTintList(checkBox, ColorStateList.valueOf(color));
 
-            checkBox.setId(View.generateViewId());
+            checkBox.setTextSize(18);
 
             taskLayout.addView(checkBox);
         }
