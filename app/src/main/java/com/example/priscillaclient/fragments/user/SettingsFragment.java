@@ -302,15 +302,11 @@ public class SettingsFragment extends FragmentBase {
 
                 View v = super.getView(position, convertView, parent);
 
-                int id = getContext().getResources().getIdentifier("ic_rectangle", "drawable", getContext().getPackageName());
                 TextView textView = v.findViewById(R.id.spinnerLanguage);
-                Drawable drawable = ContextCompat.getDrawable(getContext(), id);
-
+                Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.ic_rectangle);
 
                 if (position > 0) {
                     drawable.setColorFilter(colors[position], PorterDuff.Mode.SRC_ATOP);
-
-
                     textView.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
                 }
                 return v;
@@ -364,10 +360,8 @@ public class SettingsFragment extends FragmentBase {
 
                 View v = super.getView(position, convertView, parent);
 
-                SettingsViewModel settingsViewModel = getViewModel(SettingsViewModel.class);
-
-                if (settingsViewModel.getData().getValue() != null) {
-                    String shortcut = settingsViewModel.getData().getValue().languages.get(position).shortcut;
+                if (settings != null) {
+                    String shortcut = settings.languages.get(position).shortcut;
                     int id = getContext().getResources().getIdentifier("flag_" + shortcut.toLowerCase(), "drawable", getContext().getPackageName());
                     TextView textView = v.findViewById(R.id.spinnerLanguage);
                     textView.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(getContext(), id), null, null, null);
@@ -389,6 +383,36 @@ public class SettingsFragment extends FragmentBase {
 
     private void loadProfileTheme(Settings data) {
         Pair<Integer, String[]> selection = data.getThemeSelection(profile);
-        loadSelection(profileEditTheme, selection.y, selection.x);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.spinner_row, R.id.spinnerLanguage, selection.y) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+
+                View v = super.getView(position, convertView, parent);
+
+                if (settings != null) {
+                    String theme = settings.themes.get(position).theme_name.replaceAll("-", "_");
+                    int id = getContext().getResources().getIdentifier("ic_" + theme, "drawable", getContext().getPackageName());
+                    TextView textView = v.findViewById(R.id.spinnerLanguage);
+
+                    Drawable drawable = ContextCompat.getDrawable(getContext(), id);
+
+                    if (isDarkModeEnabled())
+                        drawable.setColorFilter(0xffffffff, PorterDuff.Mode.SRC_IN);
+                    textView.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
+                }
+                return v;
+            }
+
+            @Override
+            public View getDropDownView(int position, View convertView, @NotNull ViewGroup parent) {
+                View v = getView(position, convertView, parent);
+                v.setPadding(25, 25, 25, 25);
+                return v;
+            }
+        };
+        adapter.setDropDownViewResource(R.layout.spinner_row);
+        profileEditTheme.setAdapter(adapter);
+        profileEditTheme.setSelection(selection.x);
     }
 }
