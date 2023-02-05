@@ -4,12 +4,9 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Html;
-import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -32,10 +29,10 @@ import android.widget.TextView;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.priscillaclient.R;
-import com.example.priscillaclient.api.tasks.DoEvaluateHtml;
-import com.example.priscillaclient.api.tasks.DoEvaluateTask;
-import com.example.priscillaclient.api.tasks.DoPassTask;
-import com.example.priscillaclient.api.tasks.DoRunProgram;
+import com.example.priscillaclient.api.app.DoEvaluateHtml;
+import com.example.priscillaclient.api.app.DoEvaluateTask;
+import com.example.priscillaclient.api.app.DoPassTask;
+import com.example.priscillaclient.api.app.DoRunProgram;
 import com.example.priscillaclient.fragments.FragmentBase;
 import com.example.priscillaclient.misc.JavascriptInterface;
 import com.example.priscillaclient.misc.LoadingDialog;
@@ -74,6 +71,8 @@ public class TaskFragment extends FragmentBase {
     private int currentTask;
     private int currentLessonId = 0;
 
+    int currentFileIndex = 0;
+    boolean shouldClearTask = false;
     ArrayList<Lesson> lessons;
     ArrayList<Task> tasks;
 
@@ -252,6 +251,7 @@ public class TaskFragment extends FragmentBase {
         codeEditor.setEditorLanguage(new JavaLanguage());
         codeEditor.setTypefaceText(Typeface.MONOSPACE);
 
+        // TODO hardcoded
         EditorColorScheme scheme = new EditorColorScheme(isDarkModeEnabled()) { };
         scheme.setColor(EditorColorScheme.WHOLE_BACKGROUND, isDarkModeEnabled() ? 0xFF333333 : 0xffffffff);
         scheme.setColor(EditorColorScheme.TEXT_NORMAL, isDarkModeEnabled() ? 0xffffffff : 0xFF333333);
@@ -277,15 +277,15 @@ public class TaskFragment extends FragmentBase {
         if (lessons == null || lessons.isEmpty())
             return;
 
-        boolean flag = false;
-
+        boolean currentLessonExists = false;
         for (int i = 0; i < lessons.size(); ++i) {
             if (lessons.get(i).id == currentLessonId) {
-                flag = true;
+                currentLessonExists = true;
+                break;
             }
         }
-        if (!flag)
-            currentLessonId = lessons.get(0).id;
+        if (!currentLessonExists)
+            currentLessonId = lessons.get(0).id; // does not exist, select first
 
         currentTask = 0;
         this.lessons = lessons;
@@ -318,15 +318,13 @@ public class TaskFragment extends FragmentBase {
         }
 
         // Set menu items
-        boolean initialChecked = false;
         for (Lesson lesson : lessons) {
             MenuItem menuItem = menu.add(lesson.name);
-
-            if (!initialChecked && lesson.id == currentLessonId) {
-                menuItem.setChecked(initialChecked = true);
-            }
-
             menuItem.setOnMenuItemClickListener((item) -> onSelectLesson(item, lesson.id));
+
+            if (lesson.id == currentLessonId) {
+                menuItem.setChecked(true);
+            }
         }
 
         navigationView.invalidate();
@@ -351,7 +349,6 @@ public class TaskFragment extends FragmentBase {
     }
 
     private void getTaskHelp(View view) {
-
         if (tasks.isEmpty())
             return;
 
@@ -398,13 +395,11 @@ public class TaskFragment extends FragmentBase {
         d.show();
     }
 
-    boolean refreshTask = false;
     public void onUpdate(TaskResult result) {
-
         if (result == null)
             return;
 
-        refreshTask = true;
+        shouldClearTask = true;
 
         tasksViewModel.fetchData(courseId, chapterId, currentLessonId, true);
         showRatingDialog(result);
@@ -413,12 +408,7 @@ public class TaskFragment extends FragmentBase {
     }
 
     public void onUpdateAnswer(Answer answer) {
-
-        if (answer == null)
-            return;
-
-
-        if (tasks.isEmpty())
+        if (answer == null || tasks.isEmpty() || currentTask >= tasks.size())
             return;
 
         ArrayList<String> answerList = answer.getAnswerList();
@@ -639,7 +629,6 @@ public class TaskFragment extends FragmentBase {
         codeTaskLayout.addView(codeEditor);
     }
 
-    int currentFileIndex = 0;
     public void onUpdateTasks(ArrayList<Task> tasks) {
         this.tasks = tasks;
 
@@ -659,8 +648,8 @@ public class TaskFragment extends FragmentBase {
         if (task.passed == 1 && task.max_score > 0)
             setStarsRating(task);
 
-        if (refreshTask) {
-            refreshTask = false;
+        if (shouldClearTask) {
+            shouldClearTask = false;
             return;
         }
 
@@ -713,8 +702,6 @@ public class TaskFragment extends FragmentBase {
             ScrollView scrollView = findViewById(R.id.taskScrollView);
             scrollView.scrollTo(0, 0);
         });
-
-        //webView.evaluateJavascript("loadData('<p>Priraďte správny vysvetľujúci komentár:</p><p>LF §§_§§</p><p>CR §§_§§</p><p>form feed §§_§§</p><p>BEL §§_§§</p>')", null);
 
         taskLayout.setVisibility(View.VISIBLE);
     }

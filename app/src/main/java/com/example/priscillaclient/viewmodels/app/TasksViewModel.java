@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.priscillaclient.api.browse.GetTasks;
-import com.example.priscillaclient.api.tasks.GetAnswer;
+import com.example.priscillaclient.api.app.GetAnswer;
 import com.example.priscillaclient.viewmodels.app.models.Answer;
 import com.example.priscillaclient.viewmodels.app.models.Task;
 import com.example.priscillaclient.viewmodels.ViewModelBase;

@@ -1,4 +1,4 @@
-package com.example.priscillaclient.api.tasks;
+package com.example.priscillaclient.api.app;
 
 import com.example.priscillaclient.api.HttpConnection;
 import com.example.priscillaclient.viewmodels.app.models.Answer;

@@ -3,8 +3,8 @@ package com.example.priscillaclient.viewmodels.app;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.priscillaclient.api.tasks.DoSaveProgram;
-import com.example.priscillaclient.api.tasks.GetProgram;
+import com.example.priscillaclient.api.app.DoSaveProgram;
+import com.example.priscillaclient.api.app.GetProgram;
 import com.example.priscillaclient.viewmodels.app.models.TaskResult;
 import com.example.priscillaclient.misc.Pair;
 import com.example.priscillaclient.viewmodels.ViewModelBase;

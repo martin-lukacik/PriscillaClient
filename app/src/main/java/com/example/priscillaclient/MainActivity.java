@@ -12,6 +12,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
+import com.example.priscillaclient.fragments.app.ChaptersFragment;
 import com.example.priscillaclient.misc.Preferences;
 import com.example.priscillaclient.viewmodels.user.ProfileViewModel;
 import com.example.priscillaclient.viewmodels.user.SettingsViewModel;
@@ -23,7 +24,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends ActivityBase {
 
-    public static final String INTENT_COURSE_ID = "course_id";
+    public static final String INTENT_COURSE_ID = "courseId";
 
     NavController navController;
 
@@ -131,14 +132,14 @@ public class MainActivity extends ActivityBase {
     }
 
     @Override
-    protected void onNewIntent(Intent intent) {
+    protected void onNewIntent(Intent intent) { // TODO dead code?
         super.onNewIntent(intent);
 
-        int courseId = intent.getIntExtra("course_id", -1);
+        int courseId = intent.getIntExtra(INTENT_COURSE_ID, -1);
 
         if (courseId != -1) {
             Bundle args = new Bundle();
-            args.putInt("courseId", courseId);
+            args.putInt(ChaptersFragment.ARG_COURSE_ID, courseId);
             navigate(R.id.chaptersFragment, args);
         }
     }
