@@ -239,13 +239,14 @@ public class TaskFragment extends FragmentBase {
                             currentTask = index;
 
                         try {
-                            JSONArray array = new JSONArray(state.getString("postedAnswers"));
-                            for (int i = 0; i < array.length(); ++i) {
-                                postedAnswers.add(array.getString(i));
+                            String answers = state.getString("postedAnswers");
+                            if (answers != null) {
+                                JSONArray array = new JSONArray(answers);
+                                for (int i = 0; i < array.length(); ++i) {
+                                    postedAnswers.add(array.getString(i));
+                                }
                             }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                        } catch (Exception ignore) { }
 
                         state.clear();
                     }
@@ -261,9 +262,8 @@ public class TaskFragment extends FragmentBase {
                 if (url != null && (url.startsWith("http://") || url.startsWith("https://"))) {
                     startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
                     return true;
-                } else {
-                    return false;
                 }
+                return false;
             }
         });
     }
@@ -313,7 +313,7 @@ public class TaskFragment extends FragmentBase {
             }
         }
         if (!currentLessonExists)
-            currentLessonId = lessons.get(0).id; // does not exist, select first
+            currentLessonId = lessons.get(0).id; // does not exist, select the first
 
         currentTask = 0;
         this.lessons = lessons;
