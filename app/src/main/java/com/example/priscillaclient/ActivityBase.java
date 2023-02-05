@@ -3,8 +3,10 @@ package com.example.priscillaclient;
 import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -17,6 +19,7 @@ import androidx.core.content.ContextCompat;
 import com.example.priscillaclient.misc.Preferences;
 import com.example.priscillaclient.viewmodels.user.models.Theme;
 
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Random;
 
@@ -103,19 +106,8 @@ public class ActivityBase extends AppCompatActivity {
     }
 
     private int getThemeId(int motiveIndex) {
-
-        int[] styles = new int[] { // TODO hardcoded
-                0,
-                R.style.Purple,
-                R.style.Blue,
-                R.style.Green,
-                R.style.Orange,
-                R.style.Red,
-        };
-
         if (motiveIndex == -1)
-            motiveIndex = new Random().nextInt(styles.length) + 1;
-
-        return styles[motiveIndex];
+            motiveIndex = new Random().nextInt(Preferences.PREFS_MOTIVES.length) + 1;
+        return Preferences.PREFS_MOTIVES[motiveIndex];
     }
 }

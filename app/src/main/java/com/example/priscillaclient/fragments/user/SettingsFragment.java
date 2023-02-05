@@ -1,6 +1,8 @@
 package com.example.priscillaclient.fragments.user;
 
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -38,6 +40,7 @@ import com.example.priscillaclient.viewmodels.user.models.User;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class SettingsFragment extends FragmentBase {
@@ -276,7 +279,13 @@ public class SettingsFragment extends FragmentBase {
 
     private void loadProfileMotive() {
         int savedIndex = preferences.getInt(Preferences.PREFS_MOTIVE, 0);
-        String[] items = new String[] { "Random", "Purple", "Blue", "Green", "Orange", "Red" };
+
+        ArrayList<String> items = new ArrayList<>();
+        items.add("Random");
+        for (int i = 1; i < Preferences.PREFS_MOTIVES.length; ++i) {
+            items.add(getResources().getResourceEntryName(Preferences.PREFS_MOTIVES[i]));
+        }
+
         int[] colors = new int[] { // TODO hardcoded
             0,
             Color.parseColor("#3700B3"),

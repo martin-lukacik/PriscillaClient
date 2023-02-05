@@ -2,6 +2,7 @@ package com.example.priscillaclient.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -34,6 +35,13 @@ public class ChapterListAdapter extends ArrayAdapter<Chapter> {
         super(context, R.layout.listview_chapter, chapters);
         this.context = context;
         this.chapters = chapters;
+
+        float[] hsv = new float[3];
+        Color.colorToHSV(color, hsv);
+        if (hsv[2] >= .16)
+            hsv[2] -= .16;
+        color = Color.HSVToColor(hsv);
+
         this.color = color;
     }
 
@@ -84,15 +92,8 @@ public class ChapterListAdapter extends ArrayAdapter<Chapter> {
         holder.chapterTitle.setBackground(drawable);
         holder.chapterTitle.setTextColor(Color.WHITE);
 
-        Drawable progressDrawable = holder.taskProgress.getProgressDrawable();
-        if (progressDrawable != null)
-            progressDrawable.mutate().setColorFilter(color, PorterDuff.Mode.MULTIPLY);
-        holder.taskProgress.setProgressDrawable(progressDrawable);
-
-        progressDrawable = holder.codeProgress.getProgressDrawable();
-        if (progressDrawable != null)
-            progressDrawable.mutate().setColorFilter(color, PorterDuff.Mode.MULTIPLY);
-        holder.codeProgress.setProgressDrawable(progressDrawable);
+        holder.taskProgress.setProgressTintList(ColorStateList.valueOf(color));
+        holder.codeProgress.setProgressTintList(ColorStateList.valueOf(color));
 
 
         try {

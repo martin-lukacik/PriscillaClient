@@ -2,6 +2,7 @@ package com.example.priscillaclient.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -81,6 +82,12 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
 
         int color = Color.parseColor(courses.get(i).area_color);
 
+        float[] hsv = new float[3];
+        Color.colorToHSV(color, hsv);
+        if (hsv[2] >= .16)
+            hsv[2] -= .16;
+        color = Color.HSVToColor(hsv);
+
         holder.descriptionIcon.setColorFilter(color);
         holder.codeIcon.setColorFilter(color);
         holder.contactIcon.setColorFilter(color);
@@ -88,13 +95,11 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
         Drawable drawable = ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.course_title_border, null);
         if (drawable != null)
             drawable.mutate().setColorFilter(color, PorterDuff.Mode.SRC_IN);
-        holder.titleText.setBackground(drawable);
 
-        Drawable progressDrawable = holder.courseProgress.getProgressDrawable();
-        if (progressDrawable != null)
-            progressDrawable.mutate().setColorFilter(color, PorterDuff.Mode.MULTIPLY);
-        holder.courseProgress.setProgressDrawable(progressDrawable);
+        holder.titleText.setBackground(drawable);
         holder.titleText.setTextColor(Color.WHITE);
+
+        holder.courseProgress.setProgressTintList(ColorStateList.valueOf(color));
 
         if (courses.get(i).isPinned) {
             holder.titleText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_push_pin, 0);

@@ -84,8 +84,7 @@ public class LoginActivity extends ActivityBase {
 
     public void redirect(View view) {
         Uri uri = Uri.parse("https://priscilla.fitped.eu/register");
-        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-        startActivity(intent);
+        startActivity(new Intent(Intent.ACTION_VIEW, uri));
     }
 
     public void performLogin(View view) {

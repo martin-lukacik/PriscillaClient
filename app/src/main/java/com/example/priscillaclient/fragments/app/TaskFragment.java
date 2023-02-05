@@ -4,7 +4,10 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.Menu;
@@ -237,6 +240,15 @@ public class TaskFragment extends FragmentBase {
                     onUpdateTasks(tasks);
                 });
             }
+
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                if (url != null && (url.startsWith("http://") || url.startsWith("https://"))) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+                    return true;
+                } else {
+                    return false;
+                }
+            }
         });
     }
 
@@ -420,6 +432,7 @@ public class TaskFragment extends FragmentBase {
                 case TASK_CODE2:
                 case TASK_CODE_SQL:
                 case TASK_CODE_HTML:
+                    // TODO implement
                     break;
 
                 case TASK_ORDER:
