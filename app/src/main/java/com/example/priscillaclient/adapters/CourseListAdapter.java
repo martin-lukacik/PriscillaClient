@@ -6,6 +6,7 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,10 +24,12 @@ import java.util.ArrayList;
 
 public class CourseListAdapter extends ArrayAdapter<Course> {
     private final ArrayList<Course> courses;
+    private final boolean isColorblind;
 
-    public CourseListAdapter(Activity context, ArrayList<Course> courses) {
+    public CourseListAdapter(Activity context, ArrayList<Course> courses, boolean isColorblind) {
         super(context, R.layout.listview_course, courses);
         this.courses = courses;
+        this.isColorblind = isColorblind;
     }
 
     static class ViewHolder {
@@ -44,7 +47,6 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
     }
 
     public View getView(int i, View view, ViewGroup parent) {
-
         ViewHolder holder;
 
         if (view == null) {
@@ -87,6 +89,12 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
         if (hsv[2] >= .16)
             hsv[2] -= .16;
         color = Color.HSVToColor(hsv);
+
+        if (isColorblind) {
+            TypedValue value = new TypedValue();
+            getContext().getTheme().resolveAttribute(R.attr.colorPrimaryVariant, value, true);
+            color = value.data;
+        }
 
         holder.descriptionIcon.setColorFilter(color);
         holder.codeIcon.setColorFilter(color);

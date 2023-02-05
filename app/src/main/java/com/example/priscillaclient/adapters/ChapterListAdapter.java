@@ -10,6 +10,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Base64;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,18 +32,24 @@ public class ChapterListAdapter extends ArrayAdapter<Chapter> {
 
     private final int color;
 
-    public ChapterListAdapter(Activity context, ArrayList<Chapter> chapters, int color) {
+    public ChapterListAdapter(Activity context, ArrayList<Chapter> chapters, int color, boolean isColorblind) {
         super(context, R.layout.listview_chapter, chapters);
         this.context = context;
         this.chapters = chapters;
 
-        float[] hsv = new float[3];
-        Color.colorToHSV(color, hsv);
-        if (hsv[2] >= .16)
-            hsv[2] -= .16;
-        color = Color.HSVToColor(hsv);
+        if (isColorblind) {
+            TypedValue value = new TypedValue();
+            getContext().getTheme().resolveAttribute(R.attr.colorPrimaryVariant, value, true);
+            this.color = value.data;
+        } else {
+            float[] hsv = new float[3];
+            Color.colorToHSV(color, hsv);
+            if (hsv[2] >= .16)
+                hsv[2] -= .16;
+            color = Color.HSVToColor(hsv);
 
-        this.color = color;
+            this.color = color;
+        }
     }
 
     static class ViewHolder{

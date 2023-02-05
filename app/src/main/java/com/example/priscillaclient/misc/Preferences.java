@@ -23,5 +23,6 @@ public final class Preferences {
         R.style.Green,
         R.style.Orange,
         R.style.Red,
+        R.style.Colorblind,
     };
 }

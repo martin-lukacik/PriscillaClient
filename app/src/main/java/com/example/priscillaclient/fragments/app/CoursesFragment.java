@@ -13,6 +13,7 @@ import com.example.priscillaclient.fragments.FragmentBase;
 import com.example.priscillaclient.misc.Preferences;
 import com.example.priscillaclient.viewmodels.app.CoursesViewModel;
 import com.example.priscillaclient.viewmodels.app.models.Course;
+import com.example.priscillaclient.viewmodels.user.models.Theme;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -58,7 +59,8 @@ public class CoursesFragment extends FragmentBase {
     public void onUpdate(ArrayList<Course> courses) {
         if (courses != null) {
             this.courses = new ArrayList<>(courses);
-            adapter = new CourseListAdapter(getActivity(), this.courses);
+            boolean isColorblind = Theme.THEME_COLORBLIND == preferences.getInt(Preferences.PREFS_THEME_ID, 1);
+            adapter = new CourseListAdapter(getActivity(), this.courses, isColorblind);
             courseListView.setAdapter(adapter);
         }
 

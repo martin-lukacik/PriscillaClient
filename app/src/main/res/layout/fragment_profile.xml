@@ -130,11 +130,14 @@
                                     android:textSize="18sp"
                                     android:id="@+id/profileCoins"
                                     android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content" />
+                                <ImageView
+                                    android:id="@+id/profileCoinsImage"
+                                    android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    app:layout_constraintTop_toTopOf="parent"
-                                    app:layout_constraintStart_toStartOf="parent"
-                                    android:drawablePadding="2dp"
-                                    app:drawableRightCompat="@drawable/ic_tonality" />
+                                    android:layout_marginStart="2dp"
+                                    android:layout_marginTop="3dp"
+                                    android:src="@drawable/ic_tonality" />
                             </LinearLayout>
 
                         </LinearLayout>

@@ -4,9 +4,11 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.priscillaclient.LoginActivity;
@@ -18,6 +20,7 @@ import com.example.priscillaclient.viewmodels.user.SettingsViewModel;
 import com.example.priscillaclient.viewmodels.user.UserViewModel;
 import com.example.priscillaclient.viewmodels.user.models.Profile;
 import com.example.priscillaclient.viewmodels.user.models.Settings;
+import com.example.priscillaclient.viewmodels.user.models.Theme;
 import com.example.priscillaclient.viewmodels.user.models.User;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -127,11 +130,16 @@ public class ProfileFragment extends FragmentBase {
         TextView profileXP = findViewById(R.id.profileXP);
         TextView profileCoins = findViewById(R.id.profileCoins);
         TextView profileEmail = findViewById(R.id.profileEmail);
+        ImageView profileCoinsImage = findViewById(R.id.profileCoinsImage);
 
         profileLevel.setText(user.performance.level + "");
         profileXP.setText(user.performance.xp + "");
         profileCoins.setText(user.performance.coins + "");
         profileEmail.setText(user.email);
+
+        if (Theme.THEME_COLORBLIND == preferences.getInt(Preferences.PREFS_THEME_ID, 1)) {
+            profileCoinsImage.setImageTintList(ColorStateList.valueOf(0xff008000));
+        }
 
         FloatingActionButton profileSettings = findViewById(R.id.profileSettingsButton);
         profileSettings.setOnClickListener(this::showProfileSettings);

@@ -18,7 +18,7 @@
 
 
     <style name="Purple" parent="Theme.PriscillaClient">
-        <item name="colorPrimary">@color/purple_500</item>
+        <item name="colorPrimary">@color/purple_700</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
     </style>
     <style name="Blue" parent="Theme.PriscillaClient">
@@ -36,5 +36,9 @@
     <style name="Red" parent="Theme.PriscillaClient">
         <item name="colorPrimary">#E92C2C</item>
         <item name="colorPrimaryVariant">#E92C2C</item>
+    </style>
+    <style name="Colorblind">
+        <item name="colorPrimary">#52547a</item>
+        <item name="colorPrimaryVariant">#464767</item>
     </style>
 </resources>

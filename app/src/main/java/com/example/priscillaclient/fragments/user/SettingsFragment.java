@@ -293,6 +293,7 @@ public class SettingsFragment extends FragmentBase {
             Color.parseColor("#017020"),
             Color.parseColor("#955001"),
             Color.parseColor("#8c1b1a"),
+            Color.parseColor("#464868"),
         };
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.spinner_row, items) {

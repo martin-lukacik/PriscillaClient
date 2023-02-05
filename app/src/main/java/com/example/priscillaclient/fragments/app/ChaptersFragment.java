@@ -1,14 +1,17 @@
 package com.example.priscillaclient.fragments.app;
 
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.GridView;
 
 import com.example.priscillaclient.R;
 import com.example.priscillaclient.adapters.ChapterListAdapter;
 import com.example.priscillaclient.fragments.FragmentBase;
+import com.example.priscillaclient.misc.Preferences;
 import com.example.priscillaclient.viewmodels.app.ChaptersViewModel;
 import com.example.priscillaclient.viewmodels.app.models.Chapter;
+import com.example.priscillaclient.viewmodels.user.models.Theme;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -63,7 +66,11 @@ public class ChaptersFragment extends FragmentBase {
     public void onUpdate(ArrayList<Chapter> chapters) {
         if (chapters != null) {
             this.chapters = chapters;
-            ChapterListAdapter adapter = new ChapterListAdapter(getActivity(), this.chapters, courseColor);
+
+            int color = courseColor;
+            boolean isColorblind = Theme.THEME_COLORBLIND == preferences.getInt(Preferences.PREFS_THEME_ID, 1);
+
+            ChapterListAdapter adapter = new ChapterListAdapter(getActivity(), this.chapters, color, isColorblind);
             chaptersListView.setAdapter(adapter);
         }
     }
