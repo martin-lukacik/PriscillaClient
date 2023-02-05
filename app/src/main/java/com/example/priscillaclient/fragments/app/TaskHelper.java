@@ -3,6 +3,7 @@ package com.example.priscillaclient.fragments.app;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.util.TypedValue;
+import android.view.View;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -32,6 +33,8 @@ public final class TaskHelper {
             int color = typedValue.data;
             CompoundButtonCompat.setButtonTintList(radioButton, ColorStateList.valueOf(color));
 
+            radioButton.setId(View.generateViewId());
+
             radioGroup.addView(radioButton);
         }
         taskLayout.addView(radioGroup);
@@ -49,6 +52,8 @@ public final class TaskHelper {
             context.getTheme().resolveAttribute(R.attr.colorPrimary, typedValue, true);
             int color = typedValue.data;
             CompoundButtonCompat.setButtonTintList(checkBox, ColorStateList.valueOf(color));
+
+            checkBox.setId(View.generateViewId());
 
             taskLayout.addView(checkBox);
         }

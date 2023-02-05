@@ -54,6 +54,7 @@ import com.google.android.material.navigation.NavigationView;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -168,6 +169,7 @@ public class TaskFragment extends FragmentBase {
         outState.putBoolean("drawerStatus", drawer.isOpen());
         outState.putInt("currentTask", currentTask);
         outState.putInt("currentLessonId", currentLessonId);
+        outState.putString("postedAnswers", collectAnswer(tasks.get(currentTask))); // TODO add checks
     }
 
     private void setupViews(Bundle savedInstanceState) {
@@ -229,15 +231,29 @@ public class TaskFragment extends FragmentBase {
 
                 // Task list needs webView to be ready
                 tasksViewModel.getData().observe(getViewLifecycleOwner(), (tasks) -> {
+                    ArrayList<String> postedAnswers = new ArrayList<>();
                     if (state != null) {
                         int index = state.getInt("currentTask", -1);
 
                         if (index != -1)
                             currentTask = index;
 
+                        try {
+                            JSONArray array = new JSONArray(state.getString("postedAnswers"));
+                            for (int i = 0; i < array.length(); ++i) {
+                                postedAnswers.add(array.getString(i));
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
                         state.clear();
                     }
+
                     onUpdateTasks(tasks);
+
+                    if (!postedAnswers.isEmpty())
+                        loadAnswerList(postedAnswers);
                 });
             }
 
@@ -419,13 +435,9 @@ public class TaskFragment extends FragmentBase {
         userViewModel.fetchData();
     }
 
-    public void onUpdateAnswer(Answer answer) {
-        if (answer == null || tasks.isEmpty() || currentTask >= tasks.size())
-            return;
+    private void loadAnswerList(ArrayList<String> answerList) {
 
-        ArrayList<String> answerList = answer.getAnswerList();
         Task task = tasks.get(currentTask);
-
         if (answerList.size() > 0) {
             switch (task.type) {
                 case TASK_CODE:
@@ -486,6 +498,14 @@ public class TaskFragment extends FragmentBase {
                     break;
             }
         }
+    }
+
+    public void onUpdateAnswer(Answer answer) {
+        if (answer == null || tasks.isEmpty() || currentTask >= tasks.size())
+            return;
+
+        ArrayList<String> answerList = answer.getAnswerList();
+        loadAnswerList(answerList);
 
         // update coins, xp, etc.
         userViewModel.fetchData();
@@ -772,9 +792,8 @@ public class TaskFragment extends FragmentBase {
     public void submit(View view) {
         if (!tasks.isEmpty()) {
             Task task = tasks.get(currentTask);
-            ArrayList<String> postedAnswers = new ArrayList<>();
 
-            String answer = null;
+            String answer;
             switch (task.type) {
 
                 case TASK_CODE_HTML:
@@ -793,52 +812,59 @@ public class TaskFragment extends FragmentBase {
                     taskResultViewModel.postData(new DoPassTask(task));
                     return;
 
-                case TASK_ORDER:
-                case TASK_FILL:
-                case TASK_DRAG:
-                    answer = javascriptInterface.data;
-                    break;
-
-                case TASK_CHOICE:
-                    int index = -1;
-                    for (int i = taskLayout.getChildCount() - 1; i >= 0; --i) {
-                        View v = taskLayout.getChildAt(i);
-                        if (v instanceof RadioGroup) {
-                            RadioGroup radioGroup = (RadioGroup) v;
-
-                            for (int j = 0; j < radioGroup.getChildCount(); ++j) {
-                                if (((RadioButton) radioGroup.getChildAt(j)).isChecked()) {
-                                    index = j;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-
-                    answer = "[\"" + (index == -1 ? "" : task.answers.get(index)) + "\"]";
-                    break;
-
-                case TASK_INPUT:
-                    answer = "[\"" + inputEditText.getText().toString() + "\"]";
-                    break;
-
-                case TASK_MULTI:
-                    for (int i = taskLayout.getChildCount() - 1; i >= 0; --i) {
-                        View v = taskLayout.getChildAt(i);
-                        if (v instanceof CheckBox) {
-                            CheckBox checkBox = (CheckBox) v;
-
-                            if (checkBox.isChecked()) {
-                                postedAnswers.add(checkBox.getText().toString());
-                            }
-                        }
-                    }
-                    answer = new JSONArray(postedAnswers).toString();
-                    break;
+                default:
+                    answer = collectAnswer(task);
             }
 
             taskResultViewModel.postData(new DoEvaluateTask(task, answer, currentTaskClock));
         }
+    }
+
+    private String collectAnswer(Task task) {
+
+        switch (task.type) {
+            case TASK_ORDER:
+            case TASK_FILL:
+            case TASK_DRAG:
+                return javascriptInterface.data;
+
+            case TASK_CHOICE:
+                int index = -1;
+                for (int i = taskLayout.getChildCount() - 1; i >= 0; --i) {
+                    View v = taskLayout.getChildAt(i);
+                    if (v instanceof RadioGroup) {
+                        RadioGroup radioGroup = (RadioGroup) v;
+
+                        for (int j = 0; j < radioGroup.getChildCount(); ++j) {
+                            if (((RadioButton) radioGroup.getChildAt(j)).isChecked()) {
+                                index = j;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                return "[\"" + (index == -1 ? "" : task.answers.get(index)) + "\"]";
+
+            case TASK_INPUT:
+                return "[\"" + inputEditText.getText().toString() + "\"]";
+
+            case TASK_MULTI:
+                ArrayList<String> postedAnswers = new ArrayList<>();
+                for (int i = taskLayout.getChildCount() - 1; i >= 0; --i) {
+                    View v = taskLayout.getChildAt(i);
+                    if (v instanceof CheckBox) {
+                        CheckBox checkBox = (CheckBox) v;
+
+                        if (checkBox.isChecked()) {
+                            postedAnswers.add(checkBox.getText().toString());
+                        }
+                    }
+                }
+                return new JSONArray(postedAnswers).toString();
+        }
+
+        return "";
     }
 
     public void nextTask(View view) {
