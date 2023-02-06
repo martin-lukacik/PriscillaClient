@@ -39,6 +39,8 @@ public class CoursesFragment extends FragmentBase {
         // Prepare view models
         viewModel = getViewModel(CoursesViewModel.class);
         viewModel.fetchData(false);
+        viewModel.getData().observe(this, this::onUpdate);
+        viewModel.getErrorState().observe(this, this::showError);
     }
 
     @Override
@@ -50,10 +52,6 @@ public class CoursesFragment extends FragmentBase {
         courseListView.setOnItemClickListener(this::onCourseSelected);
         courseListView.setOnItemLongClickListener(this::onCoursePinned);
         setEmptyView(courseListView);
-
-        // Setup observers
-        viewModel.getData().observe(getViewLifecycleOwner(), this::onUpdate);
-        viewModel.getErrorState().observe(getViewLifecycleOwner(), this::showError);
     }
 
     public void onUpdate(ArrayList<Course> courses) {
@@ -62,10 +60,10 @@ public class CoursesFragment extends FragmentBase {
             boolean isColorblind = Theme.THEME_COLORBLIND == preferences.getInt(Preferences.PREFS_THEME_ID, 1);
             adapter = new CourseListAdapter(getActivity(), this.courses, isColorblind);
             courseListView.setAdapter(adapter);
-        }
 
-        int savedPinId = preferences.getInt(Preferences.PREFS_PINNED_COURSE_ID, -1);
-        setPinnedCourse(savedPinId, false);
+            int savedPinId = preferences.getInt(Preferences.PREFS_PINNED_COURSE_ID, -1);
+            setPinnedCourse(savedPinId, false);
+        }
     }
 
     private void onCourseSelected(AdapterView<?> adapterView, View view, int i, long l){

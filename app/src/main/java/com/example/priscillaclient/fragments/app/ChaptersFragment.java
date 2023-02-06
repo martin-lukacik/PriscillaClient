@@ -1,7 +1,6 @@
 package com.example.priscillaclient.fragments.app;
 
 import android.os.Bundle;
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.GridView;
 
@@ -47,6 +46,8 @@ public class ChaptersFragment extends FragmentBase {
         // Prepare view models
         viewModel = getViewModel(ChaptersViewModel.class);
         viewModel.fetchData(courseId);
+        viewModel.getData().observe(this, this::onUpdate);
+        viewModel.getErrorState().observe(this, this::showError);
     }
 
     @Override
@@ -57,10 +58,6 @@ public class ChaptersFragment extends FragmentBase {
         chaptersListView = findViewById(R.id.chapterListView);
         chaptersListView.setOnItemClickListener((a, v, index, l) -> onChapterSelected(index));
         setEmptyView(chaptersListView);
-
-        // Setup observers
-        viewModel.getData().observe(getViewLifecycleOwner(), this::onUpdate);
-        viewModel.getErrorState().observe(getViewLifecycleOwner(), this::showError);
     }
 
     public void onUpdate(ArrayList<Chapter> chapters) {
