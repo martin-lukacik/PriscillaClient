@@ -115,6 +115,14 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
             holder.titleText.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         }
 
+        if (courses.get(i).program_count == 0) {
+            holder.programText.setVisibility(View.GONE);
+            holder.codeIcon.setVisibility(View.GONE);
+        } else {
+            holder.programText.setVisibility(View.VISIBLE);
+            holder.codeIcon.setVisibility(View.VISIBLE);
+        }
+
         return view;
     }
 }
