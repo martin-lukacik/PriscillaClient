@@ -123,6 +123,14 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
             holder.codeIcon.setVisibility(View.VISIBLE);
         }
 
+        if (courses.get(i).task_count == 0) {
+            holder.taskText.setVisibility(View.GONE);
+            holder.contactIcon.setVisibility(View.GONE);
+        } else {
+            holder.taskText.setVisibility(View.VISIBLE);
+            holder.contactIcon.setVisibility(View.VISIBLE);
+        }
+
         return view;
     }
 }

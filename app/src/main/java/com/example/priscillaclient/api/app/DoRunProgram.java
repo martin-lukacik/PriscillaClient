@@ -1,24 +1,19 @@
 package com.example.priscillaclient.api.app;
 
-import android.util.Log;
-
 import com.example.priscillaclient.api.HttpConnection;
+import com.example.priscillaclient.api.WssListener;
 import com.example.priscillaclient.viewmodels.app.models.Task;
 import com.example.priscillaclient.viewmodels.app.models.TaskResult;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CountDownLatch;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.Response;
-import okhttp3.WebSocket;
-import okhttp3.WebSocketListener;
 
 public class DoRunProgram implements Callable<TaskResult> {
 
@@ -27,6 +22,8 @@ public class DoRunProgram implements Callable<TaskResult> {
     private final ArrayList<String> fileNames;
     private final ArrayList<String> fileContents;
     private final int timeLength;
+
+    private final CountDownLatch latch = new CountDownLatch(1);
 
     public DoRunProgram(int exeType, Task task, ArrayList<String> fileNames, ArrayList<String> fileContents, int timeLength) {
         this.exeType = exeType;
@@ -70,50 +67,21 @@ public class DoRunProgram implements Callable<TaskResult> {
     }
 
     private TaskResult getResult(String adminTicket, String monitorTicket) throws Exception {
-
+        // Monitor execution progress
+        WssListener listener = new WssListener(latch);
+        OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url("wss://vpl.ki.fpvai.ukf.sk/" + monitorTicket + "/monitor")
                 .build();
-
-        WebSocketListener listener = new WebSocketListener() {
-            @Override
-            public void onClosed(@NotNull WebSocket webSocket, int code, @NotNull String reason) {
-                isFinished = true;
-                Log.d("WSS CLOSED", reason);
-                super.onClosed(webSocket, code, reason);
-            }
-
-            @Override
-            public void onFailure(@NotNull WebSocket webSocket, @NotNull Throwable t, @Nullable Response response) {
-                isFinished = true;
-                Log.d("WSS FAILED", response.message());
-                super.onFailure(webSocket, t, response);
-            }
-
-            @Override
-            public void onMessage(@NotNull WebSocket webSocket, @NotNull String text) {
-                super.onMessage(webSocket, text);
-                Log.d("WSS MESSAGE", text);
-                if (text.equals("retrieve:")) {
-                    isFinished = true;
-                }
-            }
-
-            @Override
-            public void onOpen(@NotNull WebSocket webSocket, @NotNull Response response) {
-                Log.d("WSS OPEN", response.message());
-                super.onOpen(webSocket, response);
-            }
-        };
-
-        OkHttpClient client = new OkHttpClient();
-        WebSocket socket = client.newWebSocket(request, listener);
+        client.newWebSocket(request, listener);
         client.dispatcher().executorService().shutdown();
 
-        while (!isFinished) {
-            Thread.sleep(1000);
-        }
+        // Await execution result
+        try {
+            latch.await();
+        } catch (Exception ignore) { }
 
+        // Get evaluation
         HttpConnection connection = new HttpConnection("/vpl-get-result33", "POST");
 
         JSONObject json = new JSONObject();
@@ -132,11 +100,7 @@ public class DoRunProgram implements Callable<TaskResult> {
         }
 
         JSONObject response = new JSONObject(connection.getResponse());
-        TaskResult result = new TaskResult(response);
 
-
-        return result;
+        return new TaskResult(response);
     }
-
-    private boolean isFinished = false;
 }
