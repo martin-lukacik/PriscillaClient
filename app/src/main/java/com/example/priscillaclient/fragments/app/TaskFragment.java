@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -54,7 +53,6 @@ import com.google.android.material.navigation.NavigationView;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
-import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -392,31 +390,22 @@ public class TaskFragment extends FragmentBase {
             priceAnswer = 40;
         }
 
-        String help = getString(R.string.help);
-        String answer = getString(R.string.answer);
-        String balance = getString(R.string.balance);
-        String coins = getString(R.string.coins).toLowerCase(Locale.ROOT);
-
         User user = userViewModel.getData().getValue();
 
         int currentBalance = (user != null ? user.performance.coins : 0);
 
+        String coins = getString(R.string.coins).toLowerCase(Locale.ROOT);
         String message =
-                help + ": " +
-                "<b>" + priceHelp + " " + coins + "</b>" +
-                "<br><br>" +
-                answer + ": " +
-                "<b>" + priceAnswer + " " + coins + "</b>" +
-                "<br><br><br>" +
-                balance + ": " +
-                "<b>" + currentBalance+ " " + coins + "</b></b>";
+                "<div style=\"display:block; text-align:center\"><br>" +
+                getString(R.string.balance) + ": " +
+                "<b>" + currentBalance+ " " + coins + "</b></div>";
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.help);
         builder.setMessage(Html.fromHtml(message));
 
-        builder.setPositiveButton(R.string.help, (dialog, id) -> tasksViewModel.getHelp(task.task_id));
-        builder.setNegativeButton(R.string.answer, (dialog, id) -> tasksViewModel.getAnswer(task.task_id));
+        builder.setPositiveButton(getString(R.string.help) + " (" + priceHelp + " " + coins + ")", (dialog, id) -> tasksViewModel.getHelp(task.task_id));
+        builder.setNegativeButton(getString(R.string.answer) + " (" + priceAnswer + " " + coins + ")", (dialog, id) -> tasksViewModel.getAnswer(task.task_id));
         builder.setNeutralButton(R.string.cancel, null);
 
         Dialog d = builder.create();
@@ -659,7 +648,8 @@ public class TaskFragment extends FragmentBase {
         }
 
         codeEditor.setText(codes.get(0));
-        codeTaskLayout.addView(codeEditor);
+        if (codeEditor.getParent() != codeTaskLayout)
+            codeTaskLayout.addView(codeEditor);
     }
 
     public void onUpdateTasks(ArrayList<Task> tasks) {
