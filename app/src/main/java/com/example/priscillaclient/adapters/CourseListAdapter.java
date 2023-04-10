@@ -108,6 +108,7 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
         holder.titleText.setTextColor(Color.WHITE);
 
         holder.courseProgress.setProgressTintList(ColorStateList.valueOf(color));
+        holder.courseProgress.setProgressBackgroundTintList(ColorStateList.valueOf(Color.GRAY));
 
         if (courses.get(i).isPinned) {
             holder.titleText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_push_pin, 0);

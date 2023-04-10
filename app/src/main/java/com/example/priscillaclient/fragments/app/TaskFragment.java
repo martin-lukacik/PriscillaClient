@@ -218,7 +218,6 @@ public class TaskFragment extends FragmentBase {
         webView.setLongClickable(false);
         webView.setVerticalScrollBarEnabled(false);
         webView.setHorizontalScrollBarEnabled(false);
-        webView.setHorizontalScrollBarEnabled(false);
         String loadingContent = "<div style=\"display:block;width:99%;position:absolute;top:50%;text-align:center;font-size:36px\">" +  getString(R.string.loading) + "</div>";
         String html = css + javascript + "<div id=\"task-content\">" + loadingContent + "</div>";
         webView.loadDataWithBaseURL(null, html, "text/html; charset=utf-8", "UTF-8", null);

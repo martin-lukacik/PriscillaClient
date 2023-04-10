@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="25dp"
+    tools:context=".LoginActivity">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="40dp" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:scaleType="fitCenter"
+        android:layout_gravity="center"
+        android:id="@+id/loginLogo"
+        android:src="@drawable/priscilla_logo"
+        android:contentDescription="@string/priscilla_logo" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="50dp" />
+
+    <TextView
+        android:id="@+id/loginError"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#ff0000"
+        android:textStyle="bold"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="30dp" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:autofillHints="username"
+        android:lines="1"
+        android:background="@drawable/edittextc"
+        android:hint="@string/username_or_email"
+        android:id="@+id/inputUsername"
+        android:inputType="textEmailAddress" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="20dp" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:autofillHints="password"
+        android:lines="1"
+        android:background="@drawable/edittextc"
+        android:hint="@string/password"
+        android:inputType="textPassword"
+        android:id="@+id/inputPassword" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="20dp" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:id="@+id/rememberUser"
+        android:layout_gravity="center"
+        android:text="@string/remember_login" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="20dp" />
+
+    <Button
+        android:textColor="@color/white"
+        android:backgroundTint="#065fd4"
+        android:layout_width="wrap_content"
+        android:layout_height="70dp"
+        android:text="@string/sign_in"
+        android:layout_gravity="center"
+        android:onClick="performLogin"
+        android:id="@+id/buttonLogin" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="20dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/signUp"
+        android:text="@string/register"
+        android:textColor="?colorSecondaryVariant"
+        style="?android:attr/borderlessButtonStyle"
+        android:backgroundTint="@android:color/transparent"
+        android:layout_gravity="center"
+        android:onClick="redirect"/>
+
+</LinearLayout>

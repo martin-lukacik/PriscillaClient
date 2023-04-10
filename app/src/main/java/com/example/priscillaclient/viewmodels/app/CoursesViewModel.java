@@ -12,15 +12,9 @@ import java.util.ArrayList;
 
 public class CoursesViewModel extends ViewModelBase {
     private final MutableLiveData<ArrayList<Course>> state = new MutableLiveData<>(null);
-
-    private final MutableLiveData<String> joinCourseState = new MutableLiveData<>(null);
-
+    
     public LiveData<ArrayList<Course>> getData() {
         return state;
-    }
-
-    public LiveData<String> getJoinState() {
-        return joinCourseState;
     }
 
     public void fetchData(boolean forceFetch) {
@@ -37,6 +31,11 @@ public class CoursesViewModel extends ViewModelBase {
         }
     }
 
+    private final MutableLiveData<String> joinCourseState = new MutableLiveData<>(null);
+
+    public LiveData<String> getJoinState() {
+        return joinCourseState;
+    }
     public void joinCourse(int courseId) {
         apiTask.executeAsync(new DoJoinCourse(courseId), (data, error) -> {
             if (error != null)

@@ -10,8 +10,6 @@ public abstract class ViewModelBase extends ViewModel {
 
     protected final ApiTask apiTask = new ApiTask();
 
-    protected String error = null;
-
     private final MutableLiveData<Boolean> loadingState = new MutableLiveData<>(false);
     private final MutableLiveData<String> errorState = new MutableLiveData<>(null);
 
@@ -25,7 +23,7 @@ public abstract class ViewModelBase extends ViewModel {
 
     protected void setErrorState(String error) {
         errorState.setValue(error);
-        errorState.setValue(null); // clear error so it doesn't keep showing up
+        errorState.setValue(null);
     }
 
     protected void setLoadingState(boolean value) {

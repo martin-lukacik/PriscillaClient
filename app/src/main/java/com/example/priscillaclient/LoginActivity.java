@@ -106,8 +106,8 @@ public class LoginActivity extends ActivityBase {
 
         String username = ((EditText) findViewById(R.id.inputUsername)).getText().toString();
 
-        SharedPreferences.Editor editor = preferences.edit();
         CheckBox rememberUser = findViewById(R.id.rememberUser);
+        SharedPreferences.Editor editor = preferences.edit();
         if (rememberUser.isChecked()) {
             editor.putString(Preferences.PREFS_USERNAME, username);
             editor.putString(Preferences.PREFS_REFRESH_TOKEN, token.refresh_token);

@@ -100,8 +100,9 @@ public class ChapterListAdapter extends ArrayAdapter<Chapter> {
         holder.chapterTitle.setTextColor(Color.WHITE);
 
         holder.taskProgress.setProgressTintList(ColorStateList.valueOf(color));
+        holder.taskProgress.setProgressBackgroundTintList(ColorStateList.valueOf(Color.GRAY));
         holder.codeProgress.setProgressTintList(ColorStateList.valueOf(color));
-
+        holder.codeProgress.setProgressBackgroundTintList(ColorStateList.valueOf(Color.GRAY));
 
         try {
             int dataEnd = chapters.get(i).icon.indexOf(",");

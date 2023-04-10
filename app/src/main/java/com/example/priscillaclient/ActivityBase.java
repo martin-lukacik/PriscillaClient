@@ -116,9 +116,9 @@ public abstract class ActivityBase extends AppCompatActivity {
         }
     }
 
-    private int getThemeId(int motiveIndex) {
+    public int getThemeId(int motiveIndex) {
         if (motiveIndex == -1)
-            motiveIndex = new Random().nextInt(Preferences.PREFS_MOTIVES.length) + 1;
-        return Preferences.PREFS_MOTIVES[motiveIndex];
+            motiveIndex = new Random().nextInt(Preferences.PREFS_MOTIVES.length - 1);
+        return Preferences.PREFS_MOTIVES[motiveIndex + 1];
     }
 }
